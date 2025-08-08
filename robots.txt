@@ -1,0 +1,37 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /ajax/
+Disallow: /api/
+Disallow: /classes/
+Disallow: /config/
+Disallow: /includes/
+Disallow: /lang/
+Disallow: /uploads/documents/
+Disallow: /vendor/
+Disallow: /tmp/
+Disallow: /*.log$
+Disallow: /*.sql$
+Disallow: /*.bak$
+
+Allow: /css/
+Allow: /js/
+Allow: /images/
+Allow: /uploads/blog/
+
+Crawl-delay: 1
+
+Sitemap: https://prestacapi.com/sitemap.xml
+Sitemap: https://prestacapi.com/sitemap-blog.xml
+Sitemap: https://prestacapi.com/sitemap-pages.xml
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /

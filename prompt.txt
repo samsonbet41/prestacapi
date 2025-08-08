@@ -1,0 +1,210 @@
+Conception complète du site PrestaCapi.com
+
+---
+
+#### 🧠 Contexte général
+
+Je souhaite que tu m’aides à **concevoir le site complet de PrestaCapi.com**, en utilisant **PHP (front + back)**. Je vais te fournir plusieurs fichiers PHP issus de mes anciens projets pour t’aider à comprendre ma façon de structurer mes projets, envoyer des mails, gérer l’espace admin, etc.
+
+⚠️ **Important :**
+
+* Ne mets **aucun commentaire dans le code** (pas de `//`, `#`, etc.).
+* Lorsque tu crées un **artefact**, écris **d’abord un message dans le chat** pour indiquer **ce que contient l’artefact**.
+* Je veux éviter les pertes de contenu dans les artefacts, donc tu dois **toujours annoncer ce que tu vas faire avant de générer un fichier**.
+
+---
+
+#### 🌐 Informations sur le projet
+
+* **Nom de domaine** : `prestacapi.com`
+* **Nom commercial** : `PrestaCapi`
+* **Année de création** : 2008
+* **Technologie principale** : PHP (sans framework)
+* **Multilingue** : Français, Anglais, Espagnol, Allemand
+
+---
+
+#### 🖼️ Charte graphique
+
+| Rôle                | Couleur         | Code HEX  |
+| ------------------- | --------------- | --------- |
+| Couleur principale  | Bleu profond    | `#1F3B73` |
+| Couleur secondaire  | Gris clair      | `#F5F7FA` |
+| Accent 1            | Bleu turquoise  | `#00B8D9` |
+| Accent 2            | Gris anthracite | `#333E48` |
+| Validation (Succès) | Vert doux       | `#4CAF50` |
+| Alerte / Erreur     | Rouge doux      | `#E53935` |
+
+---
+
+#### 🧩 Objectifs et fonctionnalités principales
+
+* Plateforme intuitive et **ultra-responsive**
+* Permettre à l’utilisateur de :
+
+  * Créer un **compte rapidement**
+  * Remplir toutes ses informations personnelles dès la création du compte (profil complet)
+  * Soumettre une **demande de prêt uniquement s’il est connecté**
+  * Visualiser un **tableau de bord personnel** :
+
+    * Solde
+    * Liste des documents à fournir (acte de naissance, etc.)
+  * Suivre l’état de ses demandes
+  * Effectuer une **demande de retrait** une fois un prêt validé
+  * Saisir ses informations bancaires pour le virement
+
+---
+
+#### 🔄 Processus complet de demande
+
+1. L'utilisateur crée un compte
+2. Il complète toutes ses informations et documents
+3. Il soumet une demande de prêt
+4. L’équipe PrestaCapi envoie la demande à plusieurs partenaires (banques, micro-finances, etc.)
+5. L’équipe valide ou refuse la demande côté admin :
+
+   * En cas de refus : le motif est affiché
+   * En cas d’acceptation :
+
+     * Le nom de la banque/structure est affiché
+     * Le solde de l’utilisateur est mis à jour
+     * L’utilisateur reçoit un email avec les détails (montant, banque, solde disponible)
+6. L'utilisateur peut faire une **demande de retrait**
+7. Côté admin, on peut **valider ou refuser** cette demande
+
+---
+
+#### 📧 Informations à collecter à l’inscription 
+
+* Nom Prénom
+* email
+* numéro whatsapp
+
+#### 📧 Informations à collecter à la demande
+
+### a. Informations personnelles de base
+
+* Nom complet, date de naissance, situation familiale, coordonnées (adresse, email, téléphone, WhatsApp)
+* Adresse postale ou de résidence (peut nécessiter une preuve) ([Cofidis][1], [OneMain Financial][2])
+
+### b. Identité et justificatifs
+
+* Pièce d’identité (carte nationale, passeport, permis de conduire)
+* Documents complémentaires : carte d’identité nationale, acte de naissance, etc. ([OneMain Financial][2], [LeadGen App][3])
+
+### c. Situation financière
+
+* Revenus mensuels ou annuels
+* Nature du contrat de travail ou statut professionnel (salarié, indépendant…)
+* Charges ou dettes mensuelles (loyer, crédits en cours…) ([Cofidis][1])
+
+### d. Justificatifs financiers
+
+* Relevés bancaires (souvent des 1 à 2 derniers mois)
+* Fiches de paie, avis d’imposition, déclarations de revenus (selon profil) ([Consumer Financial Protection Bureau][4], [ecocu.org][5])
+* Autres preuves comme W-2 (États-Unis), etc. ([Consumer Financial Protection Bureau][4])
+
+### e. Emploi & stabilité
+
+* Position actuelle, employeur, durée d’emploi, stabilité professionnelle
+* Éventuellement, coordonnées de l’employeur ou documents de vérification (le cas échéant) ([Investopedia][6], [Wikipedia][7])
+
+### f. Projet & montant souhaité
+
+* Motif du prêt (achat, travaux, projet, urgence, etc.)
+* Montant souhaité
+* Durée de remboursement envisagée ([Cofidis][1], [Discover][8])
+
+### g. Analyse de solvabilité
+
+* Historique de crédit / score de crédit (le cas échéant)
+* Ratio dettes/revenus, autres engagements financiers ([Investopedia][6])
+
+### h. Option co-emprunteur (si applicable)
+
+* Informations similaires à celles du demandeur principal (identité, revenus…) ([Investopedia][9])
+
+### i. Consentement et consentements légaux
+
+* Consentement à la vérification des informations, acceptation des conditions, autorisation de procéder aux vérifications de crédit ([Investopedia][10])
+
+---
+
+### En résumé – Champs recommandés pour ton formulaire PrestaCapi :
+
+| Section                       | Champs recommandés                               |
+| ----------------------------- | ------------------------------------------------ |
+| **Coordonnées**               | Nom, prénom, naissance, adresse, email, WhatsApp |
+| **Identité**                  | Pièce d’identité, acte de naissance              |
+| **Situation professionnelle** | Statut, type de contrat, employeur               |
+| **Revenus et charges**        | Revenus, charges, dettes courantes               |
+| **Documents justificatifs**   | Relevés, fiches de paie, avis d’imposition       |
+| **Projet de prêt**            | Montant, durée, objectif                         |
+| **Solvabilité**               | Crédit, dettes, ratio DTI                        |
+| **Co-emprunteur** (option)    | Informations équivalentes au demandeur           |
+| **Consentement légal**        | Accord pour vérifications, conditions générales  |
+
+
+---
+
+#### ✨ UX/UI & Design
+
+* Design **percutant, immersif, thématique “finance / capital / réussite”**
+* Animation dès la **Hero Section**
+* Interface **mobile-first**
+* Couleurs rassurantes (bleu, vert validation)
+* Témoignages clients
+* Logos de partenaires en carrousel
+* Call-to-Action visible et répété (“Faire une demande”)
+
+---
+
+#### 📄 Pages à développer
+
+* Accueil
+* Formulaire de demande
+* Espace utilisateur (tableau de bord)
+* Page de retrait
+* Espace admin (gestion utilisateurs, demandes, soldes, rejets, validations)
+* À propos
+* Blog / Actualités
+* Avis clients
+* Carrousel partenaires
+* Footer/Header multilingue
+* autres ...
+
+---
+
+#### 🔧 Intégration technique
+
+* Envoi de mail automatique lors d'une demande :
+
+  * L’utilisateur reçoit un email de confirmation
+  * L’équipe PrestaCapi reçoit aussi l’email de la demande
+* Formulaire optimisé et sécurisé
+* Notifications d’état (demande acceptée/refusée, retrait validé)
+* Stockage sécurisé des données utilisateurs
+* Design parfaitement responsive (PC / Tablette / Mobile)
+
+---
+
+#### 🧪 Pour t’aider
+
+Je vais fournir :
+
+* Mes anciens fichiers PHP avec :
+
+  * Code de traitement de formulaire
+  * Exemple d’envoi de mail
+  * Exemple de structure admin
+
+Tu peux t’en **inspirer**, **réutiliser des éléments** si besoin, et **adapter à ce projet**.
+
+---
+
+#### 📌 Résumé mission
+
+Ta mission est de m’aider à développer tout le site PrestaCapi.com **en PHP pur**, avec un **frontend moderne**, une **logique métier claire**, et **aucun commentaire dans le code**.
+
+Tu dois annoncer **dans le chat à chaque étape** ce que tu fais **avant** d’envoyer un artefact.
+

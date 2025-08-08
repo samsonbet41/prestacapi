@@ -1,0 +1,62 @@
+# ===================================================================
+# .htaccess pour PrestaCapi - Gestion des slugs multilingues
+# ===================================================================
+
+# Configuration de base
+Options -Indexes
+RewriteEngine On
+RewriteBase /
+
+# --- SÉCURITÉ ---
+<FilesMatch "\.(htaccess|htpasswd|ini|log|sh|inc|bak|config|env)$">
+    Require all denied
+</FilesMatch>
+
+# --- PERFORMANCE ---
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    
+    <FilesMatch "\.(css|js|png|jpg|jpeg|gif|svg|ico|woff|woff2)$">
+        Header set Cache-Control "public, max-age=31536000"
+    </FilesMatch>
+</IfModule>
+
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault "access plus 1 month"
+    ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
+# --- ROUTAGE ---
+
+# Ne pas réécrire les fichiers et dossiers existants
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Ne pas réécrire les dossiers spéciaux
+RewriteRule ^(css|js|images|uploads|ajax|deboutatoutprix\(admin\)|vendor)/ - [L]
+
+# Ne pas réécrire les fichiers spéciaux
+RewriteRule ^(robots\.txt|sitemap\.xml|favicon\.ico|sw\.js|test-slugs\.php)$ - [L]
+
+# Rediriger la racine vers /fr/
+RewriteRule ^$ /fr/ [R=301,L]
+
+# Rediriger les URLs sans langue vers le français
+RewriteRule ^(login|register|contact|about|blog|dashboard|profile|documents|withdrawal|testimonials|partners|privacy|faq|services|help|support|connexion|inscription|tableau-de-bord|demande-pret|retrait|profil|a-propos|temoignages|partenaires|confidentialite)/?$ /fr/$1/ [R=301,L]
+
+# ROUTAGE PRINCIPAL : Toutes les URLs avec langue vers index.php
+RewriteRule ^([a-z]{2})(/.*)?$ index.php [L,QSA]
+
+# --- ERREURS ---
+ErrorDocument 404 /404.php
+ErrorDocument 403 /404.php
+
+# --- OPTIMISATIONS ---
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain text/html text/css application/javascript
+</IfModule>
+
+AddDefaultCharset UTF-8

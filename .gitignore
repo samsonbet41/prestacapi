@@ -1,0 +1,54 @@
+# Ignorer les fichiers de configuration système
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Ignorer les fichiers d'environnement
+.env
+.env.local
+.env.*
+
+# Ignorer les dépendances Composer si tu ne veux pas les versionner (facultatif)
+vendor/
+
+# Ignorer les caches et fichiers temporaires
+cache/
+tmp/
+*.log
+*.tmp
+
+# Ignorer les fichiers de sessions PHP
+sessions/
+
+# Ignorer les fichiers de sauvegarde ou temporaires d’éditeurs
+*.bak
+*.swp
+*.swo
+*.swn
+*~
+
+# Ignorer les fichiers du système XAMPP/WAMP
+*.sql
+*.sqlite
+*.db
+*.db-journal
+
+# Ignorer les fichiers de tests (facultatif)
+phpunit.xml
+phpunit.xml.dist
+coverage/
+
+# Ignorer les fichiers générés automatiquement
+composer.lock
+node_modules/
+
+# Ignorer les fichiers d'IDE
+.idea/
+.vscode/
+nbproject/
+*.sublime-project
+*.sublime-workspace
+
+# Ignorer les fichiers d'upload ou sensibles
+uploads/
+storage/

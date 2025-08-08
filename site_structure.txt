@@ -1,0 +1,54 @@
+Structure du site : C:\xampp\htdocs
+└──
+├── .htaccess
+├── 404.php
+├── ajax/
+  ├── contact-form.php
+  ├── get-notifications.php
+  ├── language-switch.php
+  ├── loan-request.php
+  ├── login.php
+  ├── register.php
+  ├── update-profile.php
+  ├── upload-document.php
+  ├── withdrawal-request.php
+├── classes/
+  ├── Admin.php
+  ├── Blog.php
+  ├── Database.php
+  ├── Document.php
+  ├── Language.php
+  ├── LoanRequest.php
+  ├── Mailer.php
+  ├── Partner.php
+  ├── SEO.php
+  ├── Testimonial.php
+  ├── User.php
+  ├── Withdrawal.php
+├── css/
+  ├── style.css
+├── deboutatoutprix/
+├── images/
+  ├── d/
+  ├── favicon/
+├── includes/
+  ├── auth-check.php
+  ├── footer.php
+  ├── header.php
+  ├── nav.php
+├── index.php
+├── js/
+├── lang/
+  ├── de.php
+  ├── en.php
+  ├── es.php
+  ├── fr.php
+  ├── slugs.php
+├── pages/
+  ├── dashboard.php
+  ├── documents.php
+  ├── loan-request.php
+  ├── login.php
+  ├── profile.php
+  ├── register.php
+├── vendor/
