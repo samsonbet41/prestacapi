@@ -9,7 +9,6 @@ if (!isset($user)) {
     $user = new User();
 }
 
-// Charger les slugs pour la traduction des URLs
 $slugs = [];
 if (file_exists(__DIR__ . '/../lang/slugs.php')) {
     $slugs = include __DIR__ . '/../lang/slugs.php';
@@ -18,9 +17,23 @@ if (file_exists(__DIR__ . '/../lang/slugs.php')) {
 $isLoggedIn = $user->isLoggedIn();
 $currentUser = $isLoggedIn ? $user->getCurrentUser() : null;
 
-// Déterminer la page courante à partir des variables globales du routeur
 $currentPageKey = isset($currentPage) ? $currentPage : 'home';
 ?>
+
+<!DOCTYPE html>
+<html lang="<?php echo $lang->getCurrentLanguage(); ?>">
+<head>
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/form.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/auth.css">
+    <link rel="stylesheet" href="/css/nav.css">
+    <link rel="stylesheet" href="/css/documents.css">
+    <link rel="stylesheet" href="/css/footer.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+    <link rel="stylesheet" href="/css/home.css">
+</head>
 
 <header class="site-header" id="siteHeader">
     <div class="header-container">
@@ -83,40 +96,6 @@ $currentPageKey = isset($currentPage) ? $currentPage : 'home';
         </nav>
         
         <div class="header-actions">
-            <div class="language-selector-wrapper">
-                <button class="language-toggle" onclick="toggleLanguageSelector()" aria-label="Changer de langue">
-                    <img src="/images/flags/<?php echo $lang->getCountryCode(); ?>.svg" 
-                         alt="<?php echo $lang->getLanguageName(); ?>" 
-                         class="current-flag">
-                    <span class="current-lang"><?php echo strtoupper($lang->getCurrentLanguage()); ?></span>
-                    <span class="dropdown-arrow">▼</span>
-                </button>
-                
-                <div class="language-dropdown" id="languageDropdown">
-                    <?php foreach ($lang->getSupportedLanguages() as $langCode): ?>
-                        <?php if ($langCode !== $lang->getCurrentLanguage()): ?>
-                            <?php 
-                            // Générer l'URL correcte pour cette langue
-                            $languageUrl = generateLanguageUrl(
-                                $langCode, 
-                                $lang->getCurrentLanguage(), 
-                                $_SERVER['REQUEST_URI'], 
-                                $slugs
-                            );
-                            ?>
-                            <a href="<?php echo $languageUrl; ?>" 
-                               class="language-option" 
-                               hreflang="<?php echo $langCode; ?>">
-                                <img src="/images/flags/<?php echo $lang->getCountryCode($langCode); ?>.svg" 
-                                     alt="<?php echo $lang->getLanguageName($langCode); ?>" 
-                                     class="flag-icon">
-                                <span class="language-name"><?php echo $lang->getLanguageName($langCode); ?></span>
-                            </a>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-            
             <?php if ($isLoggedIn): ?>
                 <div class="user-menu-wrapper">
                     <button class="user-menu-toggle" onclick="toggleUserMenu()" aria-label="Menu utilisateur">
@@ -242,470 +221,42 @@ $currentPageKey = isset($currentPage) ? $currentPage : 'home';
             </div>
         </div>
     <?php endif; ?>
+    <div class="lang-selector-bar"> <div class="language-selector-wrapper">
+            <button class="language-toggle" onclick="toggleLanguageSelector()" aria-label="Changer de langue">
+                <img src="/images/flags/<?php echo $lang->getCountryCode(); ?>.svg" 
+                     alt="<?php echo $lang->getLanguageName(); ?>" 
+                     class="current-flag">
+                <span class="current-lang"><?php echo strtoupper($lang->getCurrentLanguage()); ?></span>
+                <span class="dropdown-arrow">▼</span>
+            </button>
+            
+            <div class="language-dropdown" id="languageDropdown">
+                <?php foreach ($lang->getSupportedLanguages() as $langCode): ?>
+                    <?php if ($langCode !== $lang->getCurrentLanguage()): ?>
+                        <?php 
+                        $languageUrl = generateLanguageUrl(
+                            $langCode, 
+                            $lang->getCurrentLanguage(), 
+                            $_SERVER['REQUEST_URI'], 
+                            $slugs
+                        );
+                        ?>
+                        <a href="<?php echo $languageUrl; ?>" 
+                           class="language-option" 
+                           hreflang="<?php echo $langCode; ?>">
+                            <img src="/images/flags/<?php echo $lang->getCountryCode($langCode); ?>.svg" 
+                                 alt="<?php echo $lang->getLanguageName($langCode); ?>" 
+                                 class="flag-icon">
+                            <span class="language-name"><?php echo $lang->getLanguageName($langCode); ?></span>
+                        </a>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
 </header>
 
-<div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="toggleMobileMenu()"></div>
-
-<style>
-.site-header {
-    background: white;
-    box-shadow: 0 2px 20px rgba(31, 59, 115, 0.1);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    transition: all 0.3s ease;
-}
-
-.header-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-height: 70px;
-}
-
-.header-brand {
-    display: flex;
-    align-items: center;
-}
-
-.logo-link {
-    text-decoration: none;
-    color: inherit;
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 0.25rem;
-}
-
-.logo-image {
-    height: 40px;
-    width: auto;
-}
-
-.logo-text {
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: var(--primary-color);
-}
-
-.tagline {
-    font-size: 0.75rem;
-    color: #666;
-    margin-left: 3rem;
-}
-
-.main-navigation {
-    display: flex;
-    align-items: center;
-}
-
-.nav-menu {
-    display: flex;
-    list-style: none;
-    gap: 2rem;
-    margin: 0;
-    padding: 0;
-}
-
-.nav-link {
-    text-decoration: none;
-    color: var(--accent-2);
-    font-weight: 500;
-    padding: 0.5rem 0;
-    position: relative;
-    transition: color 0.3s ease;
-}
-
-.nav-link:hover,
-.nav-link.active {
-    color: var(--primary-color);
-}
-
-.nav-link.active::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: var(--accent-1);
-    border-radius: 1px;
-}
-
-.header-actions {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.language-selector-wrapper,
-.user-menu-wrapper,
-.notifications-wrapper {
-    position: relative;
-}
-
-.language-toggle,
-.user-menu-toggle,
-.notifications-toggle {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem;
-    border: none;
-    background: none;
-    cursor: pointer;
-    border-radius: var(--border-radius);
-    transition: background-color 0.3s ease;
-}
-
-.language-toggle:hover,
-.user-menu-toggle:hover,
-.notifications-toggle:hover {
-    background-color: var(--secondary-color);
-}
-
-.current-flag,
-.flag-icon {
-    width: 20px;
-    height: 15px;
-    object-fit: cover;
-    border-radius: 2px;
-}
-
-.current-lang {
-    font-weight: 600;
-    font-size: 0.875rem;
-}
-
-.dropdown-arrow {
-    font-size: 0.75rem;
-    transition: transform 0.3s ease;
-}
-
-.language-dropdown,
-.user-dropdown,
-.notifications-dropdown {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background: white;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-lg);
-    padding: 0.5rem;
-    min-width: 200px;
-    opacity: 0;
-    transform: translateY(-10px);
-    pointer-events: none;
-    transition: all 0.3s ease;
-    z-index: 1001;
-}
-
-.language-dropdown.show,
-.user-dropdown.show,
-.notifications-dropdown.show {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
-}
-
-.language-option,
-.user-menu-item {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem;
-    text-decoration: none;
-    color: var(--accent-2);
-    border-radius: var(--border-radius);
-    transition: background-color 0.3s ease;
-}
-
-.language-option:hover,
-.user-menu-item:hover {
-    background-color: var(--secondary-color);
-    color: var(--primary-color);
-}
-
-.user-avatar,
-.user-avatar-large {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: var(--gradient-primary);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-    font-size: 0.875rem;
-}
-
-.user-avatar-large {
-    width: 50px;
-    height: 50px;
-    font-size: 1rem;
-}
-
-.user-info {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-.user-name {
-    font-weight: 600;
-    font-size: 0.875rem;
-    color: var(--accent-2);
-}
-
-.user-balance,
-.user-balance-large {
-    font-size: 0.75rem;
-    color: var(--accent-1);
-    font-weight: 600;
-}
-
-.user-balance-large {
-    font-size: 0.875rem;
-}
-
-.user-dropdown-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem;
-    border-bottom: 1px solid var(--secondary-color);
-    margin-bottom: 0.5rem;
-}
-
-.user-full-name {
-    font-weight: 600;
-    color: var(--primary-color);
-}
-
-.user-email {
-    font-size: 0.75rem;
-    color: #666;
-}
-
-.user-menu-divider {
-    height: 1px;
-    background: var(--secondary-color);
-    margin: 0.5rem 0;
-}
-
-.logout-item {
-    color: var(--error-color);
-}
-
-.logout-item:hover {
-    background-color: rgba(229, 57, 53, 0.1);
-}
-
-.notifications-toggle {
-    position: relative;
-}
-
-.notification-badge {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background: var(--error-color);
-    color: white;
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    font-size: 0.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-}
-
-.notifications-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    border-bottom: 1px solid var(--secondary-color);
-}
-
-.notifications-header h3 {
-    margin: 0;
-    color: var(--primary-color);
-}
-
-.mark-all-read {
-    background: none;
-    border: none;
-    color: var(--accent-1);
-    font-size: 0.75rem;
-    cursor: pointer;
-}
-
-.notifications-list {
-    max-height: 300px;
-    overflow-y: auto;
-    padding: 0.5rem;
-}
-
-.notifications-footer {
-    padding: 1rem;
-    text-align: center;
-    border-top: 1px solid var(--secondary-color);
-}
-
-.notifications-footer a {
-    color: var(--accent-1);
-    text-decoration: none;
-    font-size: 0.875rem;
-}
-
-.auth-actions {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.btn-login {
-    text-decoration: none;
-    color: var(--primary-color);
-    font-weight: 600;
-    padding: 0.5rem 1rem;
-    border-radius: var(--border-radius);
-    transition: all 0.3s ease;
-}
-
-.btn-login:hover {
-    background-color: var(--secondary-color);
-}
-
-.btn-sm {
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
-}
-
-.mobile-menu-toggle {
-    display: none;
-    flex-direction: column;
-    gap: 4px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.5rem;
-}
-
-.hamburger-line {
-    width: 24px;
-    height: 2px;
-    background: var(--accent-2);
-    transition: all 0.3s ease;
-}
-
-.mobile-menu-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 999;
-}
-
-.header-quick-stats {
-    background: var(--secondary-color);
-    border-top: 1px solid rgba(31, 59, 115, 0.1);
-}
-
-.quick-stats {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-    padding: 0.75rem 0;
-}
-
-.stat-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.stat-label {
-    font-size: 0.75rem;
-    color: #666;
-}
-
-.stat-value {
-    font-weight: 600;
-    color: var(--primary-color);
-    font-size: 0.875rem;
-}
-
-.stat-value.pending {
-    color: var(--warning-color);
-}
-
-.quick-action {
-    margin-left: auto;
-}
-
-@media (max-width: 1024px) {
-    .tagline {
-        display: none;
-    }
-    
-    .nav-menu {
-        gap: 1.5rem;
-    }
-    
-    .user-info {
-        display: none;
-    }
-    
-    .header-quick-stats {
-        display: none;
-    }
-}
-
-@media (max-width: 768px) {
-    .main-navigation {
-        display: none;
-    }
-    
-    .mobile-menu-toggle {
-        display: flex;
-    }
-    
-    .language-selector-wrapper .current-lang {
-        display: none;
-    }
-    
-    .header-actions {
-        gap: 0.5rem;
-    }
-}
-
-.header-scrolled {
-    box-shadow: 0 4px 20px rgba(31, 59, 115, 0.15);
-}
-
-.header-scrolled .logo-text {
-    font-size: 1.25rem;
-}
-
-.loading {
-    text-align: center;
-    padding: 2rem;
-    color: #666;
-}
-</style>
+<div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()"></div>
 
 <script>
 function toggleLanguageSelector() {
@@ -743,16 +294,28 @@ function toggleNotifications() {
 }
 
 function toggleMobileMenu() {
-    // Implémentation du menu mobile
+    const nav = document.getElementById('mainNav');
     const overlay = document.getElementById('mobileMenuOverlay');
+    const toggleBtn = document.querySelector('.mobile-menu-toggle');
     const body = document.body;
+
+    // Ajoute ou retire la classe 'active' sur les éléments concernés
+    nav.classList.toggle('active');
+    overlay.classList.toggle('active');
+    toggleBtn.classList.toggle('active');
     
-    if (overlay.style.display === 'block') {
-        overlay.style.display = 'none';
-        body.style.overflow = '';
-    } else {
-        overlay.style.display = 'block';
+    // Bloque ou débloque le scroll du body
+    if (nav.classList.contains('active')) {
         body.style.overflow = 'hidden';
+    } else {
+        body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const nav = document.getElementById('mainNav');
+    if (nav.classList.contains('active')) {
+        toggleMobileMenu();
     }
 }
 
@@ -835,3 +398,4 @@ function loadQuickStats() {
 }
 <?php endif; ?>
 </script>
+</html>

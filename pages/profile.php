@@ -1,7 +1,7 @@
 <?php
-require_once '../includes/auth-check.php';
-require_once '../classes/Language.php';
-require_once '../classes/SEO.php';
+require_once 'includes/auth-check.php';
+require_once 'classes/Language.php';
+require_once 'classes/SEO.php';
 
 $lang = Language::getInstance();
 $seo = new SEO();
@@ -94,18 +94,13 @@ $userStats = $user->getDashboardStats($currentUser['id']);
     <title><?php echo $seo->generateTitle($pageTitle); ?></title>
     <meta name="description" content="<?php echo $seo->generateDescription($pageDescription); ?>">
     <meta name="robots" content="noindex, nofollow">
-    
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/dashboard.css">
-    <link rel="stylesheet" href="/css/forms.css">
-    <link rel="stylesheet" href="/css/responsive.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="dashboard-page">
-    <?php include '../includes/header.php'; ?>
-    <?php include '../includes/nav.php'; ?>
+    <?php include 'includes/header.php'; ?>
+    <?php include 'includes/nav.php'; ?>
     
     <main class="dashboard-main">
         <div class="container">
@@ -489,7 +484,7 @@ $userStats = $user->getDashboardStats($currentUser['id']);
         </div>
     </main>
     
-    <?php include '../includes/footer.php'; ?>
+    <?php include 'includes/footer.php'; ?>
     
     <script src="/js/modules/dashboard.js"></script>
     <script src="/js/modules/forms.js"></script>
