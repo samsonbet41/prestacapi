@@ -25,13 +25,18 @@ $pageTitle = $mode === 'register' ? $lang->get('auth_register_title') : $lang->g
     <meta name="description" content="<?php echo $seo->generateDescription($pageTitle); ?>">
     
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/login.css">
     <link rel="stylesheet" href="/css/forms.css">
+    <link rel="stylesheet" href="/css/auth.css">
+    <link rel="stylesheet" href="/css/responsive.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="/images/favicon/favicon.ico">
 </head>
 <body class="auth-page">
+    <?php include 'includes/auth_header.php'; ?>
+    
     <div class="auth-container">
         <div class="auth-background">
             <div class="auth-gradient"></div>
@@ -43,17 +48,6 @@ $pageTitle = $mode === 'register' ? $lang->get('auth_register_title') : $lang->g
         </div>
         
         <div class="auth-content">
-            <div class="auth-header">
-                <div class="auth-logo">
-                    <a href="<?php echo $lang->url(); ?>">
-                        <img src="/images/logo.png" alt="PrestaCapi" class="logo-img">
-                    </a>
-                </div>
-                <div class="auth-language">
-                    <?php echo $lang->generateLanguageSelector(); ?>
-                </div>
-            </div>
-            
             <div class="auth-card">
                 <div class="auth-toggle">
                     <button class="toggle-btn <?php echo $mode === 'login' ? 'active' : ''; ?>" 
@@ -367,8 +361,6 @@ $pageTitle = $mode === 'register' ? $lang->get('auth_register_title') : $lang->g
         </div>
     </div>
     
-    <script src="/js/main.js"></script>
-    <script src="/js/modules/auth.js"></script>
     <script>
         let currentMode = '<?php echo $mode; ?>';
         

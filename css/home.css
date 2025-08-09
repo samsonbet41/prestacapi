@@ -936,16 +936,9 @@
   transform: translateX(-30px);
 }
 
-.animate-on-scroll {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: var(--transition-slow);
-}
 
-.animate-on-scroll.in-view {
-  opacity: 1;
-  transform: translateY(0);
-}
+
+
 
 /* Délais d'animation */
 .delay-1 { animation-delay: 0.1s; }

@@ -1,0 +1,189 @@
+/**
+ * register.css
+ * Un style simple, propre et centré pour la page d'inscription.
+ * Il se concentre sur une expérience utilisateur claire et un formulaire multi-étapes efficace.
+ */
+
+/* === STRUCTURE PRINCIPALE DE LA PAGE === */
+.auth-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: var(--secondary-color);
+  font-family: var(--font-family-primary);
+  padding: var(--spacing-xl);
+}
+
+/* On cache la partie visuelle pour se concentrer sur le formulaire */
+.auth-visual {
+  display: none;
+}
+
+/* === CARTE D'INSCRIPTION CENTRÉE === */
+.auth-container {
+  width: 100%;
+  max-width: 650px; /* Un peu plus large pour le formulaire multi-étapes */
+  background-color: white;
+  border-radius: var(--border-radius-xl);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+}
+
+/* La section du formulaire prend toute la place dans la carte */
+.auth-form-section {
+  padding: var(--spacing-3xl);
+}
+
+/* === EN-TÊTE DU FORMULAIRE === */
+.form-header {
+  text-align: center;
+  margin-bottom: var(--spacing-2xl);
+}
+
+.form-title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--primary-color);
+  margin-bottom: var(--spacing-xs);
+}
+
+.form-subtitle {
+  font-size: var(--font-size-base);
+  color: #6B7280;
+}
+
+/* === TITRE DE CHAQUE ÉTAPE === */
+.auth-form .step-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--primary-color);
+  margin-bottom: var(--spacing-xl);
+  padding-bottom: var(--spacing-base);
+  border-bottom: 1px solid rgba(31, 59, 115, 0.1);
+  text-align: left;
+}
+
+/* === ACTIONS DU FORMULAIRE (BOUTONS PRÉCÉDENT/SUIVANT) === */
+.form-actions {
+  display: flex;
+  justify-content: space-between; /* Aligne les boutons aux extrémités */
+  align-items: center;
+  margin-top: var(--spacing-2xl);
+  padding-top: var(--spacing-xl);
+  border-top: 1px solid rgba(31, 59, 115, 0.1);
+}
+
+/* === CONSENTEMENT (CGU, NEWSLETTER) === */
+.form-consent {
+  margin-top: var(--spacing-xl);
+  padding: var(--spacing-lg);
+  background: rgba(31, 59, 115, 0.03);
+  border-radius: var(--border-radius-lg);
+}
+
+.form-consent .checkbox-group:last-child {
+  margin-bottom: 0;
+}
+
+.form-consent label a {
+  color: var(--accent-1);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+  transition: text-decoration 0.2s ease;
+}
+
+.form-consent label a:hover {
+  text-decoration: underline;
+}
+
+/* === PIED DE PAGE DU FORMULAIRE (LIEN DE CONNEXION) === */
+.form-footer {
+  text-align: center;
+  margin-top: var(--spacing-2xl);
+  font-size: var(--font-size-sm);
+}
+
+.auth-switch {
+  color: #6B7280;
+}
+
+.auth-link {
+  color: var(--accent-1);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+}
+
+.auth-link:hover {
+  text-decoration: underline;
+}
+
+/* === ALERTES (SUCCÈS / ERREUR) === */
+.alert {
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+  border-radius: var(--border-radius-lg);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-base);
+  border: 1px solid;
+  font-size: var(--font-size-sm);
+}
+
+.alert-success {
+  background-color: rgba(76, 175, 80, 0.08);
+  border-color: rgba(76, 175, 80, 0.2);
+  color: #1B5E20;
+}
+
+.alert-error {
+  background-color: rgba(229, 57, 53, 0.08);
+  border-color: rgba(229, 57, 53, 0.2);
+  color: #B71C1C;
+}
+
+.alert i {
+  font-size: var(--font-size-xl);
+  margin-top: 2px;
+}
+.alert-success i { color: var(--success-color); }
+.alert-error i { color: var(--error-color); }
+
+.alert-content h3 {
+  margin: 0 0 var(--spacing-xs) 0;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+}
+
+.alert-content p,
+.alert-content ul {
+  margin: 0;
+  line-height: var(--line-height-relaxed);
+  opacity: 0.9;
+}
+
+ul.error-list {
+  list-style-position: inside;
+  padding: 0;
+}
+
+/* === RESPONSIVE DESIGN === */
+@media (max-width: 700px) {
+  .auth-page {
+    padding: 0;
+    background-color: white; /* Le fond de la carte devient le fond de la page */
+    justify-content: flex-start;
+  }
+  .auth-container {
+    width: 100%;
+    max-width: none;
+    height: auto;
+    min-height: 100vh;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .auth-form-section {
+    padding: var(--spacing-2xl) var(--spacing-base);
+  }
+}

@@ -188,7 +188,8 @@ Je souhaite que tu m’aides à **concevoir le site complet de PrestaCapi.com**,
 
 ---
 
-#### 🧪 J'ai déjà commencer le projet et toi tu finiras le reste
+#### 🧪 J'ai déjà fini la page client il reste admin 'deboutatoutprix(admin)/'
+Tu finis la partie admin
 
 Voici la structure que j'ai prévu
 
@@ -285,22 +286,23 @@ prestacapi.com/
 │   ├── dashboard.php (déjà)
 │   ├── profile.php (déjà)
 │   ├── documents.php (déjà)
-│   ├── withdrawal.php
-│   ├── about.php
-│   ├── contact.php
-│   ├── blog.php
-│   ├── blog-post.php
-│   ├── testimonials.php
-│   ├── partners.php
-│   └── privacy.php
+│   ├── withdrawal.php (déjà)
+│   ├── about.php (déjà)
+│   ├── home.php (déjà)
+│   ├── contact.php (déjà)
+│   ├── blog.php (déjà)
+│   ├── blog-post.php (déjà)
+│   ├── testimonials.php (déjà)
+│   ├── partners.php (déjà)
+│   └── privacy.php (déjà)
 │
 ├── deboutatoutprix(admin)/
-│   ├── index.php
-│   ├── login.php
-│   ├── dashboard.php
+│   ├── index.php (déjà)
+│   ├── login.php (déjà)
+│   ├── dashboard.php (déjà)
 │   ├── users/
-│   │   ├── list.php
-│   │   ├── view.php
+│   │   ├── list.php (déjà)
+│   │   ├── view.php (déjà)
 │   │   └── edit.php
 │   ├── loans/
 │   │   ├── list.php
@@ -334,16 +336,16 @@ prestacapi.com/
 │   │   └── financial.php
 │   ├── assets/
 │   │   ├── css/
-│   │   │   ├── admin.css
-│   │   │   └── dashboard.css
+│   │   │   ├── admin.css (déjà)
+│   │   │   └── dashboard.css (déjà)
 │   │   └── js/
-│   │       ├── admin.js
-│   │       └── charts.js
+│   │       ├── admin.js (déjà)
+│   │       └── charts.js (déjà)
 │   └── includes/
-│       ├── header.php 
-│       ├── footer.php
-│       ├── sidebar.php
-│       └── auth-admin.php
+│       ├── header.php  (déjà)
+│       ├── footer.php (déjà)
+│       ├── sidebar.php (déjà)
+│       └── auth-admin.php (déjà)
 │
 ├── uploads/ (déjà)
 │   ├── documents/ (déjà)
@@ -366,6 +368,6 @@ prestacapi.com/
 
 #### 📌 Résumé mission
 
-Ta mission est de finaliser le reste des fichiers. à développer le rest du site PrestaCapi.com **en PHP pur**, avec un **frontend moderne**, une **logique métier claire**, et **aucun commentaire dans le code**.
+Ta mission est de mettre en place les pages admins. à développer admin du site PrestaCapi.com **en PHP pur**, avec un **frontend moderne**, une **logique métier claire**, et **aucun commentaire dans le code**.
 
 Tu dois annoncer **dans le chat à chaque étape** ce que tu fais **avant** d’envoyer un artefact. Tu ne dois pas refaire un fichier déjà fait sauf cas majeur

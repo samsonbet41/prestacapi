@@ -20,15 +20,12 @@ $currentUser = $isLoggedIn ? $user->getCurrentUser() : null;
 $currentPageKey = isset($currentPage) ? $currentPage : 'home';
 ?>
 
-<!DOCTYPE html>
-<html lang="<?php echo $lang->getCurrentLanguage(); ?>">
 <head>
     <link rel="stylesheet" href="/css/header.css">
     <link rel="stylesheet" href="/css/dashboard.css">
-    <link rel="stylesheet" href="/css/form.css">
+    <link rel="stylesheet" href="/css/forms.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/auth.css">
-    <link rel="stylesheet" href="/css/nav.css">
     <link rel="stylesheet" href="/css/documents.css">
     <link rel="stylesheet" href="/css/footer.css">
     <link rel="stylesheet" href="/css/responsive.css">
@@ -298,13 +295,10 @@ function toggleMobileMenu() {
     const overlay = document.getElementById('mobileMenuOverlay');
     const toggleBtn = document.querySelector('.mobile-menu-toggle');
     const body = document.body;
-
-    // Ajoute ou retire la classe 'active' sur les éléments concernés
     nav.classList.toggle('active');
     overlay.classList.toggle('active');
     toggleBtn.classList.toggle('active');
     
-    // Bloque ou débloque le scroll du body
     if (nav.classList.contains('active')) {
         body.style.overflow = 'hidden';
     } else {
