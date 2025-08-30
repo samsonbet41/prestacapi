@@ -9,8 +9,8 @@
     
     <div class="toast-container" id="toastContainer"></div>
     
-    <script src="assets/js/admin.js"></script>
-    <script src="assets/js/charts.js"></script>
+    <script src="/deboutatoutprix/assets/js/admin.js"></script>
+    <script src="/deboutatoutprix/assets/js/charts.js"></script>
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {

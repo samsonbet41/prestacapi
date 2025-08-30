@@ -1,5 +1,6 @@
 <?php
 require_once '../includes/auth-admin.php';
+require_once '../../classes/LoanRequest.php';
 requirePermission('manage_loans');
 
 $pageTitle = 'Demandes de prêt';
@@ -344,7 +345,7 @@ include '../includes/sidebar.php';
                                         <?php echo formatDateTime($loan['created_at']); ?>
                                     </div>
                                     <div style="font-size: 0.75rem; color: #6B7280;">
-                                        <?php echo $lang->getTimeAgo($loan['created_at']); ?>
+                                        
                                     </div>
                                 </td>
                                 <td>
@@ -359,23 +360,33 @@ include '../includes/sidebar.php';
                                                     data-id="<?php echo $loan['id']; ?>" 
                                                     data-status="under_review"
                                                     title="Mettre en cours">🔄</button>
+
                                             <button class="action-btn view" 
-                                                    data-action="quick-approve-loan" 
-                                                    data-id="<?php echo $loan['id']; ?>"
-                                                    title="Approuver">✅</button>
+                                                data-action="approve-loan" 
+                                                data-id="<?php echo $loan['id']; ?>" 
+                                                data-modal-id="quickApproveModal" 
+                                                data-target-input="approveLoanId" title="Approuver">✅
+                                            </button>
+
                                             <button class="action-btn delete" 
-                                                    data-action="quick-reject-loan" 
-                                                    data-id="<?php echo $loan['id']; ?>"
-                                                    title="Rejeter">❌</button>
+                                                data-action="reject-loan" 
+                                                data-id="<?php echo $loan['id']; ?>" 
+                                                data-modal-id="quickRejectModal" 
+                                                data-target-input="rejectLoanId" title="Rejeter">❌
+                                            </button>
                                         <?php elseif ($loan['status'] === 'under_review'): ?>
                                             <button class="action-btn view" 
-                                                    data-action="quick-approve-loan" 
-                                                    data-id="<?php echo $loan['id']; ?>"
-                                                    title="Approuver">✅</button>
+                                                data-action="approve-loan" 
+                                                data-id="<?php echo $loan['id']; ?>" 
+                                                data-modal-id="quickApproveModal" 
+                                                data-target-input="approveLoanId" title="Approuver">✅
+                                            </button>
                                             <button class="action-btn delete" 
-                                                    data-action="quick-reject-loan" 
-                                                    data-id="<?php echo $loan['id']; ?>"
-                                                    title="Rejeter">❌</button>
+                                                data-action="reject-loan" 
+                                                data-id="<?php echo $loan['id']; ?>" 
+                                                data-modal-id="quickRejectModal" 
+                                                data-target-input="rejectLoanId" title="Rejeter">❌
+                                            </button>
                                         <?php elseif ($loan['status'] === 'approved'): ?>
                                             <button class="action-btn edit" 
                                                     data-action="update-loan-status" 
@@ -444,7 +455,7 @@ include '../includes/sidebar.php';
             <button class="modal-close">&times;</button>
         </div>
         <div class="modal-body">
-            <form id="quickApproveForm">
+            <form id="quickApproveForm" method="POST" action="/deboutatoutprix/ajax/loan-actions.php" data-ajax="true">
                 <input type="hidden" id="approveLoanId" name="loan_id">
                 
                 <div class="form-group">
@@ -484,7 +495,7 @@ include '../includes/sidebar.php';
             <button class="modal-close">&times;</button>
         </div>
         <div class="modal-body">
-            <form id="quickRejectForm">
+            <form id="quickRejectForm" method="POST" action="/deboutatoutprix/ajax/loan-actions.php" data-ajax="true">
                 <input type="hidden" id="rejectLoanId" name="loan_id">
                 
                 <div class="form-group">
@@ -513,175 +524,5 @@ include '../includes/sidebar.php';
     </div>
 </div>
 
-<script>
-function changeSorting(value) {
-    const [sort, order] = value.split('-');
-    const url = new URL(window.location);
-    url.searchParams.set('sort', sort);
-    url.searchParams.set('order', order);
-    url.searchParams.set('page', '1');
-    window.location.href = url.toString();
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    const selectAllCheckbox = document.getElementById('selectAll');
-    const bulkActions = document.getElementById('bulkActions');
-    
-    if (selectAllCheckbox) {
-        selectAllCheckbox.addEventListener('change', function() {
-            const checkboxes = document.querySelectorAll('input[name="selected[]"]');
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = this.checked;
-            });
-            updateBulkActions();
-        });
-    }
-    
-    function updateBulkActions() {
-        const selectedCheckboxes = document.querySelectorAll('input[name="selected[]"]:checked');
-        const selectedCount = selectedCheckboxes.length;
-        
-        if (selectedCount > 0) {
-            bulkActions.classList.add('show');
-            const countElement = bulkActions.querySelector('.selected-count');
-            if (countElement) {
-                countElement.textContent = selectedCount;
-            }
-        } else {
-            bulkActions.classList.remove('show');
-        }
-    }
-    
-    document.querySelectorAll('input[name="selected[]"]').forEach(checkbox => {
-        checkbox.addEventListener('change', updateBulkActions);
-    });
-
-    document.querySelectorAll('[data-action]').forEach(button => {
-        button.addEventListener('click', function() {
-            const action = this.dataset.action;
-            const id = this.dataset.id;
-            
-            if (action === 'quick-approve-loan') {
-                openApproveModal(id);
-            } else if (action === 'quick-reject-loan') {
-                openRejectModal(id);
-            } else if (action === 'update-loan-status') {
-                const status = this.dataset.status;
-                updateLoanStatus(id, status);
-            }
-        });
-    });
-
-    document.getElementById('quickApproveForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        submitApproval();
-    });
-
-    document.getElementById('quickRejectForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        submitRejection();
-    });
-});
-
-function openApproveModal(loanId) {
-    document.getElementById('approveLoanId').value = loanId;
-    document.getElementById('quickApproveModal').style.display = 'block';
-}
-
-function openRejectModal(loanId) {
-    document.getElementById('rejectLoanId').value = loanId;
-    document.getElementById('quickRejectModal').style.display = 'block';
-}
-
-async function submitApproval() {
-    const formData = new FormData(document.getElementById('quickApproveForm'));
-    
-    try {
-        showLoading();
-        const response = await fetch('../ajax/loan-actions.php', {
-            method: 'POST',
-            body: formData
-        });
-
-        const data = await response.json();
-        
-        if (data.success) {
-            showToast('Demande approuvée avec succès', 'success');
-            document.getElementById('quickApproveModal').style.display = 'none';
-            setTimeout(() => window.location.reload(), 1000);
-        } else {
-            showToast(data.message || 'Erreur lors de l\'approbation', 'error');
-        }
-    } catch (error) {
-        showToast('Erreur de connexion', 'error');
-    } finally {
-        hideLoading();
-    }
-}
-
-async function submitRejection() {
-    const formData = new FormData(document.getElementById('quickRejectForm'));
-    
-    try {
-        showLoading();
-        const response = await fetch('../ajax/loan-actions.php', {
-            method: 'POST',
-            body: formData
-        });
-
-        const data = await response.json();
-        
-        if (data.success) {
-            showToast('Demande rejetée', 'success');
-            document.getElementById('quickRejectModal').style.display = 'none';
-            setTimeout(() => window.location.reload(), 1000);
-        } else {
-            showToast(data.message || 'Erreur lors du rejet', 'error');
-        }
-    } catch (error) {
-        showToast('Erreur de connexion', 'error');
-    } finally {
-        hideLoading();
-    }
-}
-
-async function updateLoanStatus(loanId, status) {
-    try {
-        showLoading();
-        const response = await fetch('../ajax/loan-actions.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                action: 'update_status',
-                loan_id: loanId,
-                status: status
-            })
-        });
-
-        const data = await response.json();
-        
-        if (data.success) {
-            showToast('Statut mis à jour', 'success');
-            setTimeout(() => window.location.reload(), 1000);
-        } else {
-            showToast(data.message || 'Erreur lors de la mise à jour', 'error');
-        }
-    } catch (error) {
-        showToast('Erreur de connexion', 'error');
-    } finally {
-        hideLoading();
-    }
-}
-
-document.addEventListener('click', function(e) {
-    if (e.target.classList.contains('modal') || e.target.classList.contains('modal-close') || e.target.dataset.dismiss === 'modal') {
-        document.querySelectorAll('.modal').forEach(modal => {
-            modal.style.display = 'none';
-        });
-    }
-});
-</script>
 
 <?php include '../includes/footer.php'; ?>

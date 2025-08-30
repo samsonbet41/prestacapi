@@ -2,6 +2,9 @@
 require_once '../includes/auth-admin.php';
 requirePermission('manage_users');
 
+require_once __DIR__ . '/../../classes/Language.php';
+$lang = Language::getInstance();
+
 $pageTitle = 'Gestion des utilisateurs';
 
 $db = Database::getInstance();

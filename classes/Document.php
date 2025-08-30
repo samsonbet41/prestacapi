@@ -1,5 +1,6 @@
 <?php
 require_once 'Database.php';
+require_once 'Mailer.php';
 
 class Document {
     private $db;
@@ -97,12 +98,17 @@ class Document {
             
             $this->db->logActivity($userId, null, $action, "Document $documentType uploadé: $fileName");
             
-            $mailer = new Mailer();
-            $mailer->sendAdminNotification('document_uploaded', [
-                'user_id' => $userId,
-                'document_type' => $documentType,
-                'file_name' => $fileName
-            ]);
+            try {
+                $mailer = new Mailer();
+                $mailer->sendAdminNotification('document_uploaded', [
+                    'user_id' => $userId,
+                    'document_type' => $this->getDocumentTypeName($documentType),
+                    'file_name' => $fileName
+                ]);
+            } catch (Exception $e) {
+                // Log the mailer error but continue as the file upload was successful
+                error_log("Erreur Mailer dans uploadDocument: " . $e->getMessage());
+            }
             
             return [
                 'success' => true,

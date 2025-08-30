@@ -13,7 +13,7 @@ class AdminApp {
     }
 
     checkAuthentication() {
-        fetch('ajax/check-auth.php')
+        fetch('/deboutatoutprix/includes/auth-admin.php')
             .then(response => response.json())
             .then(data => {
                 if (!data.authenticated) {
@@ -71,11 +71,28 @@ class AdminApp {
 
     executeAction(action, params, element) {
         switch (action) {
-            case 'approve-loan':
-                this.approveLoan(params.id, element);
+            // AJOUT : Cas générique pour ouvrir une modale
+            case 'open-modal':
+                if (params.modalId) {
+                    this.openModal(params.modalId, params);
+                } else {
+                    console.error('Attribut data-modal-id manquant sur le bouton.');
+                }
                 break;
+
+            case 'approve-loan':
             case 'reject-loan':
-                this.rejectLoan(params.id, element);
+                // La logique existante est déjà correcte et utilisera le même chemin
+                if (params.modalId) {
+                    this.openModal(params.modalId, params);
+                } else {
+                    console.error('Attribut data-modal-id manquant sur le bouton.');
+                }
+                break;
+
+            case 'update-status':
+            case 'update-loan-status':
+                this.updateLoanStatus(params.id, params.status);
                 break;
             case 'approve-withdrawal':
                 this.approveWithdrawal(params.id, element);
@@ -102,7 +119,7 @@ class AdminApp {
                 this.refreshStats();
                 break;
             default:
-                console.warn('Action non reconnue:', action);
+                break;
         }
     }
 
@@ -115,7 +132,7 @@ class AdminApp {
 
         try {
             this.showLoading();
-            const response = await fetch('ajax/loan-action.php', {
+            const response = await fetch('/deboutatoutprix/ajax/loan-actions.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -151,7 +168,7 @@ class AdminApp {
 
         try {
             this.showLoading();
-            const response = await fetch('ajax/loan-action.php', {
+            const response = await fetch('/deboutatoutprix/ajax/loan-actions.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -428,15 +445,22 @@ class AdminApp {
     }
 
     async submitFormAjax(form) {
-        const formData = new FormData(form);
-        const submitButton = form.querySelector('button[type="submit"]');
-        
+        // Étape 1: Trouver le bouton submit, même s'il est hors du formulaire, grâce à l'attribut [form]
+        const submitButton = document.querySelector(`button[type="submit"][form="${form.id}"]`);
+        let originalButtonContent = '';
+
         if (submitButton) {
+            originalButtonContent = submitButton.innerHTML; // Sauvegarde le contenu original (icône + texte)
             submitButton.disabled = true;
-            submitButton.textContent = 'Envoi...';
+            // Utilise une petite icône de chargement pour un meilleur retour visuel
+            submitButton.innerHTML = `<span class="spinner-sm"></span> Envoi en cours...`; 
         }
 
+        // Étape 2: Trouver la modale parente pour la fermer plus tard
+        const parentModal = form.closest('.modal');
+
         try {
+            const formData = new FormData(form);
             const response = await fetch(form.action, {
                 method: form.method,
                 body: formData
@@ -447,27 +471,38 @@ class AdminApp {
             if (data.success) {
                 this.showToast(data.message || 'Opération réussie', 'success');
                 
-                if (data.redirect) {
-                    setTimeout(() => {
-                        window.location.href = data.redirect;
-                    }, 1000);
-                } else if (data.reload) {
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1000);
-                } else {
-                    form.reset();
+                // Étape 3: Fermer la modale AVANT de rediriger ou recharger
+                if (parentModal) {
+                    this.closeModal(parentModal.id);
                 }
+                
+                if (data.redirect) {
+                    setTimeout(() => { window.location.href = data.redirect; }, 500);
+                } else if (data.reload) {
+                    // On attend un court instant pour que l'animation de fermeture se termine
+                    setTimeout(() => { window.location.reload(); }, 500); 
+                }
+                // Pas de "else" nécessaire, car si on ne recharge pas, la modale est déjà fermée.
+
             } else {
                 this.showToast(data.message || 'Erreur lors de l\'opération', 'error');
-                
                 if (data.errors) {
                     this.displayFormErrors(form, data.errors);
+                }
+                // Restaurer le bouton uniquement en cas d'échec
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = originalButtonContent;
                 }
             }
         } catch (error) {
             this.showToast('Erreur de connexion', 'error');
             console.error('Erreur:', error);
+            // Restaurer le bouton en cas d'erreur de connexion
+            if (submitButton) {
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalButtonContent;
+            }
         } finally {
             if (submitButton) {
                 submitButton.disabled = false;
@@ -604,21 +639,27 @@ class AdminApp {
     }
 
     initializeModals() {
-        document.addEventListener('click', (event) => {
-            if (event.target.dataset.modal) {
-                event.preventDefault();
-                this.openModal(event.target.dataset.modal);
-            }
-        });
+
     }
 
-    openModal(modalId) {
+    openModal(modalId, params = {}) {
         const modal = document.getElementById(modalId);
         if (modal) {
-            modal.classList.add('show');
+            // Pré-remplir le formulaire de la modale si des données sont passées
+            // MODIFICATION : Utiliser l'ID cible pour une sélection robuste
+            if (params.id && params.targetInput) { 
+                const loanIdInput = document.getElementById(params.targetInput); // On utilise l'ID exact
+                if (loanIdInput) {
+                    loanIdInput.value = params.id;
+                } else {
+                    console.error(`Input field with ID "${params.targetInput}" not found.`);
+                }
+            }
+            
+            modal.style.display = 'block'; // Assurez-vous que la modale s'affiche
             document.body.style.overflow = 'hidden';
 
-            const closeButtons = modal.querySelectorAll('[data-close]');
+            const closeButtons = modal.querySelectorAll('[data-close], .modal-close, [data-dismiss="modal"]');
             closeButtons.forEach(button => {
                 button.addEventListener('click', () => this.closeModal(modalId));
             });
@@ -631,11 +672,48 @@ class AdminApp {
         }
     }
 
+    // MODIFIEZ la méthode closeModal pour fonctionner avec style.display
     closeModal(modalId) {
         const modal = document.getElementById(modalId);
         if (modal) {
-            modal.classList.remove('show');
+            modal.style.display = 'none'; // Cache la modale
             document.body.style.overflow = '';
+        }
+    }
+
+    // AJOUTEZ CETTE NOUVELLE MÉTHODE
+    async updateLoanStatus(loanId, status) {
+        if (!confirm(`Confirmer le changement de statut vers "${status}" ?`)) {
+            return;
+        }
+
+        try {
+            this.showLoading();
+            const response = await fetch('/deboutatoutprix/ajax/loan-actions.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    action: 'update_status',
+                    loan_id: loanId,
+                    status: status
+                })
+            });
+
+            const data = await response.json();
+            
+            if (data.success) {
+                this.showToast('Statut mis à jour avec succès', 'success');
+                setTimeout(() => window.location.reload(), 1000);
+            } else {
+                this.showToast(data.message || 'Erreur lors de la mise à jour', 'error');
+            }
+        } catch (error) {
+            this.showToast('Erreur de connexion', 'error');
+            console.error('Erreur:', error);
+        } finally {
+            this.hideLoading();
         }
     }
 
@@ -690,7 +768,7 @@ class AdminApp {
 
     async loadNotifications() {
         try {
-            const response = await fetch('ajax/get-notifications.php');
+            const response = await fetch('/ajax/get-notifications.php');
             const data = await response.json();
             
             if (data.success) {

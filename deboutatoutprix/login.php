@@ -1,5 +1,5 @@
 <?php
-require_once '../classes/Admin.php';
+require_once 'classes/Admin.php';
 
 session_start();
 

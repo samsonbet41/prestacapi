@@ -100,7 +100,6 @@ $userStats = $user->getDashboardStats($currentUser['id']);
 </head>
 <body class="dashboard-page">
     <?php include 'includes/header.php'; ?>
-    <?php include 'includes/nav.php'; ?>
     
     <main class="dashboard-main">
         <div class="container">
@@ -177,12 +176,6 @@ $userStats = $user->getDashboardStats($currentUser['id']);
                                 onclick="switchTab('security')">
                             <i class="icon-shield"></i>
                             <span><?php echo $lang->get('security_title'); ?></span>
-                        </button>
-                        
-                        <button class="tab-button <?php echo $activeTab === 'activity' ? 'active' : ''; ?>" 
-                                onclick="switchTab('activity')">
-                            <i class="icon-activity"></i>
-                            <span>Activité</span>
                         </button>
                     </div>
                     
@@ -416,65 +409,6 @@ $userStats = $user->getDashboardStats($currentUser['id']);
                                     <button class="btn btn-outline" disabled>
                                         Configurer 2FA
                                     </button>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="tab-panel <?php echo $activeTab === 'activity' ? 'active' : ''; ?>" data-tab="activity">
-                            <div class="panel-header">
-                                <h3 class="panel-title">Activité du compte</h3>
-                                <p class="panel-subtitle">Résumé de votre activité sur PrestaCapi</p>
-                            </div>
-                            
-                            <div class="activity-stats">
-                                <div class="stat-card">
-                                    <div class="stat-icon">
-                                        <i class="icon-calendar"></i>
-                                    </div>
-                                    <div class="stat-info">
-                                        <h4>Membre depuis</h4>
-                                        <p><?php echo $lang->formatDate($currentUser['created_at']); ?></p>
-                                    </div>
-                                </div>
-                                
-                                <div class="stat-card">
-                                    <div class="stat-icon">
-                                        <i class="icon-money"></i>
-                                    </div>
-                                    <div class="stat-info">
-                                        <h4>Demandes de prêt</h4>
-                                        <p><?php echo $userStats['total_loans']; ?> au total</p>
-                                    </div>
-                                </div>
-                                
-                                <div class="stat-card">
-                                    <div class="stat-icon">
-                                        <i class="icon-check-circle"></i>
-                                    </div>
-                                    <div class="stat-info">
-                                        <h4>Prêts approuvés</h4>
-                                        <p><?php echo $userStats['approved_loans']; ?> approuvé(s)</p>
-                                    </div>
-                                </div>
-                                
-                                <div class="stat-card">
-                                    <div class="stat-icon">
-                                        <i class="icon-euro"></i>
-                                    </div>
-                                    <div class="stat-info">
-                                        <h4>Montant total</h4>
-                                        <p><?php echo $lang->formatCurrency($userStats['total_approved_amount']); ?></p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="activity-timeline">
-                                <h4>Activité récente</h4>
-                                <div class="timeline" id="activityTimeline">
-                                    <div class="loading-placeholder">
-                                        <div class="spinner"></div>
-                                        <span>Chargement de l'activité...</span>
-                                    </div>
                                 </div>
                             </div>
                         </div>

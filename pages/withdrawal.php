@@ -1,6 +1,7 @@
 <?php
 require_once 'includes/header.php';
 require_once 'includes/auth-check.php';
+require_once 'classes/Withdrawal.php'; 
 
 $seo->generateTitle($lang->get('withdrawal_page_title'));
 $seo->generateDescription($lang->get('withdrawal_page_description'));

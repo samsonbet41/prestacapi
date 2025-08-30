@@ -187,6 +187,10 @@ class Language {
             case 'profile':
                 $profileSlug = $this->getProfileSlug($language);
                 return $this->url($profileSlug, $language);
+
+            case 'documents':
+                $documentsSlug = $this->getSlug('documents', $language);
+                return $this->url($documentsSlug, $language);
                 
             case 'blog':
                 if (empty($slug)) {

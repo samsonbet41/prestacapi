@@ -32,13 +32,13 @@ try {
         exit;
     }
     
-    if (empty($_FILES['document_file'])) {
+    if (empty($_FILES['document'])) {
         echo json_encode(['success' => false, 'message' => 'Aucun fichier sélectionné']);
         exit;
     }
     
     $documentType = $_POST['document_type'];
-    $file = $_FILES['document_file'];
+    $file = $_FILES['document'];
     $loanRequestId = !empty($_POST['loan_request_id']) ? intval($_POST['loan_request_id']) : null;
     
     $validTypes = ['identity', 'birth_certificate', 'income_proof', 'bank_statement', 'employment_certificate', 'other'];

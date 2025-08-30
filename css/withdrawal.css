@@ -1,0 +1,319 @@
+/* === PAGE DE RETRAIT === */
+.withdrawal-page {
+    padding: var(--spacing-2xl) 0;
+    background-color: var(--secondary-color);
+}
+
+.withdrawal-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--spacing-2xl);
+    align-items: flex-start;
+}
+
+.withdrawal-main,
+.withdrawal-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+}
+
+/* === CARTE DE SOLDE === */
+.balance-card {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: white;
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    overflow: hidden;
+}
+
+.balance-header {
+    margin-bottom: var(--spacing-lg);
+    text-align: center;
+}
+
+.balance-header h2 {
+    font-size: var(--font-base);
+    font-weight: 500;
+    opacity: 0.8;
+    margin-bottom: var(--spacing-sm);
+    color: white;
+}
+
+.balance-amount {
+    font-size: var(--font-3xl);
+    font-weight: 700;
+}
+
+.balance-details {
+    display: flex;
+    justify-content: space-around;
+    gap: var(--spacing-lg);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.balance-item {
+    text-align: center;
+}
+
+.balance-item .label {
+    display: block;
+    font-size: var(--font-sm);
+    opacity: 0.8;
+    margin-bottom: var(--spacing-xs);
+}
+
+.balance-item .value {
+    font-size: var(--font-lg);
+    font-weight: 600;
+}
+
+/* === FORMULAIRE DE RETRAIT === */
+.withdrawal-form-section {
+    background: white;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+    padding: var(--spacing-xl);
+}
+
+.withdrawal-form-section .form-header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.withdrawal-form-section .form-header h2 {
+    font-size: var(--font-xl);
+    color: var(--primary-color);
+}
+
+.withdrawal-form .form-section {
+    padding-bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    border-bottom: 1px solid var(--border-color);
+}
+.withdrawal-form .form-section:last-of-type {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.form-section h3 {
+    font-size: var(--font-lg);
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-lg);
+}
+
+.amount-input-group {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-base);
+    overflow: hidden;
+}
+.amount-input-group input {
+    border: none;
+    flex-grow: 1;
+}
+.amount-input-group .currency {
+    padding: 0 var(--spacing-base);
+    background: var(--secondary-color);
+    font-weight: 500;
+}
+
+.amount-info {
+    font-size: var(--font-sm);
+    color: var(--text-color);
+    opacity: 0.7;
+    margin-top: var(--spacing-sm);
+}
+
+.quick-amounts {
+    margin-top: var(--spacing-base);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    align-items: center;
+}
+.quick-amounts span {
+    font-size: var(--font-sm);
+    font-weight: 500;
+}
+.quick-amount-btn {
+    background: var(--secondary-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-full);
+    padding: var(--spacing-xs) var(--spacing-md);
+    cursor: pointer;
+    transition: var(--transition);
+}
+.quick-amount-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+/* --- Résumé du retrait --- */
+.withdrawal-summary {
+    background: var(--secondary-color);
+    border-radius: var(--radius-base);
+    padding: var(--spacing-lg);
+}
+
+.summary-details .summary-item {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--spacing-sm) 0;
+}
+.summary-details .summary-item .label {
+    color: var(--text-color);
+    opacity: 0.8;
+}
+.summary-details .summary-item .value {
+    font-weight: 600;
+}
+.summary-details .summary-item.total {
+    border-top: 1px solid var(--border-color);
+    margin-top: var(--spacing-sm);
+    font-size: var(--font-lg);
+}
+.summary-details .summary-item.total .value {
+    color: var(--primary-color);
+}
+
+.processing-info {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-base);
+    font-size: var(--font-sm);
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+/* === SIDEBAR === */
+.info-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+}
+.info-card h3 {
+    font-size: var(--font-lg);
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-base);
+}
+.info-card .process-steps { /* Réutilisation du style de loan-request.css */
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    position: relative;
+}
+.info-card .process-steps::before {
+    content: '';
+    position: absolute;
+    left: 19px;
+    top: 10px;
+    bottom: 10px;
+    width: 2px;
+    background-color: var(--border-color);
+}
+.info-card .step-item { display: flex; align-items: flex-start; gap: var(--spacing-base); position: relative; }
+.info-card .step-number { width: 40px; height: 40px; background-color: var(--secondary-color); border: 1px solid var(--border-color); color: var(--primary-color); border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: var(--font-base); flex-shrink: 0; }
+.info-card .step-content h4 { font-size: var(--font-base); font-weight: 600; margin-bottom: var(--spacing-xs); }
+.info-card .step-content p { font-size: var(--font-sm); opacity: 0.7; margin: 0; }
+
+.info-list {
+    list-style: none;
+    padding-left: 0;
+    font-size: var(--font-sm);
+    opacity: 0.8;
+}
+.info-list li {
+    padding-left: var(--spacing-lg);
+    position: relative;
+    margin-bottom: var(--spacing-md);
+}
+.info-list li::before {
+    content: '•';
+    color: var(--primary-color);
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+.support-card p { font-size: var(--font-sm); opacity: 0.8; margin-bottom: var(--spacing-lg); }
+.support-contacts { display: flex; flex-direction: column; gap: var(--spacing-sm); }
+.support-contact { display: flex; align-items: center; gap: var(--spacing-md); text-decoration: none; padding: var(--spacing-sm); border-radius: var(--radius-base); transition: var(--transition); }
+.support-contact:hover { background: var(--secondary-color); }
+
+/* === HISTORIQUE DES RETRAITS === */
+.withdrawal-history {
+    margin-top: var(--spacing-2xl);
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+}
+.withdrawal-history h2 {
+    font-size: var(--font-xl);
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-lg);
+}
+.history-table-container {
+    overflow-x: auto;
+}
+.history-table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
+    font-size: var(--font-sm);
+}
+.history-table th, .history-table td {
+    padding: var(--spacing-base);
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+.history-table thead th {
+    background: var(--secondary-color);
+    font-weight: 600;
+}
+.history-table tbody tr:hover {
+    background: var(--secondary-color);
+}
+.history-table .amount {
+    font-weight: 600;
+}
+
+/* Styles pour les status dans les alertes et tableaux */
+.status-pending, .status-badge.status-pending { color: var(--warning-color); }
+.status-approved, .status-badge.status-approved { color: var(--success-color); }
+
+/* === RESPONSIVE === */
+@media (max-width: 992px) {
+    .withdrawal-content {
+        grid-template-columns: 1fr;
+    }
+}
+@media (max-width: 768px) {
+    .balance-details {
+        flex-direction: column;
+        align-items: center;
+        gap: var(--spacing-base);
+    }
+}
+@media (max-width: 480px) {
+    .withdrawal-form-section, .info-card, .withdrawal-history {
+        padding: var(--spacing-lg);
+    }
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    .quick-amounts {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}

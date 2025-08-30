@@ -1,0 +1,307 @@
+/* ==========================================================================
+   User List Page Styles (userlist.css)
+   ========================================================================== */
+
+/**
+ * Ce fichier contient les styles spécifiques à la page de gestion des utilisateurs (list.php).
+ * Il hérite des variables et des styles de base définis dans admin.css pour une cohérence globale.
+ */
+
+/* -- Filters Bar -- */
+/* Utilise le style de .filters-bar défini dans dashboard.css */
+.filters-bar {
+  background: white;
+  border: 1px solid #E5E7EB; /* --border-color-light from root */
+  border-radius: var(--border-radius-lg);
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.filter-form {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent-2);
+  white-space: nowrap;
+}
+
+.filter-select,
+.filter-date {
+  min-width: 140px;
+  padding: 8px 12px;
+  border: 1px solid #E5E7EB;
+  border-radius: var(--border-radius);
+  font-size: 13px;
+  background: white;
+  transition: var(--transition);
+}
+
+.filter-select:focus,
+.filter-date:focus {
+  outline: none;
+  border-color: var(--accent-1);
+  box-shadow: 0 0 0 3px rgba(0, 184, 217, 0.1);
+}
+
+.filter-search {
+  flex: 1;
+  min-width: 250px;
+  padding: 8px 12px;
+  border: 1px solid #E5E7EB;
+  border-radius: var(--border-radius);
+  font-size: 13px;
+  transition: var(--transition);
+}
+
+.filter-search:focus {
+  outline: none;
+  border-color: var(--accent-1);
+  box-shadow: 0 0 0 3px rgba(0, 184, 217, 0.1);
+}
+
+
+/* -- Bulk Actions Bar -- */
+/* Inspiré du style de .bulk-actions dans dashboard.css */
+.bulk-actions {
+  background: #E3F2FD; /* A light blue to stand out */
+  border: 1px solid var(--info-color);
+  border-radius: var(--border-radius);
+  padding: 12px 16px;
+  margin-bottom: 24px;
+  display: none; /* Initially hidden */
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.bulk-actions.show {
+  display: flex;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.bulk-actions-text {
+  font-size: 14px;
+  color: var(--primary-color);
+  font-weight: 500;
+}
+
+.bulk-actions-text .selected-count {
+  font-weight: 700;
+}
+
+.bulk-actions-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+
+/* -- User Data Table -- */
+/* Utilise le style de .data-table défini dans admin.css */
+.data-table th,
+.data-table td {
+  vertical-align: middle;
+}
+
+/* User avatar and info in table */
+.user-info-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-1));
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+.user-details .user-name {
+  font-weight: 500;
+  color: var(--accent-2);
+  margin-bottom: 2px;
+}
+
+.user-details .user-id {
+  font-size: 12px;
+  color: #6B7280;
+}
+
+/* Contact info in table */
+.contact-details .email {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.contact-details .phone {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #6B7280;
+}
+
+/* Table Row Priority Styling */
+.priority-high { position: relative; }
+.priority-high::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background-color: var(--error-color);
+}
+
+.priority-medium { position: relative; }
+.priority-medium::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background-color: var(--warning-color);
+}
+
+
+/* -- Table Actions -- */
+.table-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 16px;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.action-btn.view { background: rgba(0, 184, 217, 0.1); color: var(--accent-1); }
+.action-btn.edit { background: rgba(255, 152, 0, 0.1); color: var(--warning-color); }
+.action-btn.suspend { background: rgba(229, 57, 53, 0.1); color: var(--error-color); }
+.action-btn.activate { background: rgba(76, 175, 80, 0.1); color: var(--success-color); }
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+
+/* -- Pagination -- */
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.pagination-info {
+  font-size: 13px;
+  color: #6B7280;
+}
+
+.pagination-controls {
+  display: flex;
+  gap: 6px;
+}
+
+
+/* -- Sorting Dropdown in Card Header -- */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sort-label {
+  font-size: 13px;
+  color: #6B7280;
+  font-weight: 500;
+}
+
+.sort-select {
+  padding: 6px 10px;
+  border-radius: var(--border-radius);
+  border: 1px solid #E5E7EB;
+  font-size: 13px;
+}
+
+
+/* -- Responsive Adjustments -- */
+@media (max-width: 992px) {
+  .filter-search {
+    min-width: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .filter-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-group {
+    justify-content: space-between;
+  }
+  
+  .filter-search {
+    min-width: 100%;
+  }
+
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .card-footer {
+    flex-direction: column;
+    align-items: center;
+  }
+}

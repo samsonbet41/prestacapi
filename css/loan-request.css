@@ -1,0 +1,496 @@
+/* === PAGE DEMANDE DE PRÊT === */
+.loan-request-page {
+  background-color: var(--secondary-color);
+  min-height: 100vh;
+}
+
+.loan-request-main {
+  padding: var(--spacing-2xl) 0;
+}
+
+/* === EN-TÊTE DE PAGE === */
+.loan-request-header {
+  text-align: center;
+  margin-bottom: var(--spacing-2xl);
+}
+
+.page-breadcrumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-base);
+  font-size: var(--font-sm);
+}
+
+.page-breadcrumb a {
+  color: var(--accent-color);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.page-breadcrumb a:hover {
+  text-decoration: underline;
+  color: var(--primary-color);
+}
+
+.breadcrumb-separator {
+  color: var(--text-color);
+  opacity: 0.5;
+}
+
+.breadcrumb-current {
+  color: var(--primary-color);
+  font-weight: 500;
+}
+
+.page-title {
+  font-size: var(--font-3xl);
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: var(--spacing-sm);
+}
+
+.page-subtitle {
+  font-size: var(--font-lg);
+  color: var(--text-color);
+  opacity: 0.7;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* === BARRE DE PROGRESSION DU FORMULAIRE === */
+.loan-form-progress {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  max-width: 800px;
+  margin: var(--spacing-xl) auto 0;
+  position: relative;
+}
+
+.loan-form-progress::before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background-color: var(--border-color);
+  z-index: 1;
+}
+
+.loan-form-progress__step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex: 1;
+  position: relative;
+  z-index: 2;
+}
+
+.loan-form-progress__step-number {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background-color: white;
+  border: 2px solid var(--border-color);
+  color: var(--text-color);
+  opacity: 0.7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.loan-form-progress__step-label {
+  font-size: var(--font-sm);
+  font-weight: 500;
+  color: var(--text-color);
+  opacity: 0.7;
+  transition: var(--transition);
+}
+
+.loan-form-progress__step.active .loan-form-progress__step-number {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: white;
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.loan-form-progress__step.active .loan-form-progress__step-label {
+  color: var(--primary-color);
+  opacity: 1;
+}
+
+.loan-form-progress__step.completed .loan-form-progress__step-number {
+  background-color: var(--success-color);
+  border-color: var(--success-color);
+  color: white;
+  opacity: 1;
+}
+
+.loan-form-progress__step.completed .loan-form-progress__step-number::before {
+  content: '✓';
+  font-weight: bold;
+}
+
+.loan-form-progress__step.completed .loan-form-progress__step-label {
+  opacity: 0.8;
+}
+
+
+/* === CONTENU PRINCIPAL (GRILLE) === */
+.loan-request-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--spacing-2xl);
+  align-items: flex-start;
+}
+
+.loan-form-container {
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+}
+
+.form-step {
+  display: none;
+  padding: var(--spacing-xl);
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.form-step.active {
+  display: block;
+}
+
+.step-header {
+  margin-bottom: var(--spacing-xl);
+}
+
+.step-title {
+  font-size: var(--font-xl);
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: var(--spacing-xs);
+}
+
+.step-description {
+  color: var(--text-color);
+  opacity: 0.7;
+}
+
+/* === COMPOSANTS SPÉCIFIQUES DU FORMULAIRE === */
+.loan-simulation, .financial-analysis {
+  background: var(--secondary-color);
+  border-radius: var(--radius-base);
+  padding: var(--spacing-lg);
+  margin-top: var(--spacing-base);
+  border: 1px solid var(--border-color);
+}
+
+.simulation-header, .analysis-header {
+  margin-bottom: var(--spacing-base);
+}
+
+.simulation-header h3, .analysis-header h3 {
+  font-size: var(--font-base);
+  font-weight: 600;
+  color: var(--primary-color);
+  margin: 0;
+}
+
+.simulation-content, .analysis-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.simulation-item, .analysis-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.simulation-label, .analysis-label {
+  font-size: var(--font-xs);
+  color: var(--text-color);
+  opacity: 0.7;
+  margin-bottom: var(--spacing-xs);
+  text-transform: uppercase;
+}
+
+.simulation-value, .analysis-value {
+  font-size: var(--font-lg);
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.analysis-indicator {
+  grid-column: 1 / -1;
+  margin-top: var(--spacing-base);
+}
+.indicator-bar {
+  height: 8px;
+  background: var(--border-color);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-bottom: var(--spacing-xs);
+}
+.indicator-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--primary-color);
+  border-radius: var(--radius-full);
+  transition: width 0.5s ease, background-color 0.5s ease;
+}
+.indicator-text {
+  font-size: var(--font-xs);
+  font-weight: 500;
+  color: var(--text-color);
+  opacity: 0.8;
+}
+
+/* === ÉTAPE 4 : VALIDATION === */
+.validation-summary .summary-section {
+  margin-bottom: var(--spacing-xl);
+  padding-bottom: var(--spacing-lg);
+  border-bottom: 1px solid var(--border-color);
+}
+.validation-summary .summary-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.summary-section h3 {
+  font-size: var(--font-lg);
+  color: var(--primary-color);
+  margin-bottom: var(--spacing-lg);
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-lg);
+}
+
+.summary-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-base);
+  background: var(--secondary-color);
+  border-radius: var(--radius-base);
+}
+
+.summary-label {
+  font-size: var(--font-sm);
+  color: var(--text-color);
+  opacity: 0.7;
+}
+
+.summary-value {
+  font-size: var(--font-base);
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.doc-progress { margin-bottom: var(--spacing-base); }
+.doc-progress-bar { height: 8px; background: var(--border-color); border-radius: var(--radius-full); overflow: hidden; margin-bottom: var(--spacing-xs); }
+.doc-progress-fill { height: 100%; background: var(--success-color); border-radius: var(--radius-full); }
+.doc-progress-text { font-size: var(--font-sm); font-weight: 500; }
+
+.missing-docs { background: rgba(255,152,0,0.1); border: 1px solid rgba(255,152,0,0.2); border-radius: var(--radius-base); padding: var(--spacing-base); }
+.missing-docs h4 { font-size: var(--font-sm); color: var(--warning-color); margin-bottom: var(--spacing-sm); }
+.missing-docs ul { list-style-position: inside; padding-left: 0; margin-bottom: var(--spacing-base); font-size: var(--font-sm); }
+.doc-note { font-size: var(--font-sm); opacity: 0.8; }
+.docs-complete { background: rgba(76,175,80,0.1); border-radius: var(--radius-base); padding: var(--spacing-base); font-weight: 500; color: var(--success-color); }
+
+.consent-section { margin-top: var(--spacing-xl); }
+
+/* === SIDEBAR === */
+.loan-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.help-card, .process-card, .contact-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+  padding: var(--spacing-xl);
+}
+
+.loan-sidebar h3 {
+  font-size: var(--font-lg);
+  color: var(--primary-color);
+  margin-top: 0;
+  margin-bottom: var(--spacing-base);
+}
+
+.help-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: var(--font-sm);
+  color: var(--text-color);
+  opacity: 0.8;
+}
+
+.help-card li {
+  padding-left: var(--spacing-lg);
+  position: relative;
+  margin-bottom: var(--spacing-md);
+}
+
+.help-card li::before {
+  content: '💡';
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.sidebar-process {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  position: relative;
+}
+.sidebar-process::before {
+  content: '';
+  position: absolute;
+  left: 19px;
+  top: 10px;
+  bottom: 10px;
+  width: 2px;
+  background-color: var(--border-color);
+}
+
+.sidebar-process__item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-base);
+  position: relative;
+}
+.sidebar-process__item-number {
+  width: 40px;
+  height: 40px;
+  background-color: var(--secondary-color);
+  border: 1px solid var(--border-color);
+  color: var(--primary-color);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: var(--font-base);
+  flex-shrink: 0;
+}
+.sidebar-process__item-content strong {
+  display: block;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: var(--spacing-xs);
+}
+.sidebar-process__item-content small {
+  font-size: var(--font-sm);
+  color: var(--text-color);
+  opacity: 0.7;
+}
+
+.contact-card p {
+  font-size: var(--font-sm);
+  color: var(--text-color);
+  opacity: 0.8;
+  margin-bottom: var(--spacing-lg);
+}
+.contact-options { display: flex; flex-direction: column; gap: var(--spacing-base); }
+.contact-option {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  text-decoration: none;
+  color: var(--text-color);
+  background-color: var(--secondary-color);
+  padding: var(--spacing-sm) var(--spacing-base);
+  border-radius: var(--radius-base);
+  transition: var(--transition);
+}
+.contact-option:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+.contact-icon { font-size: var(--font-lg); }
+
+/* === RESPONSIVE === */
+@media (max-width: 1024px) {
+  .loan-request-content {
+    grid-template-columns: 1fr;
+  }
+  .loan-sidebar {
+    margin-top: var(--spacing-2xl);
+  }
+}
+
+@media (max-width: 768px) {
+  .loan-request-main {
+    padding: var(--spacing-xl) 0;
+  }
+  .page-title {
+    font-size: var(--font-2xl);
+  }
+  .page-subtitle {
+    font-size: var(--font-base);
+  }
+
+  .loan-form-progress {
+    gap: 0;
+  }
+  .loan-form-progress__step-label {
+    display: none;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-step {
+    padding: var(--spacing-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  .loan-form-container {
+    border-radius: 0;
+    box-shadow: none;
+    border-left: none;
+    border-right: none;
+  }
+
+  .form-step {
+    padding: var(--spacing-base);
+  }
+  
+  .step-title {
+    font-size: var(--font-lg);
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+  .form-actions .btn {
+    width: 100%;
+  }
+}

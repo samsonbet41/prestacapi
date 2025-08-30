@@ -228,8 +228,7 @@ prestacapi.com/
 │   ├── SEO.php (déjà)
 │   ├── Blog.php (déjà)
 │   ├── Partner.php (déjà)
-│   ├── Testimonial.php (déjà)
-│   └── Admin.php (déjà)
+│   └── Testimonial.php (déjà)
 │
 ├── css/
 │   ├── style.css (déjà)
@@ -300,6 +299,8 @@ prestacapi.com/
 │   ├── index.php (déjà)
 │   ├── login.php (déjà)
 │   ├── dashboard.php (déjà)
+│   ├── classes/
+│   │   └── Admin.php (déjà)
 │   ├── users/
 │   │   ├── list.php (déjà)
 │   │   ├── view.php (déjà)

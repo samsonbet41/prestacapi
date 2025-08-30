@@ -252,16 +252,16 @@ $pageDescription = $lang->get('hero_subtitle');
         </section>
         
       
-        <section class="process-section">
+        <section class="home-process-section">
             <div class="container">
                 <div class="section-header text-center">
                     <h2 class="section-title">Comment ça marche ?</h2>
                     <p class="section-subtitle">Un processus simple en 4 étapes</p>
                 </div>
                 
-                <div class="process-steps">
-                    <div class="process-step animate-on-scroll">
-                        <div class="step-number">1</div>
+                <div class="home-process__steps">
+                    <div class="home-process__step animate-on-scroll">
+                        <div class="home-process__step-number">1</div>
                         <div class="step-content">
                             <h3 class="step-title">Créez votre compte</h3>
                             <p class="step-description">Inscription gratuite en 2 minutes. Renseignez vos informations de base.</p>
@@ -273,8 +273,8 @@ $pageDescription = $lang->get('hero_subtitle');
                     
                     <div class="process-arrow animate-on-scroll delay-1">→</div>
                     
-                    <div class="process-step animate-on-scroll delay-1">
-                        <div class="step-number">2</div>
+                    <div class="home-process__step animate-on-scroll delay-1">
+                        <div class="home-process__step-number">2</div>
                         <div class="step-content">
                             <h3 class="step-title">Faites votre demande</h3>
                             <p class="step-description">Formulaire intelligent qui s'adapte à votre profil. Uploadez vos documents.</p>
@@ -286,8 +286,8 @@ $pageDescription = $lang->get('hero_subtitle');
                     
                     <div class="process-arrow animate-on-scroll delay-2">→</div>
                     
-                    <div class="process-step animate-on-scroll delay-2">
-                        <div class="step-number">3</div>
+                    <div class="home-process__step animate-on-scroll delay-2">
+                        <div class="home-process__step-number">3</div>
                         <div class="step-content">
                             <h3 class="step-title">Recevez votre réponse</h3>
                             <p class="step-description">Analyse automatique + négociation avec nos partenaires. Réponse sous 24-48h.</p>
@@ -299,8 +299,8 @@ $pageDescription = $lang->get('hero_subtitle');
                     
                     <div class="process-arrow animate-on-scroll delay-3">→</div>
                     
-                    <div class="process-step animate-on-scroll delay-3">
-                        <div class="step-number">4</div>
+                    <div class="home-process__step animate-on-scroll delay-3">
+                        <div class="home-process__step-number">4</div>
                         <div class="step-content">
                             <h3 class="step-title">Recevez vos fonds</h3>
                             <p class="step-description">Demande de virement depuis votre espace. Réception sous 24-48h.</p>

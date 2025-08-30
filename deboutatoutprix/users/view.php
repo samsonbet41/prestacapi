@@ -1,5 +1,9 @@
 <?php
 require_once '../includes/auth-admin.php';
+require_once '../../classes/User.php'; 
+require_once '../../classes/LoanRequest.php'; 
+require_once '../../classes/Withdrawal.php'; 
+require_once '../../classes/Document.php'; 
 requirePermission('manage_users');
 
 $pageTitle = 'Détail utilisateur';

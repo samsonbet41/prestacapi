@@ -25,11 +25,16 @@ $currentPageKey = isset($currentPage) ? $currentPage : 'home';
     <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="/css/forms.css">
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/profile.css">
     <link rel="stylesheet" href="/css/auth.css">
     <link rel="stylesheet" href="/css/documents.css">
     <link rel="stylesheet" href="/css/footer.css">
     <link rel="stylesheet" href="/css/responsive.css">
     <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/loan-request.css">
+    <link rel="stylesheet" href="/css/withdrawal.css">
+    <link rel="stylesheet" href="/css/blog.css">
+    <link rel="stylesheet" href="/css/about.css">
 </head>
 
 <header class="site-header" id="siteHeader">
@@ -75,18 +80,6 @@ $currentPageKey = isset($currentPage) ? $currentPage : 'home';
                 <li class="nav-item">
                     <a href="<?php echo generateLocalizedUrl('blog'); ?>" class="nav-link <?php echo $currentPageKey === 'blog' ? 'active' : ''; ?>">
                         <?php echo $lang->get('blog'); ?>
-                    </a>
-                </li>
-                
-                <li class="nav-item">
-                    <a href="<?php echo generateLocalizedUrl('testimonials'); ?>" class="nav-link <?php echo $currentPageKey === 'testimonials' ? 'active' : ''; ?>">
-                        <?php echo $lang->get('testimonials'); ?>
-                    </a>
-                </li>
-                
-                <li class="nav-item">
-                    <a href="<?php echo generateLocalizedUrl('contact'); ?>" class="nav-link <?php echo $currentPageKey === 'contact' ? 'active' : ''; ?>">
-                        <?php echo $lang->get('contact'); ?>
                     </a>
                 </li>
             </ul>
@@ -149,28 +142,6 @@ $currentPageKey = isset($currentPage) ? $currentPage : 'home';
                     </div>
                 </div>
                 
-                <div class="notifications-wrapper">
-                    <button class="notifications-toggle" onclick="toggleNotifications()" aria-label="Notifications">
-                        <span class="notification-icon">🔔</span>
-                        <span class="notification-badge" id="notificationBadge">3</span>
-                    </button>
-                    
-                    <div class="notifications-dropdown" id="notificationsDropdown">
-                        <div class="notifications-header">
-                            <h3>Notifications</h3>
-                            <button class="mark-all-read" onclick="markAllNotificationsRead()">Tout marquer lu</button>
-                        </div>
-                        
-                        <div class="notifications-list" id="notificationsList">
-                            <div class="loading">Chargement...</div>
-                        </div>
-                        
-                        <div class="notifications-footer">
-                            <a href="<?php echo generateLocalizedUrl('dashboard'); ?>#notifications">Voir toutes</a>
-                        </div>
-                    </div>
-                </div>
-                
             <?php else: ?>
                 <div class="auth-actions">
                     <a href="<?php echo generateLocalizedUrl('login'); ?>" class="btn-login">
@@ -190,34 +161,6 @@ $currentPageKey = isset($currentPage) ? $currentPage : 'home';
         </div>
     </div>
     
-    <?php if ($isLoggedIn): ?>
-        <div class="header-quick-stats">
-            <div class="header-container">
-                <div class="quick-stats">
-                    <div class="stat-item">
-                        <span class="stat-label">Solde</span>
-                        <span class="stat-value"><?php echo $lang->formatCurrency($currentUser['balance']); ?></span>
-                    </div>
-                    
-                    <div class="stat-item">
-                        <span class="stat-label">Demandes</span>
-                        <span class="stat-value" id="totalLoans">-</span>
-                    </div>
-                    
-                    <div class="stat-item">
-                        <span class="stat-label">En attente</span>
-                        <span class="stat-value pending" id="pendingLoans">-</span>
-                    </div>
-                    
-                    <div class="quick-action">
-                        <a href="<?php echo generateLocalizedUrl('loan_request'); ?>" class="btn btn-primary btn-sm">
-                            Nouvelle demande
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    <?php endif; ?>
     <div class="lang-selector-bar"> <div class="language-selector-wrapper">
             <button class="language-toggle" onclick="toggleLanguageSelector()" aria-label="Changer de langue">
                 <img src="/images/flags/<?php echo $lang->getCountryCode(); ?>.svg" 
@@ -278,17 +221,6 @@ function toggleUserMenu() {
     }
 }
 
-function toggleNotifications() {
-    const dropdown = document.getElementById('notificationsDropdown');
-    const isShown = dropdown.classList.contains('show');
-    
-    closeAllDropdowns();
-    
-    if (!isShown) {
-        dropdown.classList.add('show');
-        loadNotifications();
-    }
-}
 
 function toggleMobileMenu() {
     const nav = document.getElementById('mainNav');
@@ -314,54 +246,14 @@ function closeMobileMenu() {
 }
 
 function closeAllDropdowns() {
-    const dropdowns = document.querySelectorAll('.language-dropdown, .user-dropdown, .notifications-dropdown');
+    const dropdowns = document.querySelectorAll('.language-dropdown, .user-dropdown');
     dropdowns.forEach(dropdown => {
         dropdown.classList.remove('show');
     });
 }
 
-function loadNotifications() {
-    const notificationsList = document.getElementById('notificationsList');
-    
-    fetch('/ajax/get-notifications.php')
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                notificationsList.innerHTML = data.html;
-                updateNotificationBadge(data.unread_count);
-            } else {
-                notificationsList.innerHTML = '<div class="empty-state">Aucune notification</div>';
-            }
-        })
-        .catch(error => {
-            notificationsList.innerHTML = '<div class="error">Erreur de chargement</div>';
-        });
-}
-
-function updateNotificationBadge(count) {
-    const badge = document.getElementById('notificationBadge');
-    if (count > 0) {
-        badge.textContent = count;
-        badge.style.display = 'flex';
-    } else {
-        badge.style.display = 'none';
-    }
-}
-
-function markAllNotificationsRead() {
-    fetch('/ajax/mark-all-notifications-read.php', {
-        method: 'POST'
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            loadNotifications();
-        }
-    });
-}
-
 document.addEventListener('click', function(event) {
-    if (!event.target.closest('.language-selector-wrapper, .user-menu-wrapper, .notifications-wrapper')) {
+    if (!event.target.closest('.language-selector-wrapper, .user-menu-wrapper')) { 
         closeAllDropdowns();
     }
 });

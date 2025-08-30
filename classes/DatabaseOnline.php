@@ -6,9 +6,9 @@ class Database {
     private $conn;
 
     private $host = 'localhost';
-    private $user = 'root';
-    private $pass = '';
-    private $dbname = 'prestacapi';
+    private $user = 'u312336657_prestacapi';
+    private $pass = 'TestPrestaCapi2025!..0';
+    private $dbname = 'u312336657_pc';
 
     private function __construct() {
         try {

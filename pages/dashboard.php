@@ -156,7 +156,7 @@ $pageTitle = $lang->get('dashboard_title');
                                 </div>
                             <?php endif; ?>
                             
-                            <a href="<?php echo $lang->pageUrl('profile'); ?>" class="action-card">
+                            <a href="<?php echo $lang->pageUrl('documents'); ?>" class="action-card">
                                 <div class="action-icon">📄</div>
                                 <div class="action-content">
                                     <h3 class="action-title"><?php echo $lang->get('dashboard_view_documents'); ?></h3>
@@ -485,5 +485,6 @@ $pageTitle = $lang->get('dashboard_title');
             });
         });
     </script>
+    <?php require_once 'includes/footer.php'; ?>
 </body>
 </html>

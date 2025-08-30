@@ -1,8 +1,8 @@
 <?php
-require_once '../includes/auth-check.php';
-require_once '../classes/Language.php';
-require_once '../classes/SEO.php';
-require_once '../classes/Document.php';
+require_once 'includes/auth-check.php';
+require_once 'classes/Language.php';
+require_once 'classes/SEO.php';
+require_once 'classes/Document.php';
 
 $lang = Language::getInstance();
 $seo = new SEO();
@@ -114,8 +114,7 @@ function formatFileSize($bytes) {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="dashboard-page">
-    <?php include '../includes/header.php'; ?>
-    <?php include '../includes/nav.php'; ?>
+    <?php include 'includes/header.php'; ?>
     
     <main class="dashboard-main">
         <div class="container">
@@ -384,7 +383,7 @@ function formatFileSize($bytes) {
         </div>
     </div>
     
-    <?php include '../includes/footer.php'; ?>
+    <?php include 'includes/footer.php'; ?>
     
     <script src="/js/modules/file-upload.js"></script>
     <script src="/js/modules/dashboard.js"></script>
@@ -415,6 +414,31 @@ function formatFileSize($bytes) {
         
         function removeSelectedFile() {
             resetUploadForm();
+        }
+
+        // AJOUTEZ CETTE FONCTION ICI
+        function showNotification(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            if (!toast) return; // Sécurité si l'élément n'existe pas
+
+            const iconEl = document.getElementById('toastIcon');
+            const messageEl = document.getElementById('toastMessage');
+            
+            const icons = {
+                success: '✅',
+                error: '❌',
+                warning: '⚠️',
+                info: 'ℹ️'
+            };
+            
+            if(iconEl) iconEl.textContent = icons[type] || icons.info;
+            if(messageEl) messageEl.textContent = message;
+            
+            toast.className = `toast show ${type}`;
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
         }
         
         function uploadDocument() {
@@ -590,5 +614,6 @@ function formatFileSize($bytes) {
             circle.style.strokeDashoffset = circumference * (1 - percentage / 100);
         }
     </script>
+    <?php require_once 'includes/footer.php'; ?>
 </body>
 </html>

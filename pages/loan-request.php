@@ -71,29 +71,29 @@ $pageTitle = $lang->get('loan_request_title');
                     <h1 class="page-title"><?php echo $lang->get('loan_request_title'); ?></h1>
                     <p class="page-subtitle">Remplissez ce formulaire pour soumettre votre demande de financement</p>
                     
-                    <div class="loan-progress">
-                        <div class="progress-step active" data-step="1">
-                            <div class="step-number">1</div>
-                            <div class="step-label">Projet</div>
+                    <div class="loan-form-progress">
+                        <div class="loan-form-progress__step active" data-step="1">
+                            <div class="loan-form-progress__step-number">1</div>
+                            <div class="loan-form-progress__step-label">Projet</div>
                         </div>
-                        <div class="progress-step" data-step="2">
-                            <div class="step-number">2</div>
-                            <div class="step-label">Finances</div>
+                        <div class="loan-form-progress__step" data-step="2">
+                            <div class="loan-form-progress__step-number">2</div>
+                            <div class="loan-form-progress__step-label">Finances</div>
                         </div>
-                        <div class="progress-step" data-step="3">
-                            <div class="step-number">3</div>
-                            <div class="step-label">Professionnel</div>
+                        <div class="loan-form-progress__step" data-step="3">
+                            <div class="loan-form-progress__step-number">3</div>
+                            <div class="loan-form-progress__step-label">Professionnel</div>
                         </div>
-                        <div class="progress-step" data-step="4">
-                            <div class="step-number">4</div>
-                            <div class="step-label">Validation</div>
+                        <div class="loan-form-progress__step" data-step="4">
+                            <div class="loan-form-progress__step-number">4</div>
+                            <div class="loan-form-progress__step-label">Validation</div>
                         </div>
                     </div>
                 </div>
                 
                 <div class="loan-request-content">
                     <div class="loan-form-container">
-                        <form id="loanRequestForm" class="loan-form" onsubmit="handleLoanSubmit(event)">
+                        <form id="loanRequestForm" class="loan-form" onsubmit="handleLoanSubmit(event)" novalidate>
                             
                             <div class="form-step active" data-step="1">
                                 <div class="step-header">
@@ -492,31 +492,31 @@ $pageTitle = $lang->get('loan_request_title');
                         
                         <div class="process-card">
                             <h3>⏱️ Processus de traitement</h3>
-                            <div class="process-steps">
-                                <div class="process-step-item">
-                                    <span class="step-number">1</span>
-                                    <div class="step-content">
+                            <div class="sidebar-process">
+                                <div class="sidebar-process__item">
+                                    <span class="sidebar-process__item-number">1</span>
+                                    <div class="sidebar-process__item-content">
                                         <strong>Soumission</strong>
                                         <small>Votre demande nous parvient instantanément</small>
                                     </div>
                                 </div>
-                                <div class="process-step-item">
-                                    <span class="step-number">2</span>
-                                    <div class="step-content">
+                                <div class="sidebar-process__item">
+                                    <span class="sidebar-process__item-number">2</span>
+                                    <div class="sidebar-process__item-content">
                                         <strong>Analyse</strong>
                                         <small>Étude de votre dossier sous 24h</small>
                                     </div>
                                 </div>
-                                <div class="process-step-item">
-                                    <span class="step-number">3</span>
-                                    <div class="step-content">
+                                <div class="sidebar-process__item">
+                                    <span class="sidebar-process__item-number">3</span>
+                                    <div class="sidebar-process__item-content">
                                         <strong>Partenaires</strong>
                                         <small>Transmission aux institutions financières</small>
                                     </div>
                                 </div>
-                                <div class="process-step-item">
-                                    <span class="step-number">4</span>
-                                    <div class="step-content">
+                                <div class="sidebar-process__item">
+                                    <span class="sidebar-process__item-number">4</span>
+                                    <div class="sidebar-process__item-content">
                                         <strong>Réponse</strong>
                                         <small>Notification sous 48-72h maximum</small>
                                     </div>
@@ -575,7 +575,7 @@ $pageTitle = $lang->get('loan_request_title');
                 step.classList.toggle('active', index + 1 === currentStep);
             });
             
-            document.querySelectorAll('.progress-step').forEach((step, index) => {
+            document.querySelectorAll('.loan-form-progress__step').forEach((step, index) => {
                 step.classList.toggle('active', index + 1 <= currentStep);
                 step.classList.toggle('completed', index + 1 < currentStep);
             });
@@ -735,8 +735,38 @@ $pageTitle = $lang->get('loan_request_title');
             });
         }
         
-        function showToast(message, type) {
-            console.log(`${type.toUpperCase()}: ${message}`);
+        function showToast(message, type = 'success') {
+            // Nous nous assurons que l'élément HTML pour la notification existe
+            let toast = document.getElementById('toast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'toast';
+                toast.innerHTML = `
+                    <div class="toast-content">
+                        <div class="toast-icon" id="toastIcon"></div>
+                        <div class="toast-message" id="toastMessage"></div>
+                    </div>`;
+                document.body.appendChild(toast);
+            }
+
+            const iconEl = document.getElementById('toastIcon');
+            const messageEl = document.getElementById('toastMessage');
+
+            const icons = {
+                success: '✅',
+                error: '❌',
+                warning: '⚠️',
+                info: 'ℹ️'
+            };
+
+            if(iconEl) iconEl.textContent = icons[type] || icons.info;
+            if(messageEl) messageEl.textContent = message;
+
+            toast.className = `toast show ${type}`;
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
         }
         
         document.addEventListener('DOMContentLoaded', function() {
@@ -757,5 +787,6 @@ $pageTitle = $lang->get('loan_request_title');
             updateStepDisplay();
         });
     </script>
+    <?php require_once 'includes/footer.php'; ?>
 </body>
 </html>

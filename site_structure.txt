@@ -1,43 +1,251 @@
 Structure du site : C:\xampp\htdocs
 └──
+├── .git/
+  ├── hooks/
+  ├── info/
+  ├── logs/
+    ├── refs/
+      ├── heads/
+      ├── remotes/
+        ├── origin/
+  ├── objects/
+    ├── 00/
+    ├── 03/
+    ├── 05/
+    ├── 09/
+    ├── 0a/
+    ├── 0d/
+    ├── 0e/
+    ├── 11/
+    ├── 12/
+    ├── 13/
+    ├── 14/
+    ├── 17/
+    ├── 19/
+    ├── 1b/
+    ├── 1c/
+    ├── 1d/
+    ├── 20/
+    ├── 21/
+    ├── 24/
+    ├── 27/
+    ├── 28/
+    ├── 2b/
+    ├── 2c/
+    ├── 2f/
+    ├── 30/
+    ├── 32/
+    ├── 33/
+    ├── 36/
+    ├── 39/
+    ├── 3a/
+    ├── 3b/
+    ├── 3e/
+    ├── 40/
+    ├── 41/
+    ├── 42/
+    ├── 43/
+    ├── 45/
+    ├── 46/
+    ├── 49/
+    ├── 4b/
+    ├── 4c/
+    ├── 4f/
+    ├── 50/
+    ├── 51/
+    ├── 53/
+    ├── 57/
+    ├── 5a/
+    ├── 5b/
+    ├── 5c/
+    ├── 64/
+    ├── 67/
+    ├── 68/
+    ├── 69/
+    ├── 6d/
+    ├── 6e/
+    ├── 6f/
+    ├── 70/
+    ├── 73/
+    ├── 75/
+    ├── 78/
+    ├── 7c/
+    ├── 7d/
+    ├── 7f/
+    ├── 80/
+    ├── 81/
+    ├── 84/
+    ├── 85/
+    ├── 86/
+    ├── 87/
+    ├── 88/
+    ├── 8d/
+    ├── 8e/
+    ├── 90/
+    ├── 91/
+    ├── 93/
+    ├── 98/
+    ├── 99/
+    ├── 9a/
+    ├── 9b/
+    ├── 9d/
+    ├── 9f/
+    ├── a0/
+    ├── a1/
+    ├── a4/
+    ├── a5/
+    ├── a8/
+    ├── a9/
+    ├── ab/
+    ├── ac/
+    ├── ad/
+    ├── ae/
+    ├── af/
+    ├── b0/
+    ├── b1/
+    ├── b2/
+    ├── b4/
+    ├── b6/
+    ├── be/
+    ├── bf/
+    ├── c1/
+    ├── c2/
+    ├── c3/
+    ├── c4/
+    ├── cc/
+    ├── cd/
+    ├── d1/
+    ├── d5/
+    ├── d6/
+    ├── d8/
+    ├── dd/
+    ├── df/
+    ├── e1/
+    ├── e3/
+    ├── e6/
+    ├── e9/
+    ├── eb/
+    ├── ec/
+    ├── ed/
+    ├── ee/
+    ├── ef/
+    ├── f2/
+    ├── f6/
+    ├── f8/
+    ├── f9/
+    ├── fa/
+    ├── fb/
+    ├── fc/
+    ├── fe/
+    ├── ff/
+    ├── info/
+    ├── pack/
+  ├── refs/
+    ├── heads/
+    ├── remotes/
+      ├── origin/
+    ├── tags/
+├── .gitignore
 ├── .htaccess
 ├── 404.php
 ├── ajax/
-  ├── contact-form.php
+  ├── delete-document.php
   ├── get-notifications.php
   ├── language-switch.php
   ├── loan-request.php
   ├── login.php
+  ├── logout.php
   ├── register.php
   ├── update-profile.php
   ├── upload-document.php
   ├── withdrawal-request.php
 ├── classes/
-  ├── Admin.php
   ├── Blog.php
   ├── Database.php
+  ├── DatabaseOnline.php
   ├── Document.php
   ├── Language.php
   ├── LoanRequest.php
   ├── Mailer.php
   ├── Partner.php
   ├── SEO.php
-  ├── Testimonial.php
   ├── User.php
   ├── Withdrawal.php
+├── config/
+  ├── app.php
+  ├── constants.php
+  ├── database.php
 ├── css/
+  ├── about.css
+  ├── admin.css
+  ├── auth.css
+  ├── blog.css
+  ├── dashboard.css
+  ├── documents.css
+  ├── footer.css
+  ├── forms.css
+  ├── header.css
+  ├── home.css
+  ├── loan-request.css
+  ├── login.css
+  ├── profile.css
+  ├── register.css
+  ├── responsive.css
   ├── style.css
+  ├── withdrawal.css
 ├── deboutatoutprix/
+  ├── ajax/
+    ├── loan-actions.php
+  ├── assets/
+    ├── css/
+      ├── admin.css
+      ├── dashboard.css
+      ├── userlist.css
+    ├── js/
+      ├── admin.js
+      ├── charts.js
+  ├── blog/
+    ├── list.php
+  ├── classes/
+    ├── Admin.php
+  ├── dashboard.php
+  ├── documents/
+    ├── list.php
+  ├── images/
+  ├── includes/
+    ├── auth-admin.php
+    ├── footer.php
+    ├── header.php
+    ├── sidebar.php
+  ├── index.php
+  ├── loans/
+    ├── list.php
+    ├── view.php
+  ├── login.php
+  ├── users/
+    ├── edit.php
+    ├── list.php
+    ├── view.php
+  ├── withdrawals/
+    ├── list.php
+    ├── view.php
+├── hash_password.php
 ├── images/
-  ├── d/
   ├── favicon/
+  ├── flags/
 ├── includes/
   ├── auth-check.php
+  ├── auth_header.php
   ├── footer.php
   ├── header.php
   ├── nav.php
 ├── index.php
 ├── js/
+  ├── core/
+    ├── app.js
+  ├── s/
+    ├── auth.js
+    ├── dashboard.js
 ├── lang/
   ├── de.php
   ├── en.php
@@ -45,10 +253,24 @@ Structure du site : C:\xampp\htdocs
   ├── fr.php
   ├── slugs.php
 ├── pages/
+  ├── about.php
+  ├── blog-post.php
+  ├── blog.php
   ├── dashboard.php
   ├── documents.php
+  ├── home.php
   ├── loan-request.php
   ├── login.php
+  ├── privacy.php
   ├── profile.php
   ├── register.php
+  ├── withdrawal.php
+├── uploads/
+  ├── documents/
+    ├── bank/
+    ├── birth/
+    ├── employment/
+    ├── identity/
+    ├── income/
+    ├── other/
 ├── vendor/

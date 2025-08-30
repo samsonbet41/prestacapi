@@ -1,5 +1,6 @@
 <?php
 require_once 'Database.php';
+require_once 'Mailer.php';
 
 class LoanRequest {
     private $db;
