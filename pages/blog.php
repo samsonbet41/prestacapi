@@ -1,9 +1,13 @@
 <?php
+$pageKey = 'blog';
+$pageTitle = $lang->get('page_title_' . $pageKey);
+$pageDescription = $lang->get('page_description_' . $pageKey);
+?>
+<?php
 require_once 'includes/header.php';
 require_once 'classes/Blog.php';
 
-$seo->generateTitle($lang->get('blog_page_title'));
-$seo->generateDescription($lang->get('blog_page_description'));
+
 
 $blog = new Blog();
 $currentPage = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;

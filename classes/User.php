@@ -1,17 +1,10 @@
 <?php
-require_once 'Database.php';
-require_once 'Mailer.php';
-
-
 class User {
     private $db;
     private $currentUser = null;
     
     public function __construct() {
         $this->db = Database::getInstance();
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
         
         if (isset($_SESSION['user_id'])) {
             $this->loadCurrentUser();
@@ -124,6 +117,18 @@ class User {
     
     public function getCurrentUser() {
         return $this->currentUser;
+    }
+    
+    /**
+     * Récupère un utilisateur par son ID.
+     * @param int $userId L'ID de l'utilisateur à récupérer.
+     * @return array|null Les données de l'utilisateur ou null si non trouvé.
+     */
+    public function getUserById($userId) {
+        if (!$userId) {
+            return null;
+        }
+        return $this->db->fetchOne("SELECT * FROM users WHERE id = ?", [$userId]);
     }
     
     public function updateProfile($userId, $data) {

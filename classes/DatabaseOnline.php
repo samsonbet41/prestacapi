@@ -105,7 +105,11 @@ class Database {
             $sql = "UPDATE " . $table . " SET " . implode(", ", $fields) . " WHERE " . $where;
             
             $params = array_merge(array_values($data), $whereParams);
-            $this->query($sql, $params);
+            
+            $stmt = $this->query($sql, $params);
+            
+            return $stmt->rowCount(); 
+            
         } catch(Exception $e) {
             error_log("Erreur update: " . $e->getMessage());
             throw $e;

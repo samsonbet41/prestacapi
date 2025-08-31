@@ -1,28 +1,53 @@
 <?php
+// 1. Inclure les classes nécessaires
 require_once 'classes/Database.php';
 require_once 'classes/User.php';
 require_once 'classes/Language.php';
 require_once 'classes/SEO.php';
 
+// 2. Créer les instances des objets
 $lang = Language::getInstance();
 $user = new User();
 $seo = new SEO();
+
 
 if ($user->isLoggedIn()) {
     header('Location: ' . $lang->pageUrl('dashboard'));
     exit;
 }
 
+// Déterminer si on est en mode 'login' ou 'register'
 $mode = isset($_GET['mode']) && $_GET['mode'] === 'register' ? 'register' : 'login';
-$pageTitle = $mode === 'register' ? $lang->get('auth_register_title') : $lang->get('auth_login_title');
+
+// 4. Définir les variables pour la vue (HTML)
+$pageKey = $mode; // Utiliser $mode pour que le titre change dynamiquement
+$pageTitle = $lang->get('page_title_' . $pageKey);
+$pageDescription = $lang->get('page_description_' . $pageKey);
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $lang->getCurrentLanguage(); ?>">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $seo->generateTitle($pageTitle); ?></title>
-    <meta name="description" content="<?php echo $seo->generateDescription($pageTitle); ?>">
+    <meta name="description" content="<?php echo $seo->generateDescription($pageDescription); ?>">
+    <link rel="canonical" href="<?php echo $seo->generateCanonicalUrl($lang->pageUrl($pageKey)); ?>">
+    
+    <?php echo $seo->generateAlternateLinks(); ?>
+    
+    <?php echo $seo->generateOpenGraphTags(['title' => $pageTitle, 'description' => $pageDescription]); ?>
+    <?php echo $seo->generateTwitterCard(['title' => $pageTitle, 'description' => $pageDescription]); ?>
+    
+    <?php echo $seo->generateMetaTags(); ?>
+
+    <?php echo $seo->generateStructuredData('webpage', ['title' => $pageTitle, 'description' => $pageDescription]); ?>
+    <?php // Optionnel: Ajouter un Breadcrumb si pertinent
+    /*
+    echo $seo->generateStructuredData('breadcrumb', ['items' => [
+        ['name' => $lang->get('home'), 'url' => $lang->url('home')],
+        ['name' => $pageTitle]
+    ]]);
+    */
+    ?>
     
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/login.css">

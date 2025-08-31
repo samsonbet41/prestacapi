@@ -1,4 +1,9 @@
 <?php
+$pageKey = 'documents';
+$pageTitle = $lang->get('page_title_' . $pageKey);
+$pageDescription = $lang->get('page_description_' . $pageKey);
+?>
+<?php
 require_once 'includes/auth-check.php';
 require_once 'classes/Language.php';
 require_once 'classes/SEO.php';
@@ -8,8 +13,7 @@ $lang = Language::getInstance();
 $seo = new SEO();
 $document = new Document();
 
-$pageTitle = $lang->get('documents_title') . ' - ' . $lang->get('site_name');
-$pageDescription = 'Gérez vos documents pour votre demande de prêt. Upload sécurisé de pièce d\'identité, justificatifs de revenus et relevés bancaires.';
+
 
 $userDocuments = $document->getUserDocuments($currentUser['id'], true);
 $documentStatus = $document->getUserDocumentStatus($currentUser['id']);
@@ -84,25 +88,32 @@ function getDocumentStatusText($documents, $docType) {
     return 'En cours de vérification';
 }
 
-function formatFileSize($bytes) {
-    if ($bytes >= 1073741824) {
-        return number_format($bytes / 1073741824, 2) . ' GB';
-    } elseif ($bytes >= 1048576) {
-        return number_format($bytes / 1048576, 2) . ' MB';
-    } elseif ($bytes >= 1024) {
-        return number_format($bytes / 1024, 2) . ' KB';
-    } else {
-        return $bytes . ' bytes';
-    }
-}
+
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $lang->getCurrentLanguage(); ?>">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $seo->generateTitle($pageTitle); ?></title>
     <meta name="description" content="<?php echo $seo->generateDescription($pageDescription); ?>">
+    <link rel="canonical" href="<?php echo $seo->generateCanonicalUrl($lang->pageUrl($pageKey)); ?>">
+    
+    <?php echo $seo->generateAlternateLinks(); ?>
+    
+    <?php echo $seo->generateOpenGraphTags(['title' => $pageTitle, 'description' => $pageDescription]); ?>
+    <?php echo $seo->generateTwitterCard(['title' => $pageTitle, 'description' => $pageDescription]); ?>
+    
+    <?php echo $seo->generateMetaTags(); ?>
+
+    <?php echo $seo->generateStructuredData('webpage', ['title' => $pageTitle, 'description' => $pageDescription]); ?>
+    <?php // Optionnel: Ajouter un Breadcrumb si pertinent
+    /*
+    echo $seo->generateStructuredData('breadcrumb', ['items' => [
+        ['name' => $lang->get('home'), 'url' => $lang->url('home')],
+        ['name' => $pageTitle]
+    ]]);
+    */
+    ?>
     <meta name="robots" content="noindex, nofollow">
     
     <link rel="stylesheet" href="/css/style.css">
@@ -187,8 +198,7 @@ function formatFileSize($bytes) {
                 
                 <div class="documents-content">
                     <div class="documents-grid">
-                        <?php foreach ($requiredDocuments as $docType => $docInfo): ?>
-                            <?php 
+                        <?php foreach ($requiredDocuments as $docType => $docInfo):
                             $statusClass = getDocumentStatusClass($userDocuments, $docType);
                             $statusText = getDocumentStatusText($userDocuments, $docType);
                             $hasDocument = isset($userDocuments[$docType]) && !empty($userDocuments[$docType]);
@@ -218,15 +228,17 @@ function formatFileSize($bytes) {
                                 
                                 <?php if ($hasDocument): ?>
                                     <div class="document-files">
-                                        <?php foreach ($userDocuments[$docType] as $doc): ?>
+                                        <?php foreach ($userDocuments[$docType] as $doc):
+                                            if (strpos($doc['mime_type'], 'pdf') !== false):
+                                                $icon = 'icon-file-pdf';
+                                            else:
+                                                $icon = 'icon-file-image';
+                                            endif;
+                                            ?>
                                             <div class="file-item">
                                                 <div class="file-info">
                                                     <div class="file-icon">
-                                                        <?php if (strpos($doc['mime_type'], 'pdf') !== false): ?>
-                                                            <i class="icon-file-pdf"></i>
-                                                        <?php else: ?>
-                                                            <i class="icon-file-image"></i>
-                                                        <?php endif; ?>
+                                                        <i class="<?php echo $icon; ?>"></i>
                                                     </div>
                                                     <div class="file-details">
                                                         <span class="file-name"><?php echo htmlspecialchars($doc['file_name']); ?></span>
@@ -262,12 +274,15 @@ function formatFileSize($bytes) {
                                 <?php endif; ?>
                                 
                                 <div class="document-actions">
-                                    <?php if (!$hasDocument || !$latestDoc['is_verified']): ?>
+                                    <?php if (!$hasDocument || !$latestDoc['is_verified']):
+                                        $buttonText = $hasDocument ? 'Remplacer le fichier' : 'Télécharger un fichier';
+                                        ?>
                                         <button class="btn btn-primary btn-upload" onclick="openUploadModal('<?php echo $docType; ?>')">
                                             <i class="icon-upload"></i>
-                                            <?php echo $hasDocument ? 'Remplacer le fichier' : 'Télécharger un fichier'; ?>
+                                            <?php echo $buttonText; ?>
                                         </button>
-                                    <?php else: ?>
+                                    <?php else:
+                                        ?>
                                         <div class="verified-badge">
                                             <i class="icon-check-circle"></i>
                                             <span>Document vérifié</span>
@@ -284,7 +299,7 @@ function formatFileSize($bytes) {
                                 <i class="icon-help-circle"></i>
                             </div>
                             <div class="help-content">
-                                <h3>Besoin d'aide ?</h3>
+                                <h3>Besoin d\'aide ?</h3>
                                 <p>Nos conseils pour bien préparer vos documents :</p>
                                 <ul class="help-list">
                                     <li>Scannez vos documents en haute qualité (minimum 300 DPI)</li>
@@ -419,7 +434,7 @@ function formatFileSize($bytes) {
         // AJOUTEZ CETTE FONCTION ICI
         function showNotification(message, type = 'success') {
             const toast = document.getElementById('toast');
-            if (!toast) return; // Sécurité si l'élément n'existe pas
+            if (!toast) return; // Sécurité si l\'élément n\'existe pas
 
             const iconEl = document.getElementById('toastIcon');
             const messageEl = document.getElementById('toastMessage');

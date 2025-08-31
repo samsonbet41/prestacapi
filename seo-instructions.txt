@@ -1,0 +1,172 @@
+Absolument. Voici un fichier texte que vous pouvez utiliser. Il contient un contexte détaillé, des ordres précis et un guide méthodologique à fournir à une intelligence artificielle pour l'optimisation SEO complète de votre projet.
+
+Ce prompt est spécifiquement conçu en se basant sur l'analyse des fichiers que vous avez fournis (`SEO.php`, `index.php`, `.htaccess`, fichiers de langue, etc.).
+
+-----
+
+## **Nom du fichier : `prompt_optimisation_seo.txt`**
+
+````text
+# ===================================================================
+# CONTEXTE POUR L'IA D'OPTIMISATION SEO
+# ===================================================================
+
+**Objectif Principal :** Réaliser une optimisation SEO technique et sémantique complète d'un site web PHP multilingue (fr, en, es, de) dédié aux services financiers (prêts).
+
+**Architecture du Site :**
+Le site est basé sur une architecture PHP personnalisée. Il n'utilise pas de CMS standard. La logique est la suivante :
+1.  **Routeur Central (`index.php`) :** Toutes les requêtes sont gérées par `index.php`. Ce fichier analyse l'URL (ex: `/fr/demande-pret/`), identifie la langue (`fr`) et le "slug" (`demande-pret`), puis inclut le fichier de page correspondant situé dans le dossier `/pages/`.
+2.  **Gestion des Slugs (`lang/slugs.php`) :** Le routeur s'appuie sur un fichier `lang/slugs.php` pour faire correspondre les slugs traduits à une clé de page unique (ex: `demande-pret` en français correspond à la clé `loan_request`). **Ce fichier est actuellement manquant et doit être créé.**
+3.  **Cerveau SEO (`classes/SEO.php`) :** Une classe PHP très complète existe déjà pour gérer tous les aspects du SEO. Elle peut générer :
+    * Les balises de titre (`<title>`).
+    * Les méta-descriptions.
+    * Les URL canoniques.
+    * Les balises Open Graph et Twitter Cards pour les réseaux sociaux.
+    * Les données structurées (Schema.org) pour l'organisation, les pages, les FAQ, etc.
+    * Le contenu des fichiers `robots.txt` et `sitemap.xml`.
+4.  **Contenu (`lang/*.php`) :** Les chaînes de caractères et le contenu textuel sont stockés dans des fichiers de langue (`fr.php`, `en.php`, etc.). Ces fichiers doivent être enrichis pour contenir les métadonnées SEO (titres, descriptions) uniques pour chaque page.
+5.  **Configuration Serveur (`.htaccess`) :** Le fichier gère déjà les redirections de base (racine vers `/fr/`), la mise en cache et quelques en-têtes de sécurité.
+
+**Ton Rôle :**
+Tu agis en tant qu'expert SEO technique. Ta mission est de modifier et de créer les fichiers nécessaires pour implémenter une stratégie SEO exhaustive en t'appuyant au maximum sur les outils existants, notamment la classe `SEO.php`.
+
+# ===================================================================
+# ORDRES D'EXÉCUTION
+# ===================================================================
+
+**1. Création du Fichier `lang/slugs.php` :**
+   - Crée le fichier `lang/slugs.php`.
+   - Remplis-le en te basant sur le tableau `$routes` dans `index.php` pour créer des slugs traduits et optimisés pour chaque page et chaque langue.
+
+   *Exemple de structure pour `lang/slugs.php` :*
+   ```php
+   <?php
+   return [
+       'home' => ['fr' => 'accueil', 'en' => 'home', 'es' => 'inicio', 'de' => 'startseite'],
+       'loan_request' => ['fr' => 'demande-pret', 'en' => 'loan-request', 'es' => 'solicitud-prestamo', 'de' => 'kreditantrag'],
+       'about' => ['fr' => 'a-propos', 'en' => 'about', 'es' => 'nosotros', 'de' => 'ueber-uns'],
+       'contact' => ['fr' => 'contact', 'en' => 'contact', 'es' => 'contacto', 'de' => 'kontakt'],
+       // ... Continuer pour toutes les clés du tableau $routes dans index.php
+   ];
+   ?>
+````
+
+**2. Enrichissement des Fichiers de Langue (`lang/*.php`) :**
+
+  - Pour chaque fichier de langue (`fr.php`, `en.php`, `es.php`, `de.php`), ajoute des entrées pour le titre et la méta-description de **chaque page** définie dans le tableau `$routes` de `index.php`.
+  - Utilise une convention de nommage claire : `page_title_{clé_de_page}` et `page_description_{clé_de_page}`.
+
+*Exemple à ajouter dans `fr.php` :*
+
+```php
+// ...
+'page_title_loan_request' => 'Faire une Demande de Prêt Personnel en Ligne - PrestaCapi',
+'page_description_loan_request' => 'Remplissez notre formulaire sécurisé pour votre demande de prêt jusqu\'à 50 000€. Réponse rapide, processus 100% digital et sécurisé.',
+
+'page_title_contact' => 'Contacter PrestaCapi - Service Client Disponible',
+'page_description_contact' => 'Une question sur nos services de prêt ? Contactez notre équipe d\'experts par email, téléphone ou via notre formulaire. Nous sommes là pour vous aider.',
+// ... Continuer pour toutes les pages.
+```
+
+  - Répète l'opération pour les autres langues, en traduisant et en adaptant le contenu.
+
+**3. Intégration dans les Fichiers de Page (`/pages/*.php`) :**
+
+  - **(Hypothèse : Tu dois générer le code pour ces fichiers)** Pour chaque fichier du dossier `/pages/` (ex: `pages/loan-request.php`), tu dois implémenter la logique suivante au début du fichier et dans la section `<head>` du HTML.
+
+*Exemple de code à placer en haut du fichier `pages/loan-request.php` :*
+
+```php
+<?php
+// $lang et $seo sont déjà instanciés dans index.php
+$pageKey = 'loan_request'; // Clé unique de la page
+$pageTitle = $lang->get('page_title_' . $pageKey);
+$pageDescription = $lang->get('page_description_' . $pageKey);
+?>
+```
+
+*Exemple de code à placer dans la section `<head>` du template HTML :*
+
+```html
+<head>
+    <meta charset="UTF-8">
+    <title><?php echo $seo->generateTitle($pageTitle); ?></title>
+    <meta name="description" content="<?php echo $seo->generateDescription($pageDescription); ?>">
+    <link rel="canonical" href="<?php echo $seo->generateCanonicalUrl($lang->pageUrl($pageKey)); ?>">
+    
+    <?php echo $seo->generateAlternateLinks(); ?>
+    
+    <?php echo $seo->generateOpenGraphTags(['title' => $pageTitle, 'description' => $pageDescription]); ?>
+    <?php echo $seo->generateTwitterCard(['title' => $pageTitle, 'description' => $pageDescription]); ?>
+    
+    <?php echo $seo->generateMetaTags(); ?>
+
+    <?php echo $seo->generateStructuredData('webpage', ['title' => $pageTitle, 'description' => $pageDescription]); ?>
+    <?php // Optionnel: Ajouter un Breadcrumb si pertinent
+    /*
+    echo $seo->generateStructuredData('breadcrumb', ['items' => [
+        ['name' => $lang->get('home'), 'url' => $lang->url('home')],
+        ['name' => $pageTitle]
+    ]]);
+    */
+    ?>
+</head>
+```
+
+**4. Génération du Fichier `robots.txt` :**
+
+  - Modifie la méthode `generateRobotsTxt` dans `classes/SEO.php` pour qu'elle contienne des règles propres et efficaces.
+  - Crée un script à la racine du site, nommé `generate-robots.php`, qui exécutera cette méthode et créera/mettra à jour le fichier `robots.txt`.
+
+*Contenu optimisé pour `generateRobotsTxt()` :*
+
+```php
+public function generateRobotsTxt() {
+    $robots = "User-agent: *\n";
+    $robots .= "Disallow: /deboutatoutprix/\n"; // Dossier admin
+    $robots .= "Disallow: /vendor/\n";
+    $robots .= "Disallow: /uploads/documents/\n";
+    $robots .= "Disallow: /config/\n";
+    $robots .= "Disallow: /classes/\n";
+    $robots .= "Disallow: /includes/\n";
+    $robots .= "\n";
+    $robots .= "Sitemap: " . $this->siteUrl . "/sitemap.xml\n";
+    return $robots;
+}
+```
+
+**5. Génération du Fichier `sitemap.xml` :**
+
+  - Crée un script `generate-sitemap.php` à la racine du site.
+  - Ce script devra :
+    a. Récupérer toutes les clés de page depuis le tableau `$routes` dans `index.php`.
+    b. Pour chaque page, générer les URL pour toutes les langues disponibles en utilisant le fichier `slugs.php`.
+    c. Formater ces données pour la méthode `$seo->generateSitemap()`.
+    d. Écrire le résultat dans un fichier `sitemap.xml` à la racine.
+
+# \===================================================================
+
+# GUIDE MÉTHODOLOGIQUE (COMMENT PROCÉDER)
+
+# \===================================================================
+
+1.  **Approche Systématique :** Procède page par page (par clé de route). Pour chaque clé, mets à jour `slugs.php`, puis les 4 fichiers de langue, et enfin assure-toi que le fichier de page correspondant dans `/pages/` appelle correctement les nouvelles métadonnées.
+
+2.  **Qualité des Métadonnées :**
+
+      * **Titres :** Doivent être uniques, contenir le mot-clé principal de la page, faire moins de 60 caractères et inclure le nom de la marque "PrestaCapi".
+      * **Descriptions :** Doivent être uniques, incitatives (donner envie de cliquer), contenir des mots-clés pertinents et faire environ 155 caractères.
+
+3.  **Données Structurées :** Applique le type de données structurées le plus pertinent à chaque page. Par exemple :
+
+      * `FinancialService` et `Organization` sur la page d'accueil.
+      * `Article` pour les articles de blog.
+      * `FAQPage` pour la page FAQ.
+      * `BreadcrumbList` sur toutes les pages sauf la page d'accueil pour améliorer la navigation.
+
+4.  **Consistance :** Assure-toi que l'URL canonique générée par `$seo->generateCanonicalUrl()` est présente sur **absolument toutes les pages** pour éviter les problèmes de contenu dupliqué.
+
+<!-- end list -->
+
+```
+```

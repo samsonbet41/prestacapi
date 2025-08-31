@@ -1,4 +1,10 @@
 <?php
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+require_once '../config/app.php';
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -7,12 +13,20 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+// AJOUT DES DÉPENDANCES MANQUANTES
 require_once '../classes/Database.php';
 require_once '../classes/User.php';
 require_once '../classes/Withdrawal.php';
+require_once '../classes/Mailer.php';
 require_once '../classes/Language.php';
 
-session_start();
+// session_start(); // This line was removed in the new string, which is a functional change, not an escaping issue.
+
+if (!verifyCsrfToken($_POST['csrf_token'] ?? '')) {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'message' => 'Jeton de sécurité invalide ou expiré. Veuillez rafraîchir la page.']);
+    exit;
+}
 
 try {
     $user = new User();
@@ -20,106 +34,71 @@ try {
     $lang = Language::getInstance();
     
     if (!$user->isLoggedIn()) {
-        echo json_encode(['success' => false, 'message' => 'Vous devez être connecté']);
+        http_response_code(401);
+        echo json_encode(['success' => false, 'message' => 'Vous devez être connecté pour effectuer cette action.']);
         exit;
     }
     
     $currentUser = $user->getCurrentUser();
     $userId = $currentUser['id'];
     
+    // Vérifier si l'utilisateur peut faire un retrait
     $eligibilityCheck = $withdrawal->canUserRequestWithdrawal($userId);
     if (!$eligibilityCheck['can_request']) {
         echo json_encode(['success' => false, 'message' => $eligibilityCheck['reason']]);
         exit;
     }
     
-    $requiredFields = ['amount', 'bank_name', 'account_number', 'account_holder_name'];
-    foreach ($requiredFields as $field) {
-        if (empty($_POST[$field])) {
-            echo json_encode(['success' => false, 'message' => "Le champ $field est requis"]);
-            exit;
-        }
-    }
-    
-    $amount = floatval($_POST['amount']);
-    $maxAmount = $eligibilityCheck['max_amount'];
-    
-    if ($amount < 10) {
-        echo json_encode(['success' => false, 'message' => 'Montant minimum : 10€']);
-        exit;
-    }
-    
-    if ($amount > $maxAmount) {
-        echo json_encode(['success' => false, 'message' => "Montant maximum disponible : {$maxAmount}€"]);
-        exit;
-    }
-    
-    $bankName = trim($_POST['bank_name']);
-    $accountNumber = trim($_POST['account_number']);
-    $accountHolderName = trim($_POST['account_holder_name']);
-    $swiftCode = trim($_POST['swift_code'] ?? '');
-    $iban = trim($_POST['iban'] ?? '');
-    $notes = trim($_POST['notes'] ?? '');
-    
-    if (strlen($bankName) < 2) {
-        echo json_encode(['success' => false, 'message' => 'Nom de banque invalide']);
-        exit;
-    }
-    
-    if (strlen($accountNumber) < 5) {
-        echo json_encode(['success' => false, 'message' => 'Numéro de compte invalide']);
-        exit;
-    }
-    
-    if (strlen($accountHolderName) < 2) {
-        echo json_encode(['success' => false, 'message' => 'Nom du titulaire invalide']);
-        exit;
-    }
-    
-    if (!empty($iban) && !$withdrawal->validateBankDetails(['iban' => $iban])) {
-        echo json_encode(['success' => false, 'message' => 'Format IBAN invalide']);
-        exit;
-    }
-    
-    if (!empty($swiftCode) && !preg_match('/^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/', strtoupper($swiftCode))) {
-        echo json_encode(['success' => false, 'message' => 'Format SWIFT/BIC invalide']);
-        exit;
-    }
-    
+    // Rassembler les données du formulaire
     $withdrawalData = [
-        'amount' => $amount,
-        'bank_name' => $bankName,
-        'account_number' => $accountNumber,
-        'account_holder_name' => $accountHolderName,
-        'swift_code' => $swiftCode,
-        'iban' => $iban,
-        'notes' => $notes
+        'amount' => $_POST['amount'] ?? 0,
+        'bank_name' => $_POST['bank_name'] ?? '',
+        'account_number' => $_POST['account_number'] ?? '',
+        'account_holder_name' => $_POST['account_holder_name'] ?? '',
+        'swift_code' => $_POST['swift_code'] ?? '',
+        'iban' => $_POST['iban'] ?? '',
+        'notes' => $_POST['notes'] ?? ''
     ];
+
+    // AMÉLIORATION DE LA LOGIQUE DE VALIDATION
+    $errors = [];
+    $amount = filter_var($withdrawalData['amount'], FILTER_VALIDATE_FLOAT);
+    $maxAmount = $eligibilityCheck['max_amount'];
+
+    if ($amount === false || $amount <= 0) {
+        $errors['amount'] = 'Le montant est invalide.';
+    } elseif ($amount < 10) {
+        $errors['amount'] = 'Le montant minimum pour un retrait est de 10€.';
+    } elseif ($amount > $maxAmount) {
+        $errors['amount'] = "Le montant dépasse votre solde disponible ({$maxAmount}€).";
+    }
+
+    $bankDetailsErrors = $withdrawal->validateBankDetails($withdrawalData);
+    if (!empty($bankDetailsErrors)) {
+        // Mappage simplifié pour l'exemple
+        if (in_array('Nom de banque requis', $bankDetailsErrors)) $errors['bank_name'] = 'Le nom de la banque est requis.';
+        if (in_array('Numéro de compte requis', $bankDetailsErrors)) $errors['account_number'] = 'Le numéro de compte est requis.';
+        if (in_array('Nom du titulaire requis', $bankDetailsErrors)) $errors['account_holder_name'] = 'Le nom du titulaire est requis.';
+        if (in_array('Format IBAN invalide', $bankDetailsErrors)) $errors['iban'] = 'Le format de l\'IBAN est invalide.';
+        if (in_array('Format SWIFT/BIC invalide', $bankDetailsErrors)) $errors['swift_code'] = 'Le format du code SWIFT/BIC est invalide.';
+    }
     
+    if (!empty($errors)) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Veuillez corriger les erreurs dans le formulaire.',
+            'errors' => $errors
+        ]);
+        exit;
+    }
+
+    // Si tout est valide, on crée la demande
     $result = $withdrawal->createWithdrawalRequest($userId, $withdrawalData);
     
-    if ($result['success']) {
-        $db = Database::getInstance();
-        $db->insert('notifications', [
-            'user_id' => $userId,
-            'type' => 'general',
-            'title' => 'Demande de retrait créée',
-            'message' => "Votre demande de retrait de {$amount}€ a été soumise et sera traitée sous 24-48h.",
-            'related_id' => $result['withdrawal_id']
-        ]);
-        
-        echo json_encode([
-            'success' => true,
-            'message' => 'Demande de retrait soumise avec succès',
-            'withdrawal_id' => $result['withdrawal_id'],
-            'amount' => $amount,
-            'processing_time' => '24-48 heures'
-        ]);
-    } else {
-        echo json_encode($result);
-    }
+    echo json_encode($result);
     
 } catch (Exception $e) {
     error_log("Erreur AJAX withdrawal-request: " . $e->getMessage());
-    echo json_encode(['success' => false, 'message' => 'Une erreur est survenue']);
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Une erreur technique est survenue. Veuillez réessayer plus tard.']);
 }

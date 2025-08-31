@@ -14,13 +14,16 @@ Structure du site : C:\xampp\htdocs
     ├── 05/
     ├── 09/
     ├── 0a/
+    ├── 0b/
     ├── 0d/
     ├── 0e/
+    ├── 0f/
     ├── 11/
     ├── 12/
     ├── 13/
     ├── 14/
     ├── 17/
+    ├── 18/
     ├── 19/
     ├── 1b/
     ├── 1c/
@@ -28,15 +31,18 @@ Structure du site : C:\xampp\htdocs
     ├── 20/
     ├── 21/
     ├── 24/
+    ├── 25/
     ├── 27/
     ├── 28/
     ├── 2b/
     ├── 2c/
+    ├── 2e/
     ├── 2f/
     ├── 30/
     ├── 32/
     ├── 33/
     ├── 36/
+    ├── 38/
     ├── 39/
     ├── 3a/
     ├── 3b/
@@ -50,15 +56,19 @@ Structure du site : C:\xampp\htdocs
     ├── 49/
     ├── 4b/
     ├── 4c/
+    ├── 4d/
     ├── 4f/
     ├── 50/
     ├── 51/
+    ├── 52/
     ├── 53/
     ├── 57/
     ├── 5a/
     ├── 5b/
     ├── 5c/
+    ├── 61/
     ├── 64/
+    ├── 65/
     ├── 67/
     ├── 68/
     ├── 69/
@@ -66,9 +76,11 @@ Structure du site : C:\xampp\htdocs
     ├── 6e/
     ├── 6f/
     ├── 70/
+    ├── 71/
     ├── 73/
     ├── 75/
     ├── 78/
+    ├── 79/
     ├── 7c/
     ├── 7d/
     ├── 7f/
@@ -79,19 +91,26 @@ Structure du site : C:\xampp\htdocs
     ├── 86/
     ├── 87/
     ├── 88/
+    ├── 8b/
+    ├── 8c/
     ├── 8d/
     ├── 8e/
+    ├── 8f/
     ├── 90/
     ├── 91/
     ├── 93/
+    ├── 94/
+    ├── 96/
     ├── 98/
     ├── 99/
     ├── 9a/
     ├── 9b/
     ├── 9d/
+    ├── 9e/
     ├── 9f/
     ├── a0/
     ├── a1/
+    ├── a2/
     ├── a4/
     ├── a5/
     ├── a8/
@@ -106,22 +125,30 @@ Structure du site : C:\xampp\htdocs
     ├── b2/
     ├── b4/
     ├── b6/
+    ├── b7/
     ├── be/
     ├── bf/
+    ├── c0/
     ├── c1/
     ├── c2/
     ├── c3/
     ├── c4/
+    ├── c6/
+    ├── cb/
     ├── cc/
     ├── cd/
     ├── d1/
+    ├── d2/
     ├── d5/
     ├── d6/
     ├── d8/
     ├── dd/
+    ├── de/
     ├── df/
+    ├── e0/
     ├── e1/
     ├── e3/
+    ├── e5/
     ├── e6/
     ├── e9/
     ├── eb/
@@ -129,8 +156,12 @@ Structure du site : C:\xampp\htdocs
     ├── ed/
     ├── ee/
     ├── ef/
+    ├── f0/
     ├── f2/
+    ├── f3/
+    ├── f4/
     ├── f6/
+    ├── f7/
     ├── f8/
     ├── f9/
     ├── fa/
@@ -195,6 +226,7 @@ Structure du site : C:\xampp\htdocs
   ├── withdrawal.css
 ├── deboutatoutprix/
   ├── ajax/
+    ├── document-actions.php
     ├── loan-actions.php
   ├── assets/
     ├── css/
@@ -211,6 +243,7 @@ Structure du site : C:\xampp\htdocs
   ├── dashboard.php
   ├── documents/
     ├── list.php
+    ├── view.php
   ├── images/
   ├── includes/
     ├── auth-admin.php
@@ -258,12 +291,17 @@ Structure du site : C:\xampp\htdocs
   ├── blog.php
   ├── dashboard.php
   ├── documents.php
+  ├── faq.php
   ├── home.php
   ├── loan-request.php
   ├── login.php
+  ├── partners.php
   ├── privacy.php
   ├── profile.php
   ├── register.php
+  ├── services.php
+  ├── terms.php
+  ├── testimonials.php
   ├── withdrawal.php
 ├── uploads/
   ├── documents/

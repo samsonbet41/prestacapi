@@ -406,8 +406,8 @@ class LoanRequest {
             $errors[] = 'Durée maximum: 60 mois';
         }
         
-        if (empty($data['purpose']) || strlen(trim($data['purpose'])) < 10) {
-            $errors[] = 'Objectif du prêt requis (minimum 10 caractères)';
+        if (empty($data['purpose']) || strlen(trim($data['purpose'])) < 3) {
+            $errors[] = 'Objectif du prêt requis (minimum 3 caractères)';
         }
         
         if (empty($data['monthly_income']) || !is_numeric($data['monthly_income']) || floatval($data['monthly_income']) <= 0) {

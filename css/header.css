@@ -4,8 +4,10 @@
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border-color);
   box-shadow: var(--shadow-sm);
-  position: sticky;
+  /* -- MODIFICATION --: Rendu fixe et non plus "sticky" pour un meilleur support */
+  position: fixed;
   top: 0;
+  width: 100%; /* Ajout pour que le header prenne toute la largeur */
   z-index: 1000;
   transition: var(--transition);
 }
@@ -466,6 +468,11 @@
   background: var(--secondary-color);
 }
 
+/* -- AJOUT --: Masquer les boutons d'authentification mobiles par défaut */
+.mobile-auth-item {
+    display: none;
+}
+
 /* === MENU MOBILE === */
 .mobile-menu-toggle {
   display: none;
@@ -477,6 +484,7 @@
   padding: var(--spacing-sm);
   border-radius: var(--radius-base);
   transition: var(--transition);
+  z-index: 1001; /* Doit être au-dessus du header */
 }
 
 .mobile-menu-toggle:hover {
@@ -554,7 +562,69 @@
 }
 
 @media (max-width: 768px) {
+
   .main-navigation {
+    display: none;
+    position: fixed;
+    top: 0;
+   
+    left: auto; 
+    right: 0;  
+    
+
+    width: 85%;
+    max-width: 320px;
+
+    height: 100vh;
+    background: white;
+    flex-direction: column;
+    
+
+    justify-content: flex-start; 
+    align-items: flex-end; 
+    padding: var(--spacing-xl);
+    padding-top: 80px; 
+
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    box-shadow: -5px 0 15px rgba(0,0,0,0.1); 
+  }
+
+  .main-navigation.active {
+    display: flex;
+    transform: translateX(0);
+  }
+  
+  .nav-menu {
+    flex-direction: column;
+    align-items: flex-end; 
+    gap: var(--spacing-md);
+    text-align: right;
+    width: 100%;
+  }
+
+  .nav-link {
+    font-size: var(--font-lg);
+  }
+
+  .mobile-auth-item {
+    display: block;
+    padding-top: var(--spacing-md);
+  }
+  .mobile-auth-item.auth-divider {
+    height: 1px;
+    width: 100px;
+    background: var(--border-color);
+    margin: var(--spacing-md) 0;
+    padding: 0;
+  }
+  .mobile-auth-item .btn {
+    width: 150px;
+    text-align: center;
+  }
+
+  /* -- MODIFICATION --: Masquer les boutons d'authentification du header */
+  .auth-actions {
     display: none;
   }
   

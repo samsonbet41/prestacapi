@@ -1,8 +1,12 @@
 <?php
+$pageKey = 'privacy';
+$pageTitle = $lang->get('page_title_' . $pageKey);
+$pageDescription = $lang->get('page_description_' . $pageKey);
+?>
+<?php
 require_once 'includes/header.php';
 
-$seo->generateTitle($lang->get('privacy_policy_title'));
-$seo->generateDescription($lang->get('privacy_policy_description'));
+
 
 $lastUpdated = '2025-01-01';
 ?>

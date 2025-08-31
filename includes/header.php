@@ -14,6 +14,8 @@ if (file_exists(__DIR__ . '/../lang/slugs.php')) {
     $slugs = include __DIR__ . '/../lang/slugs.php';
 }
 
+require_once 'config/app.php';
+
 $isLoggedIn = $user->isLoggedIn();
 $currentUser = $isLoggedIn ? $user->getCurrentUser() : null;
 
@@ -21,6 +23,7 @@ $currentPageKey = isset($currentPage) ? $currentPage : 'home';
 ?>
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/header.css">
     <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="/css/forms.css">
@@ -82,6 +85,21 @@ $currentPageKey = isset($currentPage) ? $currentPage : 'home';
                         <?php echo $lang->get('blog'); ?>
                     </a>
                 </li>
+
+                <?php // -- AJOUT --: Liens d'authentification pour le menu mobile ?>
+                <?php if (!$isLoggedIn): ?>
+                    <li class="nav-item mobile-auth-item auth-divider"></li>
+                    <li class="nav-item mobile-auth-item">
+                         <a href="<?php echo generateLocalizedUrl('login'); ?>" class="btn-login">
+                            <?php echo $lang->get('login'); ?>
+                        </a>
+                    </li>
+                    <li class="nav-item mobile-auth-item">
+                        <a href="<?php echo generateLocalizedUrl('register'); ?>" class="btn btn-primary">
+                            <?php echo $lang->get('register'); ?>
+                        </a>
+                    </li>
+                <?php endif; ?>
             </ul>
         </nav>
         
@@ -284,4 +302,3 @@ function loadQuickStats() {
 }
 <?php endif; ?>
 </script>
-</html>

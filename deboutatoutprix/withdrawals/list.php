@@ -1,9 +1,11 @@
 <?php
 require_once '../includes/auth-admin.php';
 require_once '../../classes/Withdrawal.php';
+require_once '../../classes/Language.php';
 requirePermission('manage_withdrawals');
 
 $pageTitle = 'Demandes de retrait';
+$lang = Language::getInstance();
 
 $withdrawal = new Withdrawal();
 $db = Database::getInstance();

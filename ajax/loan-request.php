@@ -58,8 +58,8 @@ try {
         $errors[] = 'La durée doit être entre 6 et 60 mois';
     }
     
-    if (empty($data['purpose']) || strlen($data['purpose']) < 10) {
-        $errors[] = 'Objectif du prêt requis (minimum 10 caractères)';
+    if (empty($data['purpose']) || strlen($data['purpose']) < 3) {
+        $errors[] = 'Objectif du prêt requis (minimum 3 caractères)';
     }
     
     if ($data['monthly_income'] <= 0) {

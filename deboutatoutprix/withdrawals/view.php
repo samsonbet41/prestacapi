@@ -1,5 +1,6 @@
 <?php
 require_once '../includes/auth-admin.php';
+require_once '../../classes/Withdrawal.php';
 requirePermission('manage_withdrawals');
 
 $pageTitle = 'Détail demande de retrait';

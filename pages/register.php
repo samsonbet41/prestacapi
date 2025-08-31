@@ -1,4 +1,9 @@
 <?php
+$pageKey = 'register';
+$pageTitle = $lang->get('page_title_' . $pageKey);
+$pageDescription = $lang->get('page_description_' . $pageKey);
+?>
+<?php
 require_once 'classes/Database.php';
 require_once 'classes/Language.php';
 require_once 'classes/SEO.php';
@@ -13,8 +18,7 @@ if ($user->isLoggedIn()) {
     exit;
 }
 
-$pageTitle = $lang->get('auth_register_title') . ' - ' . $lang->get('site_name');
-$pageDescription = 'Créez votre compte PrestaCapi en quelques minutes. Financement rapide, processus sécurisé, réponse en 24-48h.';
+
 
 $countries = [
     'France', 'Belgique', 'Suisse', 'Luxembourg', 'Monaco',
@@ -26,18 +30,26 @@ $countries = [
 <html lang="<?php echo $lang->getCurrentLanguage(); ?>">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $seo->generateTitle($pageTitle); ?></title>
     <meta name="description" content="<?php echo $seo->generateDescription($pageDescription); ?>">
+    <link rel="canonical" href="<?php echo $seo->generateCanonicalUrl($lang->pageUrl($pageKey)); ?>">
     
-    <?php echo $lang->generateHreflang('register'); ?>
-    <link rel="canonical" href="<?php echo $lang->getCanonicalUrl('register'); ?>">
+    <?php echo $seo->generateAlternateLinks(); ?>
     
-    <?php echo $seo->generateOpenGraphTags([
-        'title' => $pageTitle,
-        'description' => $pageDescription,
-        'url' => $lang->getCanonicalUrl('register')
-    ]); ?>
+    <?php echo $seo->generateOpenGraphTags(['title' => $pageTitle, 'description' => $pageDescription]); ?>
+    <?php echo $seo->generateTwitterCard(['title' => $pageTitle, 'description' => $pageDescription]); ?>
+    
+    <?php echo $seo->generateMetaTags(); ?>
+
+    <?php echo $seo->generateStructuredData('webpage', ['title' => $pageTitle, 'description' => $pageDescription]); ?>
+    <?php // Optionnel: Ajouter un Breadcrumb si pertinent
+    /*
+    echo $seo->generateStructuredData('breadcrumb', ['items' => [
+        ['name' => $lang->get('home'), 'url' => $lang->url('home')],
+        ['name' => $pageTitle]
+    ]]);
+    */
+    ?>
     
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/forms.css">

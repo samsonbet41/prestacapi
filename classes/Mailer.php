@@ -184,8 +184,10 @@ class Mailer {
     
     private function sendViaMailFunction($to, $subject, $message, $isHtml = true) {
         try {
-            $headers = "From: {$this->fromName} <{$this->fromEmail}>\r\n";
-            $headers .= "Reply-To: {$this->fromEmail}\r\n";
+            $headers = "From: {$this->fromName} <{$this->fromEmail}>
+";
+            $headers .= "Reply-To: {$this->fromEmail}
+";
             $headers .= "X-Mailer: PHP/" . phpversion() . "\r\n";
             
             if ($isHtml) {
@@ -239,7 +241,7 @@ class Mailer {
         </style>
         ";
         
-        return "
+        return " 
         <!DOCTYPE html>
         <html lang='fr'>
         <head>
@@ -342,7 +344,7 @@ class Mailer {
         </style>
         ";
         
-        return "
+        return " 
         <!DOCTYPE html>
         <html lang='fr'>
         <head>
@@ -441,7 +443,7 @@ class Mailer {
         </style>
         ";
         
-        return "
+        return " 
         <!DOCTYPE html>
         <html lang='fr'>
         <head>
@@ -539,7 +541,7 @@ class Mailer {
         </style>
         ";
         
-        return "
+        return " 
         <!DOCTYPE html>
         <html lang='fr'>
         <head>
@@ -629,7 +631,7 @@ class Mailer {
         </style>
         ";
         
-        return "
+        return " 
         <!DOCTYPE html>
         <html lang='fr'>
         <head>
@@ -755,7 +757,7 @@ class Mailer {
                 break;
         }
         
-        return "
+        return " 
         <h2>PrestaCapi - Notification Admin</h2>
         {$content}
         <p><a href='https://prestacapi.com/admin'>Accéder à l'interface admin</a></p>

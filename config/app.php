@@ -192,7 +192,6 @@ function isValidDocumentType($mimeType) {
 
 try {
     $db = Database::getInstance();
-    $db->createTablesIfNotExists();
 } catch (Exception $e) {
     logError('Database connection failed: ' . $e->getMessage());
     if (DEBUG_MODE) {

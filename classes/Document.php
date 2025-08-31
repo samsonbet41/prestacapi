@@ -1,6 +1,4 @@
 <?php
-require_once 'Database.php';
-require_once 'Mailer.php';
 
 class Document {
     private $db;
@@ -163,6 +161,11 @@ class Document {
             if (!$document) {
                 return ['success' => false, 'message' => 'Document non trouvé'];
             }
+
+            // Si le document est déjà dans l'état souhaité, on évite une opération inutile.
+            if ($document['is_verified'] == ($isVerified ? 1 : 0)) {
+                return ['success' => true, 'message' => 'Le document est déjà dans cet état.'];
+            }
             
             $updateData = [
                 'is_verified' => $isVerified ? 1 : 0,
@@ -170,34 +173,40 @@ class Document {
                 'verified_at' => date('Y-m-d H:i:s'),
                 'notes' => $notes
             ];
-            
-            $this->db->update('documents', $updateData, 'id = ?', [$documentId]);
-            
-            $this->db->logActivity($document['user_id'], $adminId, 'document_verified', 
-                "Document {$document['document_type']} " . ($isVerified ? 'vérifié' : 'rejeté'));
-            
-            $notification_type = 'document_verified';
-            $notification_title = $isVerified ? 'Document vérifié' : 'Document rejeté';
-            $notification_message = $isVerified 
-                ? "Votre document ({$this->getDocumentTypeName($document['document_type'])}) a été vérifié avec succès."
-                : "Votre document ({$this->getDocumentTypeName($document['document_type'])}) a été rejeté. " . ($notes ?: '');
-            
-            $this->db->insert('notifications', [
-                'user_id' => $document['user_id'],
-                'type' => $notification_type,
-                'title' => $notification_title,
-                'message' => $notification_message,
-                'related_id' => $documentId
-            ]);
-            
-            return ['success' => true, 'message' => 'Document ' . ($isVerified ? 'vérifié' : 'rejeté') . ' avec succès'];
-            
+
+            // On récupère le nombre de lignes réellement modifiées grâce à notre nouvelle méthode update.
+            $affectedRows = $this->db->update('documents', $updateData, 'id = ?', [$documentId]);
+
+            // On ne confirme le succès QUE si une ligne a été modifiée.
+            if ($affectedRows > 0) {
+                $this->db->logActivity($document['user_id'], $adminId, 'document_verified', 
+                    "Document {$document['document_type']} " . ($isVerified ? 'vérifié' : 'rejeté'));
+
+                $notification_title = $isVerified ? 'Document vérifié' : 'Document rejeté';
+                $notification_message = $isVerified 
+                    ? "Votre document ({$this->getDocumentTypeName($document['document_type'])}) a été vérifié."
+                    : "Votre document ({$this->getDocumentTypeName($document['document_type'])}) a été rejeté. Motif: " . $notes;
+                
+                $this->db->insert('notifications', [
+                    'user_id' => $document['user_id'],
+                    'type' => $isVerified ? 'document_verified' : 'document_rejected',
+                    'title' => $notification_title,
+                    'message' => $notification_message,
+                    'related_id' => $documentId
+                ]);
+                
+                return ['success' => true, 'message' => 'Statut du document mis à jour avec succès'];
+            } else {
+                // Si aucune ligne n'a été modifiée, on renvoie une erreur.
+                return ['success' => false, 'message' => 'La mise à jour en base de données a échoué (0 ligne modifiée).'];
+            }
+
         } catch (Exception $e) {
             error_log("Erreur vérification document: " . $e->getMessage());
-            return ['success' => false, 'message' => 'Erreur lors de la vérification'];
+            return ['success' => false, 'message' => 'Erreur technique du serveur: ' . $e->getMessage()];
         }
     }
-    
+        
     public function deleteDocument($documentId, $userId = null) {
         try {
             $sql = "SELECT * FROM documents WHERE id = ?";

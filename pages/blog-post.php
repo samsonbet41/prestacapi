@@ -1,4 +1,9 @@
 <?php
+$pageKey = 'blog';
+$pageTitle = $blogPost['meta_title'] ?: $blogPost['title'];
+$pageDescription = $blogPost['meta_description'] ?: $blogPost['excerpt'];
+?>
+<?php
 require_once 'includes/header.php';
 
 if (!isset($blogPost) || empty($blogPost)) {
@@ -7,8 +12,7 @@ if (!isset($blogPost) || empty($blogPost)) {
     exit;
 }
 
-$seo->generateTitle($blogPost['meta_title'] ?: $blogPost['title']);
-$seo->generateDescription($blogPost['meta_description'] ?: $blogPost['excerpt']);
+
 
 $blog = new Blog();
 $relatedPosts = [];

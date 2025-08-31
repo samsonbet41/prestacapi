@@ -1,8 +1,12 @@
 <?php
+$pageKey = 'about';
+$pageTitle = $lang->get('page_title_' . $pageKey);
+$pageDescription = $lang->get('page_description_' . $pageKey);
+?>
+<?php
 require_once 'includes/header.php';
 
-$seo->generateTitle($lang->get('about_page_title'));
-$seo->generateDescription($lang->get('about_page_description'));
+
 
 $stats = [];
 try {

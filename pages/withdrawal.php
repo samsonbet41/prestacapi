@@ -1,10 +1,14 @@
 <?php
+$pageKey = 'withdrawal';
+$pageTitle = $lang->get('page_title_' . $pageKey);
+$pageDescription = $lang->get('page_description_' . $pageKey);
+?>
+<?php
 require_once 'includes/header.php';
 require_once 'includes/auth-check.php';
 require_once 'classes/Withdrawal.php'; 
 
-$seo->generateTitle($lang->get('withdrawal_page_title'));
-$seo->generateDescription($lang->get('withdrawal_page_description'));
+
 
 $withdrawalClass = new Withdrawal();
 $currentUser = $user->getCurrentUser();
@@ -353,6 +357,12 @@ foreach ($withdrawalHistory as $withdrawal) {
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const withdrawalForm = document.getElementById('withdrawalForm');
+    
+    // Si le formulaire n'existe pas sur la page, on arrête le script
+    if (!withdrawalForm) {
+        return;
+    }
+
     const amountInput = document.getElementById('amount');
     const summaryAmount = document.getElementById('summaryAmount');
     const summaryTotal = document.getElementById('summaryTotal');
@@ -360,111 +370,138 @@ document.addEventListener('DOMContentLoaded', function() {
     const submitBtn = document.getElementById('submitBtn');
     const formResult = document.getElementById('formResult');
 
-    if (amountInput) {
-        quickAmountBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                const amount = this.getAttribute('data-amount');
-                amountInput.value = amount;
-                updateSummary();
+    quickAmountBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const amount = this.getAttribute('data-amount');
+            amountInput.value = amount;
+            // On déclenche manuellement l'événement 'input' pour que le résumé se mette à jour
+            amountInput.dispatchEvent(new Event('input'));
+        });
+    });
+
+    amountInput.addEventListener('input', updateSummary);
+
+    function updateSummary() {
+        const amount = parseFloat(amountInput.value) || 0;
+        const fees = 0; // Supposez des frais nuls pour le moment
+        const total = amount - fees;
+
+        const currencyOptions = {
+            style: 'currency',
+            currency: 'EUR',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        };
+
+        summaryAmount.textContent = amount.toLocaleString('fr-FR', currencyOptions);
+        summaryTotal.textContent = total.toLocaleString('fr-FR', currencyOptions);
+    }
+
+    // AJOUT: Appel initial pour afficher 0,00 € correctement formaté
+    updateSummary(); 
+
+    withdrawalForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        clearErrors();
+        setLoadingState(true);
+        formResult.style.display = 'none';
+        
+        const formData = new FormData(this);
+        
+        try {
+            const response = await fetch('/ajax/withdrawal-request.php', {
+                method: 'POST',
+                body: formData
             });
-        });
-
-        amountInput.addEventListener('input', updateSummary);
-
-        function updateSummary() {
-            const amount = parseFloat(amountInput.value) || 0;
-            const fees = 0;
-            const total = amount - fees;
-
-            summaryAmount.textContent = amount.toLocaleString('fr-FR', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            }) + ' €';
-
-            summaryTotal.textContent = total.toLocaleString('fr-FR', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            }) + ' €';
-        }
-
-        withdrawalForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
             
-            clearErrors();
-            setLoadingState(true);
+            const result = await response.json();
             
-            const formData = new FormData(this);
-            
-            try {
-                const response = await fetch('ajax/withdrawal-request.php', {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    showResult(result.message, 'success');
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 2000);
-                } else {
-                    if (result.errors) {
-                        showFieldErrors(result.errors);
-                    }
-                    showResult(result.message, 'error');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                showResult('<?php echo $lang->get("error_occurred"); ?>', 'error');
-            } finally {
-                setLoadingState(false);
-            }
-        });
-
-        function setLoadingState(loading) {
-            if (loading) {
-                submitBtn.classList.add('loading');
+            if (result.success) {
+                showResult(result.message, 'success');
+                // Bloquer le formulaire et préparer le rechargement
+                withdrawalForm.reset();
                 submitBtn.disabled = true;
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2500);
             } else {
-                submitBtn.classList.remove('loading');
-                submitBtn.disabled = false;
-            }
-        }
-
-        function showResult(message, type) {
-            formResult.textContent = message;
-            formResult.className = `form-result ${type}`;
-            formResult.style.display = 'block';
-        }
-
-        function clearErrors() {
-            document.querySelectorAll('.error-message').forEach(el => {
-                el.textContent = '';
-                el.parentElement.classList.remove('error');
-            });
-        }
-
-        function showFieldErrors(errors) {
-            Object.keys(errors).forEach(field => {
-                const errorElement = document.querySelector(`#${field} + .error-message, [name="${field}"] + .error-message`);
-                if (errorElement) {
-                    errorElement.textContent = errors[field];
-                    errorElement.parentElement.classList.add('error');
+                if (result.errors) {
+                    showFieldErrors(result.errors);
                 }
-            });
+                showResult(result.message || 'Une erreur est survenue.', 'error');
+            }
+        } catch (error) {
+            console.error('Erreur lors de la soumission:', error);
+            showResult('<?php echo addslashes($lang->get("error_occurred")); ?>', 'error');
+        } finally {
+            setLoadingState(false);
+        }
+    });
+
+    function setLoadingState(loading) {
+        const btnText = submitBtn.querySelector('.btn-text');
+        const btnLoader = submitBtn.querySelector('.btn-loader');
+        
+        if (loading) {
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+            if(btnText) btnText.style.display = 'none';
+            if(btnLoader) btnLoader.style.display = 'inline-block';
+        } else {
+            submitBtn.classList.remove('loading');
+            submitBtn.disabled = false;
+            if(btnText) btnText.style.display = 'inline-block';
+            if(btnLoader) btnLoader.style.display = 'none';
         }
     }
 
+    function showResult(message, type) {
+        formResult.textContent = message;
+        formResult.className = `form-result ${type}`;
+        formResult.style.display = 'block';
+    }
+
+    function clearErrors() {
+        withdrawalForm.querySelectorAll('.form-group.error').forEach(el => {
+            el.classList.remove('error');
+            const errorMsg = el.querySelector('.error-message');
+            if (errorMsg) {
+                errorMsg.textContent = '';
+            }
+        });
+    }
+
+    function showFieldErrors(errors) {
+        for (const field in errors) {
+            const input = withdrawalForm.querySelector(`[name="${field}"]`);
+            if (input) {
+                const formGroup = input.closest('.form-group');
+                if (formGroup) {
+                    formGroup.classList.add('error');
+                    const errorElement = formGroup.querySelector('.error-message');
+                    if (errorElement) {
+                        errorElement.textContent = errors[field];
+                    }
+                }
+            }
+        }
+    }
+
+    // Animation à l'apparition des éléments (bonus)
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('animate');
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
             }
         });
     }, { threshold: 0.1 });
 
-    document.querySelectorAll('.balance-card, .withdrawal-form-section, .info-card').forEach(el => {
+    document.querySelectorAll('.balance-card, .withdrawal-form-section, .info-card, .withdrawal-history').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
         observer.observe(el);
     });
 });

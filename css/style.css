@@ -64,6 +64,7 @@ body {
   color: var(--text-color);
   line-height: 1.5;
   background-color: #ffffff;
+  padding-top: 100px;
 }
 
 /* === TYPOGRAPHIE === */
@@ -373,6 +374,11 @@ a:hover {
 @media (max-width: 768px) {
   .container {
     padding: 0 var(--spacing-md);
+  }
+
+  body {
+    /* Hauteur du header mobile (60px) + barre de langue (35px) + petite marge (5px) */
+    padding-top: 90px; 
   }
   
   .grid-2,

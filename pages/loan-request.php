@@ -1,4 +1,9 @@
 <?php
+$pageKey = 'loan_request';
+$pageTitle = $lang->get('page_title_' . $pageKey);
+$pageDescription = $lang->get('page_description_' . $pageKey);
+?>
+<?php
 require_once 'classes/Database.php';
 require_once 'classes/User.php';
 require_once 'classes/Language.php';
@@ -23,14 +28,32 @@ $hasActiveLoan = !empty($existingLoanRequest) && in_array($existingLoanRequest[0
 $documentStatus = $document->getUserDocumentStatus($userId);
 $requiredDocs = $document->getMissingDocuments($userId);
 
-$pageTitle = $lang->get('loan_request_title');
+
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $lang->getCurrentLanguage(); ?>">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $seo->generateTitle($pageTitle); ?></title>
+    <meta name="description" content="<?php echo $seo->generateDescription($pageDescription); ?>">
+    <link rel="canonical" href="<?php echo $seo->generateCanonicalUrl($lang->pageUrl($pageKey)); ?>">
+    
+    <?php echo $seo->generateAlternateLinks(); ?>
+    
+    <?php echo $seo->generateOpenGraphTags(['title' => $pageTitle, 'description' => $pageDescription]); ?>
+    <?php echo $seo->generateTwitterCard(['title' => $pageTitle, 'description' => $pageDescription]); ?>
+    
+    <?php echo $seo->generateMetaTags(); ?>
+
+    <?php echo $seo->generateStructuredData('webpage', ['title' => $pageTitle, 'description' => $pageDescription]); ?>
+    <?php // Optionnel: Ajouter un Breadcrumb si pertinent
+    /*
+    echo $seo->generateStructuredData('breadcrumb', ['items' => [
+        ['name' => $lang->get('home'), 'url' => $lang->url('home')],
+        ['name' => $pageTitle]
+    ]]);
+    */
+    ?>
     <meta name="robots" content="noindex, nofollow">
     
     <link rel="stylesheet" href="/css/style.css">
@@ -726,7 +749,33 @@ $pageTitle = $lang->get('loan_request_title');
                         window.location.href = '<?php echo $lang->pageUrl('dashboard'); ?>';
                     }, 2000);
                 } else {
+
+                    // 1. Affichez une notification générale
                     showToast(data.message || 'Erreur lors de la soumission', 'error');
+                    
+                    // 2. Essayez de trouver le champ correspondant à l'erreur
+                    const errorMessage = data.message.toLowerCase();
+                    let fieldToHighlight = null;
+
+                    if (errorMessage.includes('objectif') || errorMessage.includes('purpose')) {
+                        fieldToHighlight = document.getElementById('loanPurpose');
+                    } else if (errorMessage.includes('montant') || errorMessage.includes('amount')) {
+                        fieldToHighlight = document.getElementById('loanAmount');
+                    } else if (errorMessage.includes('revenus') || errorMessage.includes('income')) {
+                        fieldToHighlight = document.getElementById('monthlyIncome');
+                    } else if (errorMessage.includes('charges') || errorMessage.includes('expenses')) {
+                        fieldToHighlight = document.getElementById('monthlyExpenses');
+                    }
+                    // Ajoutez d'autres conditions pour les autres champs si nécessaire
+
+                    // 3. Si un champ est trouvé, affichez l'erreur sous ce champ
+                    if (fieldToHighlight) {
+                        showFieldError(fieldToHighlight, data.message);
+                        
+                        // Optionnel : faites défiler la page jusqu'au champ en erreur
+                        fieldToHighlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                    // -- FIN DE LA MODIFICATION --
                 }
             })
             .catch(error => {
