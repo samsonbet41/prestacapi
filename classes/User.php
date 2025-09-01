@@ -37,7 +37,8 @@ class User {
                 'city' => trim($data['city'] ?? ''),
                 'postal_code' => trim($data['postal_code'] ?? ''),
                 'country' => trim($data['country'] ?? ''),
-                'status' => 'active'
+                'status' => 'active',
+                'language' => $languageCode,
             ];
             
             $userId = $this->db->insert('users', $userData);
@@ -70,6 +71,12 @@ class User {
             if (!$user || !password_verify($password, $user['password'])) {
                 sleep(1);
                 return ['success' => false, 'message' => 'Email ou mot de passe incorrect'];
+            }
+
+            $currentLang = Language::getInstance()->getCurrentLanguage();
+
+            if ($user['language'] !== $currentLang) {
+                $this->db->update('users', ['language' => $currentLang], 'id = ?', [$user['id']]);
             }
             
             $_SESSION['user_id'] = $user['id'];

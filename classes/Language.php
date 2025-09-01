@@ -254,7 +254,7 @@ class Language {
             'fr' => 'demande-pret',
             'en' => 'loan-request',
             'es' => 'solicitud-prestamo',
-            'de' => 'kredit-antrag'
+            'de' => 'kreditantrag'
         ];
         return $slugs[$language] ?? $slugs['fr'];
     }

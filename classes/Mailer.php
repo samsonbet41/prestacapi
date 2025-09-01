@@ -407,10 +407,13 @@ class Mailer {
         </html>";
     }
     
-    public function sendLoanApprovalEmail($userData, $loanData) {
+    public function sendLoanApprovalEmail($userData, $loanData, $languageCode) {
         try {
-            $subject = "🎉 Félicitations ! Votre prêt a été approuvé - Référence #" . $loanData['id'];
-            $message = $this->buildLoanApprovalTemplate($userData, $loanData);
+            // Le sujet est maintenant multilingue
+            $subject = $this->lang->get('email_approval_subject', ['id' => $loanData['id']], $languageCode);
+            
+            // On passe la langue à la méthode de construction
+            $message = $this->buildLoanApprovalTemplate($userData, $loanData, $languageCode);
             
             $result = $this->send($userData['email'], $subject, $message);
             
@@ -425,8 +428,8 @@ class Mailer {
             return false;
         }
     }
-    
-    private function buildLoanApprovalTemplate($userData, $loanData) {
+
+    private function buildLoanApprovalTemplate($userData, $loanData, $languageCode) {
         $styles = "
         <style>
             body { font-family: 'Arial', sans-serif; margin: 0; padding: 0; background-color: #F5F7FA; }
@@ -443,73 +446,68 @@ class Mailer {
         
         return " 
         <!DOCTYPE html>
-        <html lang='fr'>
+        <html lang='{$languageCode}'>
         <head>
             <meta charset='UTF-8'>
-            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-            <title>Prêt approuvé !</title>
+            <title>{$this->lang->get('email_approval_subject', ['id' => $loanData['id']], $languageCode)}</title>
             {$styles}
         </head>
         <body>
             <div class='container'>
                 <div class='header'>
-                    <h1>🎉 FÉLICITATIONS !</h1>
-                    <h2>Votre prêt a été approuvé</h2>
+                    <h1>{$this->lang->get('email_approval_header', [], $languageCode)}</h1>
+                    <h2>{$this->lang->get('email_approval_subheader', [], $languageCode)}</h2>
                 </div>
                 
                 <div class='content'>
-                    <h2>Excellente nouvelle, " . htmlspecialchars($userData['first_name']) . " !</h2>
+                    <h2>{$this->lang->get('email_approval_greeting', ['name' => htmlspecialchars($userData['first_name'])], $languageCode)}</h2>
                     
                     <div class='success-box'>
-                        <h3>✅ Votre demande de prêt a été acceptée !</h3>
+                        <h3>{$this->lang->get('email_approval_box_title', [], $languageCode)}</h3>
                         <div class='amount-big'>" . number_format($loanData['approved_amount'], 0, ',', ' ') . " €</div>
-                        <p>Ce montant est maintenant disponible sur votre compte PrestaCapi</p>
+                        <p>{$this->lang->get('email_approval_box_body', [], $languageCode)}</p>
                     </div>
                     
                     <div class='bank-info'>
-                        <h3>🏦 Détails de l'approbation :</h3>
-                        <p><strong>Référence :</strong> #" . htmlspecialchars($loanData['id']) . "</p>
-                        <p><strong>Montant approuvé :</strong> " . number_format($loanData['approved_amount'], 0, ',', ' ') . " €</p>
-                        <p><strong>Partenaire financier :</strong> " . htmlspecialchars($loanData['partner_bank']) . "</p>
-                        <p><strong>Date d'approbation :</strong> " . date('d/m/Y H:i') . "</p>
-                        <p><strong>Votre nouveau solde :</strong> " . number_format($userData['balance'], 2, ',', ' ') . " €</p>
+                        <h3>{$this->lang->get('email_approval_details_title', [], $languageCode)}</h3>
+                        <p><strong>{$this->lang->get('email_ref', [], $languageCode)}:</strong> #" . htmlspecialchars($loanData['id']) . "</p>
+                        <p><strong>{$this->lang->get('email_approval_amount', [], $languageCode)}:</strong> " . number_format($loanData['approved_amount'], 0, ',', ' ') . " €</p>
+                        <p><strong>{$this->lang->get('email_approval_partner', [], $languageCode)}:</strong> " . htmlspecialchars($loanData['partner_bank']) . "</p>
+                        <p><strong>{$this->lang->get('email_approval_date', [], $languageCode)}:</strong> " . date('d/m/Y H:i') . "</p>
+                        <p><strong>{$this->lang->get('email_approval_new_balance', [], $languageCode)}:</strong> " . number_format($userData['balance'], 2, ',', ' ') . " €</p>
                     </div>
                     
-                    <h3>💳 Prochaines étapes :</h3>
+                    <h3>{$this->lang->get('email_approval_next_steps_title', [], $languageCode)}</h3>
                     <ol>
-                        <li>Connectez-vous à votre tableau de bord pour voir votre solde mis à jour</li>
-                        <li>Faites une demande de retrait en indiquant vos coordonnées bancaires</li>
-                        <li>Votre virement sera traité sous 24-48h après validation</li>
+                        <li>{$this->lang->get('email_approval_step1', [], $languageCode)}</li>
+                        <li>{$this->lang->get('email_approval_step2', [], $languageCode)}</li>
+                        <li>{$this->lang->get('email_approval_step3', [], $languageCode)}</li>
                     </ol>
                     
                     <div style='text-align: center; margin: 2rem 0;'>
-                        <a href='https://prestacapi.com/dashboard' class='button'>
-                            Accéder à mon tableau de bord
+                        <a href='https://prestacapi.com/{$languageCode}/dashboard' class='button'>
+                            {$this->lang->get('email_approval_cta_button', [], $languageCode)}
                         </a>
                     </div>
                     
-                    <h3>📞 Support</h3>
-                    <p>
-                        Notre équipe reste à votre disposition :<br>
-                        <strong>Téléphone :</strong> +33 7 45 50 52 07<br>
-                        <strong>Email :</strong> support@prestacapi.com<br>
-                        <strong>WhatsApp :</strong> +33 7 45 50 52 07
-                    </p>
+                    <h3>{$this->lang->get('email_support_title', [], $languageCode)}</h3>
+                    <p>{$this->lang->get('email_support_body', [], $languageCode)}</p>
                 </div>
                 
                 <div class='footer'>
-                    <p><strong>PrestaCapi</strong> - Merci de votre confiance !</p>
-                    <p><small>Référence : #" . htmlspecialchars($loanData['id']) . "</small></p>
+                    <p><strong>{$this->lang->get('email_approval_footer_brand', [], $languageCode)}</strong></p>
+                    <p><small>{$this->lang->get('email_ref', [], $languageCode)}: #" . htmlspecialchars($loanData['id']) . "</small></p>
                 </div>
             </div>
         </body>
         </html>";
     }
     
-    public function sendLoanRejectionEmail($userData, $loanData) {
+    public function sendLoanRejectionEmail($userData, $loanData, $languageCode) {
         try {
-            $subject = "Mise à jour de votre demande de prêt - Référence #" . $loanData['id'];
-            $message = $this->buildLoanRejectionTemplate($userData, $loanData);
+            $subject = $this->lang->get('email_rejection_subject', ['id' => $loanData['id']], $languageCode);
+            
+            $message = $this->buildLoanRejectionTemplate($userData, $loanData, $languageCode);
             
             $result = $this->send($userData['email'], $subject, $message);
             
@@ -524,8 +522,8 @@ class Mailer {
             return false;
         }
     }
-    
-    private function buildLoanRejectionTemplate($userData, $loanData) {
+
+    private function buildLoanRejectionTemplate($userData, $loanData, $languageCode) {
         $styles = "
         <style>
             body { font-family: 'Arial', sans-serif; margin: 0; padding: 0; background-color: #F5F7FA; }
@@ -541,62 +539,54 @@ class Mailer {
         
         return " 
         <!DOCTYPE html>
-        <html lang='fr'>
+        <html lang='{$languageCode}'>
         <head>
             <meta charset='UTF-8'>
-            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-            <title>Mise à jour de votre demande</title>
+            <title>{$this->lang->get('email_rejection_subject', ['id' => $loanData['id']], $languageCode)}</title>
             {$styles}
         </head>
         <body>
             <div class='container'>
                 <div class='header'>
-                    <h1>📋 Mise à jour de votre demande</h1>
-                    <p>Référence : #" . htmlspecialchars($loanData['id']) . "</p>
+                    <h1>{$this->lang->get('email_rejection_header', [], $languageCode)}</h1>
+                    <p>{$this->lang->get('email_ref', [], $languageCode)}: #" . htmlspecialchars($loanData['id']) . "</p>
                 </div>
                 
                 <div class='content'>
-                    <h2>Bonjour " . htmlspecialchars($userData['first_name']) . ",</h2>
+                    <h2>{$this->lang->get('email_rejection_greeting', ['name' => htmlspecialchars($userData['first_name'])], $languageCode)}</h2>
                     
-                    <p>Nous avons le regret de vous informer que votre demande de prêt n'a pas pu être approuvée pour le moment.</p>
+                    <p>{$this->lang->get('email_rejection_intro', [], $languageCode)}</p>
                     
                     <div class='info-box'>
-                        <h3>📊 Détails de la demande :</h3>
-                        <p><strong>Référence :</strong> #" . htmlspecialchars($loanData['id']) . "</p>
-                        <p><strong>Montant demandé :</strong> " . number_format($loanData['amount'], 0, ',', ' ') . " €</p>
-                        <p><strong>Motif du refus :</strong> " . htmlspecialchars($loanData['rejection_reason']) . "</p>
+                        <h3>{$this->lang->get('email_rejection_details_title', [], $languageCode)}</h3>
+                        <p><strong>{$this->lang->get('email_ref', [], $languageCode)}:</strong> #" . htmlspecialchars($loanData['id']) . "</p>
+                        <p><strong>{$this->lang->get('loan_amount', [], $languageCode)}:</strong> " . number_format($loanData['amount'], 0, ',', ' ') . " €</p>
+                        <p><strong>{$this->lang->get('email_rejection_reason', [], $languageCode)}:</strong> " . htmlspecialchars($loanData['rejection_reason']) . "</p>
                     </div>
                     
                     <div class='alternatives'>
-                        <h3>💡 Nos recommandations :</h3>
+                        <h3>{$this->lang->get('email_rejection_reco_title', [], $languageCode)}</h3>
                         <ul>
-                            <li>Vous pouvez refaire une demande dans 30 jours</li>
-                            <li>Assurez-vous que tous vos documents sont à jour</li>
-                            <li>Considérez un montant ou une durée différente</li>
-                            <li>Améliorer votre profil financier avant de repostuler</li>
+                            <li>{$this->lang->get('email_rejection_reco1', [], $languageCode)}</li>
+                            <li>{$this->lang->get('email_rejection_reco2', [], $languageCode)}</li>
+                            <li>{$this->lang->get('email_rejection_reco3', [], $languageCode)}</li>
+                            <li>{$this->lang->get('email_rejection_reco4', [], $languageCode)}</li>
                         </ul>
                     </div>
                     
-                    <h3>🆘 Besoin d'aide ?</h3>
-                    <p>Notre équipe peut vous conseiller pour optimiser votre prochaine demande :</p>
+                    <h3>{$this->lang->get('email_rejection_help_title', [], $languageCode)}</h3>
+                    <p>{$this->lang->get('email_rejection_help_body', [], $languageCode)}</p>
                     
                     <div style='text-align: center; margin: 2rem 0;'>
-                        <a href='https://prestacapi.com/contact' class='button'>
-                            Contacter un conseiller
+                        <a href='https://prestacapi.com/{$languageCode}/contact' class='button'>
+                            {$this->lang->get('email_rejection_cta_button', [], $languageCode)}
                         </a>
                     </div>
-                    
-                    <h3>📞 Support</h3>
-                    <p>
-                        <strong>Téléphone :</strong> +33 7 45 50 52 07<br>
-                        <strong>Email :</strong> support@prestacapi.com<br>
-                        <strong>WhatsApp :</strong> +33 7 45 50 52 07
-                    </p>
                 </div>
                 
                 <div class='footer'>
-                    <p><strong>PrestaCapi</strong> - Nous restons à votre service</p>
-                    <p><small>Référence : #" . htmlspecialchars($loanData['id']) . "</small></p>
+                    <p><strong>{$this->lang->get('email_rejection_footer_brand', [], $languageCode)}</strong></p>
+                    <p><small>{$this->lang->get('email_ref', [], $languageCode)}: #" . htmlspecialchars($loanData['id']) . "</small></p>
                 </div>
             </div>
         </body>

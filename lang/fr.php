@@ -629,5 +629,46 @@ return [
     'email_loan_request_doc3' => 'Relevés bancaires (3 derniers mois)',
     'email_loan_request_doc4' => 'Justificatif de domicile récent',
     'email_contact_title' => '📞 Contact',
-];
+
+    // --- EMAIL D'APPROBATION DE PRÊT ---
+    'email_approval_subject' => '🎉 Félicitations ! Votre prêt #{id} a été approuvé',
+    'email_approval_header' => 'FÉLICITATIONS !',
+    'email_approval_subheader' => 'Votre prêt a été approuvé',
+    'email_approval_greeting' => 'Excellente nouvelle, {name} !',
+    'email_approval_box_title' => '✅ Votre demande de prêt a été acceptée !',
+    'email_approval_box_body' => 'Ce montant est maintenant disponible sur votre compte PrestaCapi.',
+    'email_approval_details_title' => '🏦 Détails de l\'approbation',
+    'email_approval_amount' => 'Montant approuvé',
+    'email_approval_partner' => 'Partenaire financier',
+    'email_approval_date' => 'Date d\'approbation',
+    'email_approval_new_balance' => 'Votre nouveau solde',
+    'email_approval_next_steps_title' => '💳 Prochaines étapes',
+    'email_approval_step1' => 'Connectez-vous à votre tableau de bord pour voir votre solde mis à jour.',
+    'email_approval_step2' => 'Faites une demande de retrait en indiquant vos coordonnées bancaires.',
+    'email_approval_step3' => 'Votre virement sera traité sous 24-48h après validation.',
+    'email_approval_cta_button' => 'Accéder à mon tableau de bord',
+    'email_approval_footer_brand' => 'PrestaCapi - Merci de votre confiance !',
+
+    // --- EMAIL DE REFUS DE PRÊT ---
+    'email_rejection_subject' => 'Mise à jour de votre demande de prêt #{id}',
+    'email_rejection_header' => '📋 Mise à jour de votre demande',
+    'email_rejection_greeting' => 'Bonjour {name},',
+    'email_rejection_intro' => 'Nous avons examiné votre demande de prêt. Malheureusement, nous ne pouvons pas y répondre favorablement pour le moment.',
+    'email_rejection_details_title' => '📊 Détails de la demande',
+    'email_rejection_reason' => 'Motif du refus',
+    'email_rejection_reco_title' => '💡 Nos recommandations',
+    'email_rejection_reco1' => 'Vous pouvez soumettre une nouvelle demande dans 30 jours.',
+    'email_rejection_reco2' => 'Assurez-vous que tous vos documents sont complets et à jour.',
+    'email_rejection_reco3' => 'Envisagez de revoir le montant ou la durée de votre demande.',
+    'email_rejection_reco4' => 'Améliorer votre profil financier peut augmenter vos chances.',
+    'email_rejection_help_title' => '🆘 Besoin de conseils ?',
+    'email_rejection_help_body' => 'Notre équipe peut vous conseiller pour optimiser votre prochaine demande.',
+    'email_rejection_cta_button' => 'Contacter un conseiller',
+    'email_rejection_footer_brand' => 'PrestaCapi - Nous restons à votre service',
+
+    // --- CLÉS COMMUNES (si non déjà présentes) ---
+    'email_ref' => 'Référence',
+    'email_support_title' => '📞 Support',
+    'email_support_body' => 'Notre équipe reste à votre disposition :',
+    ];
 ?>

@@ -3,6 +3,7 @@
 // Initialisation et sécurité
 require_once '../includes/auth-admin.php';
 require_once '../../classes/LoanRequest.php';
+require_once '../../classes/Language.php';
 
 // Seuls les admins avec la permission peuvent exécuter ce script
 requirePermission('manage_loans');

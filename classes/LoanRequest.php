@@ -190,12 +190,12 @@ class LoanRequest {
             
             $user = $this->db->fetchOne("SELECT * FROM users WHERE id = ?", [$loanRequest['user_id']]);
             $loanData = array_merge($loanRequest, $updateData);
-            
+            $languageCode = $user['language'] ?? 'es'; // Par défaut 'es'
             $mailer = new Mailer();
             if ($status === 'approved') {
-                $mailer->sendLoanApprovalEmail($user, $loanData);
+                $mailer->sendLoanApprovalEmail($user, $loanData, $languageCode);
             } elseif ($status === 'rejected') {
-                $mailer->sendLoanRejectionEmail($user, $loanData);
+                $mailer->sendLoanRejectionEmail($user, $loanData, $languageCode);
             }
             
             $this->db->commit();
