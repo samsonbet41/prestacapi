@@ -522,4 +522,5 @@ return [
     'explore_more' => 'Möchten Sie mehr erfahren?',
     'explore_more_desc' => 'Erkunden Sie unseren Blog für weitere Finanztipps oder stellen Sie Ihren Kreditantrag.',
     'all_articles' => 'Alle Artikel',
+    'loan_request' => 'Kreditantrag',
 ];

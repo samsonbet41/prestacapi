@@ -92,7 +92,7 @@ $totalPages = ceil($totalPosts / $postsPerPage);
                              alt="<?php echo htmlspecialchars($post['title']); ?>" 
                              loading="lazy">
                         <div class="post-overlay">
-                            <a href="<?php echo generateLocalizedUrl('blog', $post['slug']); ?>" class="read-more-btn">
+                            <a href="<?php echo generateLocalizedUrl('blog', $currentLang, $post['slug']); ?>" class="read-more-btn">
                                 <?php echo $lang->get('read_article'); ?>
                             </a>
                         </div>
@@ -114,7 +114,7 @@ $totalPages = ceil($totalPosts / $postsPerPage);
                             </span>
                         </div>
                         <h3>
-                            <a href="<?php echo generateLocalizedUrl('blog', $post['slug']); ?>">
+                            <a href="<?php echo generateLocalizedUrl('blog', $currentLang, $post['slug']); ?>">
                                 <?php echo htmlspecialchars($post['title']); ?>
                             </a>
                         </h3>
@@ -190,7 +190,7 @@ $totalPages = ceil($totalPosts / $postsPerPage);
                                     </span>
                                 </div>
                                 <h3>
-                                    <a href="<?php echo generateLocalizedUrl('blog', $post['slug']); ?>">
+                                    <a href="<?php echo generateLocalizedUrl('blog', $currentLang, $post['slug']); ?>">
                                         <?php echo htmlspecialchars($post['title']); ?>
                                     </a>
                                 </h3>
@@ -210,7 +210,7 @@ $totalPages = ceil($totalPosts / $postsPerPage);
                                     ?>
                                 </div>
                                 <?php endif; ?>
-                                <a href="<?php echo generateLocalizedUrl('blog', $post['slug']); ?>" class="read-more">
+                                <a href="<?php echo generateLocalizedUrl('blog', $currentLang, $post['slug']); ?>" class="read-more">
                                     <?php echo $lang->get('read_more'); ?> <i class="icon-arrow-right"></i>
                                 </a>
                             </div>

@@ -583,5 +583,6 @@ return [
     'explore_more' => 'Want to learn more?',
     'explore_more_desc' => 'Explore our blog for more financial advice or apply for your loan.',
     'all_articles' => 'All articles',
+    'loan_request' => 'Loan application',
 ];
 ?>

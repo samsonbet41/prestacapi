@@ -27,7 +27,7 @@ $requestUri = rtrim($requestUri, '/');
 
 
 if (empty($requestUri) || $requestUri === '') {
-    header('Location: /fr/', 301);
+    header('Location: /es/', 301);
     exit;
 }
 

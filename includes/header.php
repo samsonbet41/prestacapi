@@ -14,7 +14,7 @@ if (file_exists(__DIR__ . '/../lang/slugs.php')) {
     $slugs = include __DIR__ . '/../lang/slugs.php';
 }
 
-require_once 'config/app.php';
+require_once __DIR__ . '/../config/app.php';
 
 $isLoggedIn = $user->isLoggedIn();
 $currentUser = $isLoggedIn ? $user->getCurrentUser() : null;

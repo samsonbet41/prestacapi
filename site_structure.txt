@@ -24,6 +24,7 @@ Structure du site : C:\xampp\htdocs
     ├── 12/
     ├── 13/
     ├── 14/
+    ├── 15/
     ├── 16/
     ├── 17/
     ├── 18/
@@ -46,6 +47,7 @@ Structure du site : C:\xampp\htdocs
     ├── 30/
     ├── 32/
     ├── 33/
+    ├── 35/
     ├── 36/
     ├── 38/
     ├── 39/
@@ -113,9 +115,11 @@ Structure du site : C:\xampp\htdocs
     ├── 8f/
     ├── 90/
     ├── 91/
+    ├── 92/
     ├── 93/
     ├── 94/
     ├── 96/
+    ├── 97/
     ├── 98/
     ├── 99/
     ├── 9a/
@@ -126,6 +130,7 @@ Structure du site : C:\xampp\htdocs
     ├── a0/
     ├── a1/
     ├── a2/
+    ├── a3/
     ├── a4/
     ├── a5/
     ├── a7/
@@ -143,6 +148,7 @@ Structure du site : C:\xampp\htdocs
     ├── b4/
     ├── b6/
     ├── b7/
+    ├── b8/
     ├── ba/
     ├── bb/
     ├── be/
@@ -157,17 +163,20 @@ Structure du site : C:\xampp\htdocs
     ├── cb/
     ├── cc/
     ├── cd/
+    ├── cf/
     ├── d1/
     ├── d2/
     ├── d5/
     ├── d6/
     ├── d8/
+    ├── da/
     ├── db/
     ├── dd/
     ├── de/
     ├── df/
     ├── e0/
     ├── e1/
+    ├── e2/
     ├── e3/
     ├── e5/
     ├── e6/
@@ -285,8 +294,10 @@ Structure du site : C:\xampp\htdocs
     ├── view.php
 ├── hash_password.php
 ├── images/
+  ├── equipes/
   ├── favicon/
   ├── flags/
+  ├── partners/
 ├── includes/
   ├── auth-check.php
   ├── auth_header.php

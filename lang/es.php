@@ -522,4 +522,5 @@ return [
     'explore_more' => '¿Quiere saber más?',
     'explore_more_desc' => 'Explore nuestro blog para más consejos financieros o solicite su préstamo.',
     'all_articles' => 'Todos los artículos',
+    'loan_request' => 'Solicitud de préstamo',
 ];

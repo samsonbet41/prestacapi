@@ -1,22 +1,22 @@
 <?php
+// Le fichier index.php a déjà vérifié que l'article existe
+// et a créé la variable $blogPost pour nous.
+// Nous n'avons plus besoin de chercher le slug ou de refaire la requête.
+
+// 1. DÉFINIR LES VARIABLES POUR LE HEADER
 $pageKey = 'blog';
 $pageTitle = $blogPost['meta_title'] ?: $blogPost['title'];
 $pageDescription = $blogPost['meta_description'] ?: $blogPost['excerpt'];
-?>
-<?php
-require_once 'includes/header.php';
 
-if (!isset($blogPost) || empty($blogPost)) {
-    header('HTTP/1.1 404 Not Found');
-    include '404.php';
-    exit;
-}
+// 2. INCLURE LE HEADER
+// Note: index.php a déjà chargé app.php, donc $lang existe déjà.
+require_once __DIR__ . '/../includes/header.php';
 
-
-
-$blog = new Blog();
+// 3. PRÉPARER LES VARIABLES POUR LA PAGE (en utilisant $blogPost)
 $relatedPosts = [];
 try {
+    // On crée une nouvelle instance de Blog juste pour ses méthodes utilitaires
+    $blog = new Blog(); 
     $relatedPosts = $blog->getRelatedPosts($blogPost['id'], $currentLang, 3);
 } catch (Exception $e) {
     error_log("Erreur chargement articles relatés: " . $e->getMessage());
@@ -98,7 +98,7 @@ $shareText = urlencode($blogPost['excerpt']);
         <?php if (!empty($blogPost['featured_image'])): ?>
         <div class="post-featured-image">
             <div class="container">
-                <img src="<?php echo htmlspecialchars($blogPost['featured_image']); ?>" 
+                <img src="/<?php echo ltrim(htmlspecialchars($blogPost['featured_image']), '/'); ?>" 
                      alt="<?php echo htmlspecialchars($blogPost['title']); ?>" 
                      loading="lazy">
             </div>
@@ -296,7 +296,7 @@ $shareText = urlencode($blogPost['excerpt']);
                 <article class="related-post-card">
                     <?php if (!empty($post['featured_image'])): ?>
                     <div class="post-image">
-                        <img src="<?php echo htmlspecialchars($post['featured_image']); ?>" 
+                        <img src="/<?php echo ltrim(htmlspecialchars($post['featured_image']), '/'); ?>" 
                              alt="<?php echo htmlspecialchars($post['title']); ?>" 
                              loading="lazy">
                     </div>
@@ -347,7 +347,7 @@ $shareText = urlencode($blogPost['excerpt']);
     "@type": "BlogPosting",
     "headline": "<?php echo htmlspecialchars($blogPost['title'], ENT_QUOTES); ?>",
     "description": "<?php echo htmlspecialchars($blogPost['excerpt'], ENT_QUOTES); ?>",
-    "image": "<?php echo !empty($blogPost['featured_image']) ? htmlspecialchars($blogPost['featured_image'], ENT_QUOTES) : ''; ?>",
+    "image": "<?php echo !empty($blogPost['featured_image']) ? htmlspecialchars(ltrim($blogPost['featured_image'], '/'), ENT_QUOTES) : ''; ?>",
     "author": {
         "@type": "Person",
         "name": "<?php echo htmlspecialchars($blogPost['author'], ENT_QUOTES); ?>"
@@ -540,4 +540,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<?php require_once 'includes/footer.php'; ?>
+<?php 
+require_once __DIR__ . '/../includes/footer.php'; 
+?>

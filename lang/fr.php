@@ -588,5 +588,6 @@ return [
     'explore_more' => 'Envie d\'en savoir plus ?',
     'explore_more_desc' => 'Explorez notre blog pour plus de conseils financiers ou faites votre demande de prêt.',
     'all_articles' => 'Tous les articles',
+    'loan_request' => 'Demande de prêt',
 ];
 ?>

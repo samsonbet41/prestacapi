@@ -41,8 +41,8 @@ RewriteRule ^(css|js|images|uploads|ajax|deboutatoutprix\(admin\)|vendor)/ - [L]
 # Ne pas réécrire les fichiers spéciaux
 RewriteRule ^(robots\.txt|sitemap\.xml|favicon\.ico|sw\.js|test-slugs\.php)$ - [L]
 
-# Rediriger la racine vers /fr/
-RewriteRule ^$ /fr/ [R=301,L]
+# Rediriger la racine vers /es/
+RewriteRule ^$ /es/ [R=301,L]
 
 # Rediriger les URLs sans langue vers le français
 RewriteRule ^(login|register|contact|about|blog|dashboard|profile|documents|withdrawal|testimonials|partners|privacy|faq|services|help|support|connexion|inscription|tableau-de-bord|demande-pret|retrait|profil|a-propos|temoignages|partenaires|confidentialite)/?$ /fr/$1/ [R=301,L]
