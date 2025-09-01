@@ -11,7 +11,7 @@ class User {
         }
     }
     
-    public function register($data) {
+    public function register($data, $languageCode) {
         try {
             if ($this->emailExists($data['email'])) {
                 return ['success' => false, 'message' => 'Cette adresse email existe déjà'];
@@ -46,7 +46,7 @@ class User {
                 $this->db->logActivity($userId, null, 'user_registered', 'Nouvel utilisateur inscrit');
                 
                 $mailer = new Mailer();
-                $mailer->sendWelcomeEmail($userData['email'], $userData['first_name']);
+                $mailer->sendWelcomeEmail($userData['email'], $userData['first_name'], $languageCode);
                 
                 return [
                     'success' => true, 

@@ -25,11 +25,17 @@ class Mailer {
         'encryption' => 'ssl',
         'timeout' => 30
     ];
+
+    private $lang;
     
     public function __construct() {
+        if (class_exists('Language')) {
+            $this->lang = Language::getInstance();
+        }
         $this->loadConfigFromDatabase();
         $this->log("Mailer PrestaCapi initialisé");
     }
+
     
     private function log($message, $level = 'INFO') {
         $timestamp = date('Y-m-d H:i:s');
@@ -205,17 +211,18 @@ class Mailer {
         }
     }
     
-    public function sendWelcomeEmail($email, $firstName) {
+    public function sendWelcomeEmail($email, $firstName, $languageCode) {
         try {
-            $subject = "Bienvenue chez PrestaCapi - Votre compte a été créé !";
-            $message = $this->buildWelcomeTemplate($firstName);
+            $subject = $this->lang->get('email_welcome_subject', [], $languageCode);
+            
+            $message = $this->buildWelcomeTemplate($firstName, $languageCode);
             
             $result = $this->send($email, $subject, $message);
             
             if ($result) {
-                $this->log("Email de bienvenue envoyé vers: $email", 'SUCCESS');
+                $this->log("Email de bienvenue ($languageCode) envoyé vers: $email", 'SUCCESS');
             } else {
-                $this->log("Échec envoi email de bienvenue vers: $email", 'ERROR');
+                $this->log("Échec envoi email de bienvenue ($languageCode) vers: $email", 'ERROR');
             }
             
             return $result;
@@ -226,7 +233,7 @@ class Mailer {
         }
     }
     
-    private function buildWelcomeTemplate($firstName) {
+    private function buildWelcomeTemplate($firstName, $languageCode) {
         $styles = "
         <style>
             body { font-family: 'Arial', sans-serif; margin: 0; padding: 0; background-color: #F5F7FA; }
@@ -240,81 +247,69 @@ class Mailer {
             .feature { flex: 1; min-width: 200px; text-align: center; padding: 1rem; background: #F5F7FA; border-radius: 8px; }
         </style>
         ";
+
+        $header = $this->lang->get('email_welcome_header', [], $languageCode);
+        $subheader = $this->lang->get('email_welcome_subheader', [], $languageCode);
+        $greeting = $this->lang->get('email_welcome_greeting', ['name' => htmlspecialchars($firstName)], $languageCode);
+        $boxTitle = $this->lang->get('email_welcome_box_title', [], $languageCode);
+        $boxBody = $this->lang->get('email_welcome_box_body', [], $languageCode);
+        $ctaButton = $this->lang->get('email_welcome_cta_button', [], $languageCode);
+        $question = $this->lang->get('email_welcome_question', [], $languageCode);
+        $supportText = $this->lang->get('email_welcome_support_text', [], $languageCode);
+        $footerBrand = $this->lang->get('email_footer_brand', [], $languageCode);
+        $footerNotice = $this->lang->get('email_footer_notice', [], $languageCode);
         
         return " 
         <!DOCTYPE html>
-        <html lang='fr'>
+        <html lang='{$languageCode}'>
         <head>
             <meta charset='UTF-8'>
-            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-            <title>Bienvenue chez PrestaCapi</title>
+            <title>{$this->lang->get('email_welcome_subject', [], $languageCode)}</title>
             {$styles}
         </head>
         <body>
             <div class='container'>
                 <div class='header'>
-                    <h1>🎉 Bienvenue chez PrestaCapi !</h1>
-                    <p>Votre partenaire de confiance pour vos projets financiers</p>
+                    <h1>{$header}</h1>
+                    <p>{$subheader}</p>
                 </div>
                 
                 <div class='content'>
-                    <h2>Bonjour " . htmlspecialchars($firstName) . " !</h2>
+                    <h2>{$greeting}</h2>
                     
                     <div class='welcome-box'>
-                        <h3>✅ Votre compte a été créé avec succès</h3>
-                        <p>Félicitations ! Vous pouvez maintenant accéder à tous nos services de financement.</p>
+                        <h3>{$boxTitle}</h3>
+                        <p>{$boxBody}</p>
                     </div>
-                    
-                    <div class='features'>
-                        <div class='feature'>
-                            <h4>💰 Prêts Rapides</h4>
-                            <p>Obtenez une réponse sous 24h pour vos demandes de prêt</p>
-                        </div>
-                        <div class='feature'>
-                            <h4>🏦 Partenaires Fiables</h4>
-                            <p>Nous travaillons avec les meilleures banques et institutions</p>
-                        </div>
-                        <div class='feature'>
-                            <h4>📊 Suivi en Temps Réel</h4>
-                            <p>Suivez l'état de vos demandes depuis votre tableau de bord</p>
-                        </div>
-                    </div>
-                    
-                    <h3>🚀 Prochaines étapes :</h3>
-                    <ol>
-                        <li><strong>Complétez votre profil</strong> avec vos informations personnelles</li>
-                        <li><strong>Uploadez vos documents</strong> requis (pièce d'identité, justificatifs de revenus...)</li>
-                        <li><strong>Faites votre première demande</strong> de prêt en quelques clics</li>
-                    </ol>
                     
                     <div style='text-align: center; margin: 2rem 0;'>
-                        <a href='https://prestacapi.com/dashboard' class='button'>
-                            🔗 Accéder à mon tableau de bord
+                        <a href='https://prestacapi.com/{$languageCode}/dashboard' class='button'>
+                            {$ctaButton}
                         </a>
                     </div>
                     
-                    <h3>❓ Une question ?</h3>
+                    <h3>{$question}</h3>
                     <p>
-                        Notre équipe est disponible 7j/7 pour vous accompagner :<br>
+                        {$supportText}<br>
                         <strong>📞 Téléphone :</strong> +33 7 45 50 52 07<br>
                         <strong>📧 Email :</strong> support@prestacapi.com<br>
-                        <strong>💬 WhatsApp :</strong> +33  745 50 52 07
+                        <strong>💬 WhatsApp :</strong> +33 7 45 50 52 07
                     </p>
                 </div>
                 
                 <div class='footer'>
-                    <p><strong>PrestaCapi</strong> - Votre réussite financière depuis 2008</p>
-                    <p><small>Cet email a été envoyé automatiquement. Merci de ne pas répondre à cette adresse.</small></p>
+                    <p><strong>{$footerBrand}</strong></p>
+                    <p><small>{$footerNotice}</small></p>
                 </div>
             </div>
         </body>
         </html>";
     }
     
-    public function sendLoanRequestConfirmation($userData, $loanData) {
+    public function sendLoanRequestConfirmation($userData, $loanData, $languageCode) {
         try {
-            $subject = "Demande de prêt reçue - Référence #" . $loanData['id'];
-            $message = $this->buildLoanRequestTemplate($userData, $loanData);
+            $subject = $this->lang->get('email_loan_request_subject', ['id' => $loanData['id']], $languageCode);
+            $message = $this->buildLoanRequestTemplate($userData, $loanData, $languageCode);
             
             $result = $this->send($userData['email'], $subject, $message);
             

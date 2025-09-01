@@ -584,5 +584,25 @@ return [
     'explore_more_desc' => 'Explore our blog for more financial advice or apply for your loan.',
     'all_articles' => 'All articles',
     'loan_request' => 'Loan application',
+    'email_welcome_subject' => 'Welcome to PrestaCapi - Your account has been created!',
+    'email_welcome_greeting' => 'Hello {name}!',
+    'email_welcome_header' => '🎉 Welcome to PrestaCapi!',
+    'email_welcome_subheader' => 'Your trusted partner for your financial projects',
+    'email_welcome_box_title' => '✅ Your account has been created successfully',
+    'email_welcome_box_body' => 'Congratulations! You can now access all our financing services.',
+    'email_welcome_cta_button' => '🔗 Access my dashboard',
+    'email_welcome_question' => '❓ A question?',
+    'email_welcome_support_text' => 'Our team is available 7 days a week to support you:',
+    'email_footer_brand' => 'PrestaCapi - Your financial success since 2008',
+    'email_footer_notice' => 'This email was sent automatically. Please do not reply to this address.',
+    'login_subtitle' => 'Access your personal PrestaCapi space',
+    'login_placeholder_email' => 'your@email.com',
+    'login_placeholder_password' => '••••••••',
+
+    'forgot_password_title' => 'Reset Password',
+    'forgot_password_instructions' => 'Enter your email to receive a reset link.',
+    'forgot_password_submit_btn' => 'Send link',
+
+    'js_error_occurred' => 'A communication error occurred. Please try again.',
 ];
 ?>

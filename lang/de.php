@@ -523,4 +523,24 @@ return [
     'explore_more_desc' => 'Erkunden Sie unseren Blog für weitere Finanztipps oder stellen Sie Ihren Kreditantrag.',
     'all_articles' => 'Alle Artikel',
     'loan_request' => 'Kreditantrag',
-];
+    'email_welcome_subject' => 'Willkommen bei PrestaCapi - Ihr Konto wurde erstellt!',
+    'email_welcome_greeting' => 'Hallo {name}!',
+    'email_welcome_header' => '🎉 Willkommen bei PrestaCapi!',
+    'email_welcome_subheader' => 'Ihr vertrauenswürdiger Partner für Ihre Finanzprojekte',
+    'email_welcome_box_title' => '✅ Ihr Konto wurde erfolgreich erstellt',
+    'email_welcome_box_body' => 'Herzlichen Glückwunsch! Sie können jetzt auf alle unsere Finanzierungsdienste zugreifen.',
+    'email_welcome_cta_button' => '🔗 Zum Dashboard',
+    'email_welcome_question' => '❓ Eine Frage?',
+    'email_welcome_support_text' => 'Unser Team steht Ihnen 7 Tage die Woche zur Verfügung, um Sie zu unterstützen:',
+    'email_footer_brand' => 'PrestaCapi - Ihr finanzieller Erfolg seit 2008',
+    'email_footer_notice' => 'Diese E-Mail wurde automatisch gesendet. Bitte antworten Sie nicht auf diese Adresse.',
+    'login_subtitle' => 'Greifen Sie auf Ihren persönlichen PrestaCapi-Bereich zu',
+    'login_placeholder_email' => 'ihre@email.com',
+    'login_placeholder_password' => '••••••••',
+
+    'forgot_password_title' => 'Passwort zurücksetzen',
+    'forgot_password_instructions' => 'Geben Sie Ihre E-Mail-Adresse ein, um einen Zurücksetzungslink zu erhalten.',
+    'forgot_password_submit_btn' => 'Link senden',
+
+    'js_error_occurred' => 'Es ist ein Kommunikationsfehler aufgetreten. Bitte versuchen Sie es erneut.',
+    ];

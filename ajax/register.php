@@ -80,8 +80,9 @@ try {
         ]);
         exit;
     }
+    $currentLang = $lang->getCurrentLanguage();
     
-    $result = $user->register($data);
+    $result = $user->register($data, $currentLang);
     
     if ($result['success']) {
         $db->logActivity($result['user_id'], null, 'user_register_ajax', 'Inscription via AJAX', $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
@@ -93,7 +94,7 @@ try {
             'email' => $data['email']
         ]);
     }
-    
+        
     echo json_encode($result);
     
 } catch (Exception $e) {

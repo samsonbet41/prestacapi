@@ -589,5 +589,25 @@ return [
     'explore_more_desc' => 'Explorez notre blog pour plus de conseils financiers ou faites votre demande de prêt.',
     'all_articles' => 'Tous les articles',
     'loan_request' => 'Demande de prêt',
+    'email_welcome_subject' => 'Bienvenue chez PrestaCapi - Votre compte a été créé !',
+    'email_welcome_greeting' => 'Bonjour {name} !',
+    'email_welcome_header' => '🎉 Bienvenue chez PrestaCapi !',
+    'email_welcome_subheader' => 'Votre partenaire de confiance pour vos projets financiers',
+    'email_welcome_box_title' => '✅ Votre compte a été créé avec succès',
+    'email_welcome_box_body' => 'Félicitations ! Vous pouvez maintenant accéder à tous nos services de financement.',
+    'email_welcome_cta_button' => '🔗 Accéder à mon tableau de bord',
+    'email_welcome_question' => '❓ Une question ?',
+    'email_welcome_support_text' => 'Notre équipe est disponible 7j/7 pour vous accompagner :',
+    'email_footer_brand' => 'PrestaCapi - Votre réussite financière depuis 2008',
+    'email_footer_notice' => 'Cet email a été envoyé automatiquement. Merci de ne pas répondre à cette adresse.',
+    'login_subtitle' => 'Accédez à votre espace personnel PrestaCapi',
+    'login_placeholder_email' => 'votre@email.com',
+    'login_placeholder_password' => '••••••••',
+
+    'forgot_password_title' => 'Réinitialiser le mot de passe',
+    'forgot_password_instructions' => 'Entrez votre email pour recevoir un lien de réinitialisation.',
+    'forgot_password_submit_btn' => 'Envoyer le lien',
+
+    'js_error_occurred' => 'Une erreur de communication est survenue. Veuillez réessayer.',
 ];
 ?>

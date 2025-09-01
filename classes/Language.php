@@ -223,7 +223,7 @@ class Language {
         $slugs = [
             'fr' => 'connexion',
             'en' => 'login',
-            'es' => 'iniciar-sesion',
+            'es' => 'acceso',
             'de' => 'anmelden'
         ];
         return $slugs[$language] ?? $slugs['fr'];

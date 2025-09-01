@@ -4,7 +4,7 @@ return [
     'login' => ['fr' => 'connexion', 'en' => 'login', 'es' => 'acceso', 'de' => 'anmeldung'],
     'register' => ['fr' => 'inscription', 'en' => 'register', 'es' => 'registro', 'de' => 'registrieren'],
     'loan_request' => ['fr' => 'demande-pret', 'en' => 'loan-request', 'es' => 'solicitud-prestamo', 'de' => 'kreditantrag'],
-    'dashboard' => ['fr' => 'tableau-de-bord', 'en' => 'dashboard', 'es' => 'panel-de-control', 'de' => 'dashboard'],
+    'dashboard' => ['fr' => 'tableau-de-bord', 'en' => 'dashboard', 'es' => 'panel', 'de' => 'dashboard'],
     'profile' => ['fr' => 'profil', 'en' => 'profile', 'es' => 'perfil', 'de' => 'profil'],
     'documents' => ['fr' => 'documents', 'en' => 'documents', 'es' => 'documentos', 'de' => 'dokumente'],
     'withdrawal' => ['fr' => 'retrait', 'en' => 'withdrawal', 'es' => 'retiro', 'de' => 'abhebung'],
