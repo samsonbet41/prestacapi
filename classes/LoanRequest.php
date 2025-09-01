@@ -9,7 +9,7 @@ class LoanRequest {
         $this->db = Database::getInstance();
     }
     
-    public function createLoanRequest($userId, $data) {
+    public function createLoanRequest($userId, $data, $languageCode) {
         try {
             $errors = $this->validateLoanRequestData($data);
             if (!empty($errors)) {
@@ -59,7 +59,7 @@ class LoanRequest {
                 
                 $mailer = new Mailer();
                 $loanData['id'] = $loanId;
-                $mailer->sendLoanRequestConfirmation($user, $loanData);
+                $mailer->sendLoanRequestConfirmation($user, $loanData, $languageCode);
                 $mailer->sendAdminNotification('new_loan_request', array_merge($loanData, [
                     'user_name' => $user['first_name'] . ' ' . $user['last_name']
                 ]));

@@ -325,7 +325,7 @@ class Mailer {
         }
     }
     
-    private function buildLoanRequestTemplate($userData, $loanData) {
+    private function buildLoanRequestTemplate($userData, $loanData, $languageCode) {
         $styles = "
         <style>
             body { font-family: 'Arial', sans-serif; margin: 0; padding: 0; background-color: #F5F7FA; }
@@ -339,55 +339,58 @@ class Mailer {
         </style>
         ";
         
+        $amountFormatted = number_format($loanData['amount'], 0, ',', ' ') . " €";
+        $durationFormatted = $loanData['duration'] . " " . $this->lang->get('loan_duration_months', [], $languageCode);
+        $dateFormatted = date('d/m/Y H:i', strtotime($loanData['created_at']));
+
         return " 
         <!DOCTYPE html>
-        <html lang='fr'>
+        <html lang='{$languageCode}'>
         <head>
             <meta charset='UTF-8'>
-            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-            <title>Demande de prêt reçue</title>
+            <title>{$this->lang->get('email_loan_request_subject', ['id' => $loanData['id']], $languageCode)}</title>
             {$styles}
         </head>
         <body>
             <div class='container'>
                 <div class='header'>
-                    <h1>📋 Demande de prêt reçue !</h1>
-                    <p>Référence : #" . htmlspecialchars($loanData['id']) . "</p>
+                    <h1>{$this->lang->get('email_loan_request_header', [], $languageCode)}</h1>
+                    <p>{$this->lang->get('email_loan_request_ref', [], $languageCode)} : #" . htmlspecialchars($loanData['id']) . "</p>
                 </div>
                 
                 <div class='content'>
-                    <h2>Bonjour " . htmlspecialchars($userData['first_name']) . " !</h2>
+                    <h2>{$this->lang->get('email_loan_request_greeting', ['name' => htmlspecialchars($userData['first_name'])], $languageCode)}</h2>
                     
-                    <p>Nous avons bien reçu votre demande de prêt. Notre équipe va maintenant l'examiner et la transmettre à nos partenaires financiers.</p>
+                    <p>{$this->lang->get('email_loan_request_intro', [], $languageCode)}</p>
                     
                     <div class='info-box'>
-                        <h3>📊 Résumé de votre demande :</h3>
-                        <p><strong>Montant demandé :</strong> <span class='amount-highlight'>" . number_format($loanData['amount'], 0, ',', ' ') . " €</span></p>
-                        <p><strong>Durée :</strong> " . $loanData['duration'] . " mois</p>
-                        <p><strong>Objectif :</strong> " . htmlspecialchars($loanData['purpose']) . "</p>
-                        <p><strong>Date de demande :</strong> " . date('d/m/Y H:i', strtotime($loanData['created_at'])) . "</p>
+                        <h3>{$this->lang->get('email_loan_request_summary_title', [], $languageCode)}</h3>
+                        <p><strong>{$this->lang->get('email_loan_request_amount', [], $languageCode)} :</strong> <span class='amount-highlight'>{$amountFormatted}</span></p>
+                        <p><strong>{$this->lang->get('email_loan_request_duration', [], $languageCode)} :</strong> {$durationFormatted}</p>
+                        <p><strong>{$this->lang->get('email_loan_request_purpose', [], $languageCode)} :</strong> " . htmlspecialchars($loanData['purpose']) . "</p>
+                        <p><strong>{$this->lang->get('email_loan_request_date', [], $languageCode)} :</strong> {$dateFormatted}</p>
                     </div>
                     
                     <div class='timeline'>
-                        <h3>⏱️ Processus de traitement :</h3>
+                        <h3>{$this->lang->get('email_loan_request_process_title', [], $languageCode)}</h3>
                         <ul>
-                            <li>✅ <strong>Demande reçue</strong> - " . date('d/m/Y') . "</li>
-                            <li>🔄 <strong>Analyse en cours</strong> - Sous 24h</li>
-                            <li>🏦 <strong>Transmission aux partenaires</strong> - 24-48h</li>
-                            <li>📞 <strong>Réponse finale</strong> - 48-72h</li>
+                            <li>{$this->lang->get('email_loan_request_step1', [], $languageCode)} - " . date('d/m/Y') . "</li>
+                            <li>{$this->lang->get('email_loan_request_step2', [], $languageCode)}</li>
+                            <li>{$this->lang->get('email_loan_request_step3', [], $languageCode)}</li>
+                            <li>{$this->lang->get('email_loan_request_step4', [], $languageCode)}</li>
                         </ul>
                     </div>
                     
-                    <h3>📂 Documents requis</h3>
-                    <p>Assurez-vous d'avoir uploadé tous les documents nécessaires dans votre espace personnel :</p>
+                    <h3>{$this->lang->get('email_loan_request_docs_title', [], $languageCode)}</h3>
+                    <p>{$this->lang->get('email_loan_request_docs_intro', [], $languageCode)}</p>
                     <ul>
-                        <li>Pièce d'identité valide</li>
-                        <li>Justificatifs de revenus (3 derniers bulletins de paie)</li>
-                        <li>Relevés bancaires (3 derniers mois)</li>
-                        <li>Justificatif de domicile récent</li>
+                        <li>{$this->lang->get('email_loan_request_doc1', [], $languageCode)}</li>
+                        <li>{$this->lang->get('email_loan_request_doc2', [], $languageCode)}</li>
+                        <li>{$this->lang->get('email_loan_request_doc3', [], $languageCode)}</li>
+                        <li>{$this->lang->get('email_loan_request_doc4', [], $languageCode)}</li>
                     </ul>
                     
-                    <h3>📞 Contact</h3>
+                    <h3>{$this->lang->get('email_contact_title', [], $languageCode)}</h3>
                     <p>
                         <strong>Téléphone :</strong> +33 7 45 50 52 07<br>
                         <strong>Email :</strong> support@prestacapi.com<br>
@@ -396,8 +399,8 @@ class Mailer {
                 </div>
                 
                 <div class='footer'>
-                    <p><strong>PrestaCapi</strong> - Votre partenaire financier de confiance depuis 2008</p>
-                    <p><small>Référence : #" . htmlspecialchars($loanData['id']) . "</small></p>
+                    <p><strong>{$this->lang->get('email_footer_brand', [], $languageCode)}</strong></p>
+                    <p><small>{$this->lang->get('email_loan_request_ref', [], $languageCode)} : #" . htmlspecialchars($loanData['id']) . "</small></p>
                 </div>
             </div>
         </body>

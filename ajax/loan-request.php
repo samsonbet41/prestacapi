@@ -116,16 +116,12 @@ try {
         ]);
         exit;
     }
-    
-    $result = $loanRequest->createLoanRequest($userId, $data);
+
+    $currentLang = $lang->getCurrentLanguage();
+    $result = $loanRequest->createLoanRequest($userId, $data, $currentLang);
     
     if ($result['success']) {
         $eligibility = $loanRequest->calculateLoanEligibility($currentUser, $data);
-        
-        $db->update('loan_requests', [
-            'notes' => 'Score d\'éligibilité: ' . $eligibility['score'] . '/100. Recommandation: ' . $eligibility['recommendation']
-        ], 'id = ?', [$result['loan_id']]);
-        
         $stats = $user->getDashboardStats($userId);
         
         echo json_encode([
