@@ -12,6 +12,8 @@ Structure du site : C:\xampp\htdocs
     ├── 00/
     ├── 03/
     ├── 05/
+    ├── 06/
+    ├── 08/
     ├── 09/
     ├── 0a/
     ├── 0b/
@@ -22,12 +24,14 @@ Structure du site : C:\xampp\htdocs
     ├── 12/
     ├── 13/
     ├── 14/
+    ├── 16/
     ├── 17/
     ├── 18/
     ├── 19/
     ├── 1b/
     ├── 1c/
     ├── 1d/
+    ├── 1f/
     ├── 20/
     ├── 21/
     ├── 24/
@@ -36,6 +40,7 @@ Structure du site : C:\xampp\htdocs
     ├── 28/
     ├── 2b/
     ├── 2c/
+    ├── 2d/
     ├── 2e/
     ├── 2f/
     ├── 30/
@@ -46,6 +51,7 @@ Structure du site : C:\xampp\htdocs
     ├── 39/
     ├── 3a/
     ├── 3b/
+    ├── 3c/
     ├── 3e/
     ├── 40/
     ├── 41/
@@ -62,7 +68,10 @@ Structure du site : C:\xampp\htdocs
     ├── 51/
     ├── 52/
     ├── 53/
+    ├── 56/
     ├── 57/
+    ├── 58/
+    ├── 59/
     ├── 5a/
     ├── 5b/
     ├── 5c/
@@ -72,6 +81,7 @@ Structure du site : C:\xampp\htdocs
     ├── 67/
     ├── 68/
     ├── 69/
+    ├── 6b/
     ├── 6d/
     ├── 6e/
     ├── 6f/
@@ -79,13 +89,18 @@ Structure du site : C:\xampp\htdocs
     ├── 71/
     ├── 73/
     ├── 75/
+    ├── 77/
     ├── 78/
     ├── 79/
+    ├── 7a/
+    ├── 7b/
     ├── 7c/
     ├── 7d/
     ├── 7f/
     ├── 80/
     ├── 81/
+    ├── 82/
+    ├── 83/
     ├── 84/
     ├── 85/
     ├── 86/
@@ -113,6 +128,7 @@ Structure du site : C:\xampp\htdocs
     ├── a2/
     ├── a4/
     ├── a5/
+    ├── a7/
     ├── a8/
     ├── a9/
     ├── ab/
@@ -123,9 +139,12 @@ Structure du site : C:\xampp\htdocs
     ├── b0/
     ├── b1/
     ├── b2/
+    ├── b3/
     ├── b4/
     ├── b6/
     ├── b7/
+    ├── ba/
+    ├── bb/
     ├── be/
     ├── bf/
     ├── c0/
@@ -134,6 +153,7 @@ Structure du site : C:\xampp\htdocs
     ├── c3/
     ├── c4/
     ├── c6/
+    ├── c7/
     ├── cb/
     ├── cc/
     ├── cd/
@@ -142,6 +162,7 @@ Structure du site : C:\xampp\htdocs
     ├── d5/
     ├── d6/
     ├── d8/
+    ├── db/
     ├── dd/
     ├── de/
     ├── df/
@@ -160,6 +181,7 @@ Structure du site : C:\xampp\htdocs
     ├── f2/
     ├── f3/
     ├── f4/
+    ├── f5/
     ├── f6/
     ├── f7/
     ├── f8/
@@ -208,7 +230,6 @@ Structure du site : C:\xampp\htdocs
   ├── database.php
 ├── css/
   ├── about.css
-  ├── admin.css
   ├── auth.css
   ├── blog.css
   ├── dashboard.css

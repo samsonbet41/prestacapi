@@ -430,8 +430,8 @@ $lastUpdated = '2025-01-01';
                         <div class="contact-info-item">
                             <h4><?php echo $lang->get('privacy_officer'); ?></h4>
                             <p>
-                                Email: <a href="mailto:privacy@prestacapi.com">privacy@prestacapi.com</a><br>
-                                Téléphone: <a href="tel:+33123456789">+33 1 23 45 67 89</a>
+                                Email: <a href="mailto:support@prestacapi.com">support@prestacapi.com</a><br>
+                                Téléphone: <a href="tel:+33745505207">+33 7 45 50 52 07</a>
                             </p>
                         </div>
                         

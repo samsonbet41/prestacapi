@@ -221,7 +221,7 @@ $pageDescription = $lang->get('page_description_' . $pageKey);
                                            id="phone" 
                                            name="phone" 
                                            class="form-input" 
-                                           placeholder="+33 1 23 45 67 89">
+                                           placeholder="+33 7 45 50 52 07">
                                 </div>
                                 <div class="form-error" id="phoneError"></div>
                             </div>
@@ -236,7 +236,7 @@ $pageDescription = $lang->get('page_description_' . $pageKey);
                                            id="whatsapp" 
                                            name="whatsapp" 
                                            class="form-input" 
-                                           placeholder="+33 6 12 34 56 78">
+                                           placeholder="+33 7 45 50 52 07">
                                 </div>
                                 <div class="form-error" id="whatsappError"></div>
                             </div>
@@ -341,9 +341,9 @@ $pageDescription = $lang->get('page_description_' . $pageKey);
                 <h3>Besoin d'aide ?</h3>
                 <p>Notre équipe support est disponible 7j/7</p>
                 <div class="help-contacts">
-                    <a href="tel:+33123456789" class="help-contact">
+                    <a href="tel:+33745505207" class="help-contact">
                         <span class="contact-icon">📞</span>
-                        <span>+33 1 23 45 67 89</span>
+                        <span>+33 7 45 50 52 07</span>
                     </a>
                     <a href="mailto:support@prestacapi.com" class="help-contact">
                         <span class="contact-icon">📧</span>

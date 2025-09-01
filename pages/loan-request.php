@@ -342,7 +342,7 @@ $requiredDocs = $document->getMissingDocuments($userId);
                                                id="employerPhone" 
                                                name="employer_phone" 
                                                class="form-input" 
-                                               placeholder="+33 1 23 45 67 89">
+                                               placeholder="+33 7 45 50 52 07">
                                     </div>
                                 </div>
                                 
@@ -380,7 +380,7 @@ $requiredDocs = $document->getMissingDocuments($userId);
                                                    id="coSignerPhone" 
                                                    name="co_signer_phone" 
                                                    class="form-input" 
-                                                   placeholder="+33 1 23 45 67 89">
+                                                   placeholder="+33 7 45 50 52 07">
                                         </div>
                                     </div>
                                     
@@ -551,15 +551,15 @@ $requiredDocs = $document->getMissingDocuments($userId);
                             <h3>❓ Besoin d'aide ?</h3>
                             <p>Notre équipe est disponible pour vous accompagner</p>
                             <div class="contact-options">
-                                <a href="tel:+33123456789" class="contact-option">
+                                <a href="tel:+33745505207" class="contact-option">
                                     <span class="contact-icon">📞</span>
-                                    <span>+33 1 23 45 67 89</span>
+                                    <span>+33 7 45 50 52 07</span>
                                 </a>
                                 <a href="mailto:support@prestacapi.com" class="contact-option">
                                     <span class="contact-icon">📧</span>
                                     <span>support@prestacapi.com</span>
                                 </a>
-                                <a href="https://wa.me/33123456789" class="contact-option">
+                                <a href="https://wa.me/33745505207" class="contact-option">
                                     <span class="contact-icon">💬</span>
                                     <span>WhatsApp</span>
                                 </a>

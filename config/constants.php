@@ -3,7 +3,7 @@
 if (!defined('SITE_NAME')) define('SITE_NAME', 'PrestaCapi');
 if (!defined('SITE_TAGLINE')) define('SITE_TAGLINE', 'Votre partenaire financier de confiance depuis 2008');
 if (!defined('SITE_URL')) define('SITE_URL', 'https://prestacapi.com');
-if (!defined('SITE_EMAIL')) define('SITE_EMAIL', 'contact@prestacapi.com');
+if (!defined('SITE_EMAIL')) define('SITE_EMAIL', 'support@prestacapi.com');
 if (!defined('ADMIN_EMAIL')) define('ADMIN_EMAIL', 'admin@prestacapi.com');
 if (!defined('SUPPORT_EMAIL')) define('SUPPORT_EMAIL', 'support@prestacapi.com');
 

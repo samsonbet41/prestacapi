@@ -361,15 +361,15 @@ $totalPages = ceil($totalPosts / $postsPerPage);
                         <div class="contact-info">
                             <div class="contact-item">
                                 <i class="icon-phone"></i>
-                                <span>+33 1 23 45 67 89</span>
+                                <span>+33 7 45 50 52 07</span>
                             </div>
                             <div class="contact-item">
                                 <i class="icon-mail"></i>
-                                <span>contact@prestacapi.com</span>
+                                <span>support@prestacapi.com</span>
                             </div>
                             <div class="contact-item">
                                 <i class="icon-whatsapp"></i>
-                                <span>+33 6 12 34 56 78</span>
+                                <span>+33 7 45 50 52 07</span>
                             </div>
                         </div>
                         <a href="<?php echo generateLocalizedUrl('contact'); ?>" class="btn btn-outline btn-sm">

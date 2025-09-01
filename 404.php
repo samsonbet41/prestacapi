@@ -308,15 +308,15 @@ $pageTitle = $lang->get('page_not_found');
             <div class="error-help">
                 <h3 class="help-title">Besoin d'aide ?</h3>
                 <div class="help-contacts">
-                    <a href="tel:+33123456789" class="help-contact">
+                    <a href="tel:+33745505207" class="help-contact">
                         <span>📞</span>
-                        <span>+33 1 23 45 67 89</span>
+                        <span>+33 7 45 50 52 07</span>
                     </a>
                     <a href="mailto:support@prestacapi.com" class="help-contact">
                         <span>📧</span>
                         <span>support@prestacapi.com</span>
                     </a>
-                    <a href="https://wa.me/33123456789" class="help-contact" target="_blank" rel="noopener">
+                    <a href="https://wa.me/33745505207" class="help-contact" target="_blank" rel="noopener">
                         <span>💬</span>
                         <span>WhatsApp</span>
                     </a>

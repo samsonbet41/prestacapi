@@ -160,12 +160,12 @@ $countries = [
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="phone" class="form-label"><?php echo $lang->get('auth_phone'); ?> <span class="required">*</span></label>
-                                <input type="tel" id="phone" name="phone" class="form-input" required autocomplete="tel" placeholder="+33 6 12 34 56 78">
+                                <input type="tel" id="phone" name="phone" class="form-input" required autocomplete="tel" placeholder="+33 7 45 50 52 07">
                                 <div class="form-feedback"></div>
                             </div>
                             <div class="form-group">
                                 <label for="whatsapp" class="form-label"><?php echo $lang->get('auth_whatsapp'); ?></label>
-                                <input type="tel" id="whatsapp" name="whatsapp" class="form-input" autocomplete="tel" placeholder="+33 6 12 34 56 78">
+                                <input type="tel" id="whatsapp" name="whatsapp" class="form-input" autocomplete="tel" placeholder="+33 7 45 50 52 07">
                                 <div class="form-feedback"></div>
                             </div>
                         </div>

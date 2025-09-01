@@ -12,7 +12,7 @@ use PHPMailer\PHPMailer\SMTP;
 class Mailer {
     private $fromEmail = "no-reply@prestacapi.com";
     private $fromName = "PrestaCapi";
-    private $adminEmail = "admin@prestacapi.com";
+    private $adminEmail = "support@prestacapi.com";
     private $smtpDebug = false;
     private $useSmtp = true;
     private $lastError = '';
@@ -20,7 +20,7 @@ class Mailer {
     private $smtpConfig = [
         'host' => 'smtp.hostinger.com',
         'username' => 'no-reply@prestacapi.com',
-        'password' => 'VotreMotDePasse123!',
+        'password' => '6^uAW!2d=',
         'port' => 465,
         'encryption' => 'ssl',
         'timeout' => 30
@@ -296,9 +296,9 @@ class Mailer {
                     <h3>❓ Une question ?</h3>
                     <p>
                         Notre équipe est disponible 7j/7 pour vous accompagner :<br>
-                        <strong>📞 Téléphone :</strong> +33 1 23 45 67 89<br>
+                        <strong>📞 Téléphone :</strong> +33 7 45 50 52 07<br>
                         <strong>📧 Email :</strong> support@prestacapi.com<br>
-                        <strong>💬 WhatsApp :</strong> +33 6 12 34 56 78
+                        <strong>💬 WhatsApp :</strong> +33  745 50 52 07
                     </p>
                 </div>
                 
@@ -394,9 +394,9 @@ class Mailer {
                     
                     <h3>📞 Contact</h3>
                     <p>
-                        <strong>Téléphone :</strong> +33 1 23 45 67 89<br>
+                        <strong>Téléphone :</strong> +33 7 45 50 52 07<br>
                         <strong>Email :</strong> support@prestacapi.com<br>
-                        <strong>WhatsApp :</strong> +33 6 12 34 56 78
+                        <strong>WhatsApp :</strong> +33 7 45 50 52 07
                     </p>
                 </div>
                 
@@ -493,9 +493,9 @@ class Mailer {
                     <h3>📞 Support</h3>
                     <p>
                         Notre équipe reste à votre disposition :<br>
-                        <strong>Téléphone :</strong> +33 1 23 45 67 89<br>
+                        <strong>Téléphone :</strong> +33 7 45 50 52 07<br>
                         <strong>Email :</strong> support@prestacapi.com<br>
-                        <strong>WhatsApp :</strong> +33 6 12 34 56 78
+                        <strong>WhatsApp :</strong> +33 7 45 50 52 07
                     </p>
                 </div>
                 
@@ -590,9 +590,9 @@ class Mailer {
                     
                     <h3>📞 Support</h3>
                     <p>
-                        <strong>Téléphone :</strong> +33 1 23 45 67 89<br>
+                        <strong>Téléphone :</strong> +33 7 45 50 52 07<br>
                         <strong>Email :</strong> support@prestacapi.com<br>
-                        <strong>WhatsApp :</strong> +33 6 12 34 56 78
+                        <strong>WhatsApp :</strong> +33 7 45 50 52 07
                     </p>
                 </div>
                 

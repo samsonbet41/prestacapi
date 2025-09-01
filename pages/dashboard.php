@@ -420,10 +420,10 @@ $pageTitle = $lang->get('dashboard_title');
                                 </div>
                             </a>
                             
-                            <a href="tel:+33123456789" class="support-link">
+                            <a href="tel:+33745505207" class="support-link">
                                 <div class="support-icon">📞</div>
                                 <div class="support-content">
-                                    <div class="support-title">+33 1 23 45 67 89</div>
+                                    <div class="support-title">+33 7 45 50 52 07</div>
                                     <div class="support-description">Lun-Ven 9h-18h</div>
                                 </div>
                             </a>

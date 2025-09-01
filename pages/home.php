@@ -2,32 +2,66 @@
 $pageKey = 'home';
 $pageTitle = $lang->get('page_title_' . $pageKey);
 $pageDescription = $lang->get('page_description_' . $pageKey);
-?>
-<?php
 
-$testimonials = $db->fetchAll("
-    SELECT * FROM testimonials 
-    WHERE is_approved = 1 AND is_featured = 1 
-    ORDER BY created_at DESC 
-    LIMIT 6
-");
+// Données des témoignages et partenaires maintenant en dur
+$testimonials = [
+    [
+        'name' => 'Alice Martin',
+        'content' => 'Processus incroyablement simple et rapide. J\'ai reçu une offre en moins de 24 heures et les fonds étaient sur mon compte 2 jours plus tard. Je recommande vivement !',
+        'rating' => 5,
+        'verified' => true
+    ],
+    [
+        'name' => 'Julien Dubois',
+        'content' => 'Service client très réactif et professionnel. Ils ont su répondre à toutes mes questions avec clarté. Le taux obtenu était très compétitif.',
+        'rating' => 5,
+        'verified' => true
+    ],
+    [
+        'name' => 'Claire Petit',
+        'content' => 'Enfin une plateforme de prêt 100% en ligne qui tient ses promesses. La simulation est précise et il n\'y a pas de frais cachés. Très satisfaite.',
+        'rating' => 4,
+        'verified' => true
+    ],
+    [
+        'name' => 'Lucas Bernard',
+        'content' => 'J\'ai pu financer l\'achat de ma nouvelle voiture grâce à PrestaCapi. Le suivi du dossier depuis l\'espace client est un vrai plus.',
+        'rating' => 5,
+        'verified' => true
+    ],
+    [
+        'name' => 'Émilie Laurent',
+        'content' => 'La plateforme est intuitive et la soumission des documents est très facile. Une expérience sans stress, bien loin des banques traditionnelles.',
+        'rating' => 5,
+        'verified' => true
+    ],
+    [
+        'name' => 'Thomas Moreau',
+        'content' => 'Bonne expérience dans l\'ensemble. Le délai de réponse était un peu plus long que prévu (48h), mais le résultat a été à la hauteur de mes attentes.',
+        'rating' => 4,
+        'verified' => true
+    ]
+];
 
-$partners = $db->fetchAll("
-    SELECT * FROM partners 
-    WHERE is_active = 1 
-    ORDER BY display_order, name 
-    LIMIT 12
-");
+$partners = [
+    ['name' => 'BNP Paribas', 'logo' => '/images/partners/bnp-paribas.webp'],
+    ['name' => 'Société Générale', 'logo' => '/images/partners/societe-generale.webp'],
+    ['name' => 'Crédit Agricole', 'logo' => '/images/partners/credit-agricole.svg'],
+    ['name' => 'BPCE', 'logo' => '/images/partners/bpce.png'],
+    ['name' => 'Crédit Mutuel', 'logo' => '/images/partners/credit-mutuel.webp'],
+    ['name' => 'La Banque Postale', 'logo' => '/images/partners/la-banque-postale.png'],
+    ['name' => 'HSBC', 'logo' => '/images/partners/hsbc.png'],
+    ['name' => 'ING', 'logo' => '/images/partners/ing.png'],
+];
 
+
+// Appel BDD pour les articles de blog (conservé)
 $blogPosts = $db->fetchAll("
     SELECT * FROM blog_posts 
     WHERE published = 1 AND language = ?
     ORDER BY created_at DESC 
     LIMIT 3
 ", [$lang->getCurrentLanguage()]);
-
-
-
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $lang->getCurrentLanguage(); ?>">
@@ -45,16 +79,9 @@ $blogPosts = $db->fetchAll("
     <?php echo $seo->generateMetaTags(); ?>
 
     <?php echo $seo->generateStructuredData('webpage', ['title' => $pageTitle, 'description' => $pageDescription]); ?>
-    <?php // Optionnel: Ajouter un Breadcrumb si pertinent
-    /*
-    echo $seo->generateStructuredData('breadcrumb', ['items' => [
-        ['name' => $lang->get('home'), 'url' => $lang->url('home')],
-        ['name' => $pageTitle]
-    ]]);
-    */
-    ?>
     
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/home.css">
     <link rel="stylesheet" href="/css/animations.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -141,32 +168,6 @@ $blogPosts = $db->fetchAll("
                                 </button>
                             </div>
                         </div>
-                        
-                        <div class="floating-elements">
-                            <div class="floating-card card-1">
-                                <div class="card-icon">💰</div>
-                                <div class="card-text">
-                                    <div class="card-title">€50,000</div>
-                                    <div class="card-subtitle"><?php echo $lang->get('validation_max_amount', ['max' => '50,000']); ?></div>
-                                </div>
-                            </div>
-                            
-                            <div class="floating-card card-2">
-                                <div class="card-icon">⚡</div>
-                                <div class="card-text">
-                                    <div class="card-title">24-48h</div>
-                                    <div class="card-subtitle">Réponse rapide</div>
-                                </div>
-                            </div>
-                            
-                            <div class="floating-card card-3">
-                                <div class="card-icon">🔒</div>
-                                <div class="card-text">
-                                    <div class="card-title">100%</div>
-                                    <div class="card-subtitle">Sécurisé</div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -182,75 +183,19 @@ $blogPosts = $db->fetchAll("
                 
                 <div class="features-grid">
                     <div class="feature-card animate-on-scroll">
-                        <div class="feature-icon">
-                            <div class="icon-wrapper">⚡</div>
-                        </div>
+                        <div class="feature-icon"><div class="icon-wrapper">⚡</div></div>
                         <h3 class="feature-title">Réponse ultra-rapide</h3>
                         <p class="feature-description">Recevez une réponse définitive sous 24-48h grâce à notre processus automatisé et notre réseau de partenaires.</p>
-                        <div class="feature-stats">
-                            <span class="stat-number">24h</span>
-                            <span class="stat-label">Temps de réponse moyen</span>
-                        </div>
                     </div>
-                    
                     <div class="feature-card animate-on-scroll delay-1">
-                        <div class="feature-icon">
-                            <div class="icon-wrapper">🏦</div>
-                        </div>
+                        <div class="feature-icon"><div class="icon-wrapper">🏦</div></div>
                         <h3 class="feature-title">Réseau de partenaires</h3>
                         <p class="feature-description">Plus de 50 partenaires financiers pour vous offrir les meilleures conditions selon votre profil.</p>
-                        <div class="feature-stats">
-                            <span class="stat-number">50+</span>
-                            <span class="stat-label">Partenaires financiers</span>
-                        </div>
                     </div>
-                    
                     <div class="feature-card animate-on-scroll delay-2">
-                        <div class="feature-icon">
-                            <div class="icon-wrapper">📱</div>
-                        </div>
+                        <div class="feature-icon"><div class="icon-wrapper">📱</div></div>
                         <h3 class="feature-title">100% Digital</h3>
                         <p class="feature-description">Tout en ligne ! Dossier, documents, suivi, virement... Gérez votre prêt depuis votre smartphone.</p>
-                        <div class="feature-stats">
-                            <span class="stat-number">0</span>
-                            <span class="stat-label">Déplacement nécessaire</span>
-                        </div>
-                    </div>
-                    
-                    <div class="feature-card animate-on-scroll delay-3">
-                        <div class="feature-icon">
-                            <div class="icon-wrapper">🔒</div>
-                        </div>
-                        <h3 class="feature-title">Sécurité maximale</h3>
-                        <p class="feature-description">Vos données sont protégées par un chiffrement de niveau bancaire et nous respectons le RGPD.</p>
-                        <div class="feature-stats">
-                            <span class="stat-number">256</span>
-                            <span class="stat-label">Bits de chiffrement</span>
-                        </div>
-                    </div>
-                    
-                    <div class="feature-card animate-on-scroll delay-4">
-                        <div class="feature-icon">
-                            <div class="icon-wrapper">💰</div>
-                        </div>
-                        <h3 class="feature-title">Montants flexibles</h3>
-                        <p class="feature-description">De 500€ à 50 000€, sur 6 à 60 mois. Trouvez la solution qui correspond à votre projet.</p>
-                        <div class="feature-stats">
-                            <span class="stat-number">50k€</span>
-                            <span class="stat-label">Montant maximum</span>
-                        </div>
-                    </div>
-                    
-                    <div class="feature-card animate-on-scroll delay-5">
-                        <div class="feature-icon">
-                            <div class="icon-wrapper">🎯</div>
-                        </div>
-                        <h3 class="feature-title">Taux personnalisés</h3>
-                        <p class="feature-description">Notre IA analyse votre profil pour négocier les meilleurs taux auprès de nos partenaires.</p>
-                        <div class="feature-stats">
-                            <span class="stat-number">2.9%</span>
-                            <span class="stat-label">Taux à partir de</span>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -267,65 +212,31 @@ $blogPosts = $db->fetchAll("
                 <div class="home-process__steps">
                     <div class="home-process__step animate-on-scroll">
                         <div class="home-process__step-number">1</div>
-                        <div class="step-content">
-                            <h3 class="step-title">Créez votre compte</h3>
-                            <p class="step-description">Inscription gratuite en 2 minutes. Renseignez vos informations de base.</p>
-                        </div>
-                        <div class="step-visual">
-                            <div class="visual-icon">👤</div>
-                        </div>
+                        <h3 class="step-title">Créez votre compte</h3>
+                        <p class="step-description">Inscription gratuite en 2 minutes.</p>
                     </div>
-                    
                     <div class="process-arrow animate-on-scroll delay-1">→</div>
-                    
                     <div class="home-process__step animate-on-scroll delay-1">
                         <div class="home-process__step-number">2</div>
-                        <div class="step-content">
-                            <h3 class="step-title">Faites votre demande</h3>
-                            <p class="step-description">Formulaire intelligent qui s'adapte à votre profil. Uploadez vos documents.</p>
-                        </div>
-                        <div class="step-visual">
-                            <div class="visual-icon">📄</div>
-                        </div>
+                        <h3 class="step-title">Faites votre demande</h3>
+                        <p class="step-description">Formulaire intelligent et upload de documents.</p>
                     </div>
-                    
                     <div class="process-arrow animate-on-scroll delay-2">→</div>
-                    
                     <div class="home-process__step animate-on-scroll delay-2">
                         <div class="home-process__step-number">3</div>
-                        <div class="step-content">
-                            <h3 class="step-title">Recevez votre réponse</h3>
-                            <p class="step-description">Analyse automatique + négociation avec nos partenaires. Réponse sous 24-48h.</p>
-                        </div>
-                        <div class="step-visual">
-                            <div class="visual-icon">✅</div>
-                        </div>
+                        <h3 class="step-title">Recevez votre réponse</h3>
+                        <p class="step-description">Analyse et négociation. Réponse sous 24-48h.</p>
                     </div>
-                    
                     <div class="process-arrow animate-on-scroll delay-3">→</div>
-                    
                     <div class="home-process__step animate-on-scroll delay-3">
                         <div class="home-process__step-number">4</div>
-                        <div class="step-content">
-                            <h3 class="step-title">Recevez vos fonds</h3>
-                            <p class="step-description">Demande de virement depuis votre espace. Réception sous 24-48h.</p>
-                        </div>
-                        <div class="step-visual">
-                            <div class="visual-icon">💸</div>
-                        </div>
+                        <h3 class="step-title">Recevez vos fonds</h3>
+                        <p class="step-description">Virement sur votre compte sous 24-48h.</p>
                     </div>
-                </div>
-                
-                <div class="process-cta text-center">
-                    <a href="<?php echo $lang->pageUrl('register'); ?>" class="btn btn-primary btn-large">
-                        Commencer maintenant
-                    </a>
-                    <p class="cta-note">Gratuit et sans engagement</p>
                 </div>
             </div>
         </section>
         
-   
         <?php if (!empty($testimonials)): ?>
         <section class="testimonials-section">
             <div class="container">
@@ -343,7 +254,7 @@ $blogPosts = $db->fetchAll("
                                         <span class="star <?php echo $i <= $testimonial['rating'] ? 'filled' : ''; ?>">★</span>
                                     <?php endfor; ?>
                                 </div>
-                                <p class="testimonial-text"><?php echo htmlspecialchars($testimonial['content']); ?></p>
+                                <p class="testimonial-text">"<?php echo htmlspecialchars($testimonial['content']); ?>"</p>
                             </div>
                             <div class="testimonial-author">
                                 <div class="author-avatar">
@@ -367,7 +278,6 @@ $blogPosts = $db->fetchAll("
         </section>
         <?php endif; ?>
         
-    
         <?php if (!empty($partners)): ?>
         <section class="partners-section">
             <div class="container">
@@ -378,30 +288,19 @@ $blogPosts = $db->fetchAll("
                 
                 <div class="partners-carousel">
                     <div class="partners-track">
-                        <?php foreach ($partners as $partner): ?>
+                        <?php foreach (array_merge($partners, $partners) as $partner): // Dupliquer pour un défilement infini ?>
                             <div class="partner-item">
-                                <?php if (!empty($partner['logo'])): ?>
-                                    <img src="<?php echo htmlspecialchars($partner['logo']); ?>" 
-                                         alt="<?php echo htmlspecialchars($partner['name']); ?>"
-                                         class="partner-logo">
-                                <?php else: ?>
-                                    <div class="partner-name"><?php echo htmlspecialchars($partner['name']); ?></div>
-                                <?php endif; ?>
+                                <img src="<?php echo htmlspecialchars($partner['logo']); ?>" 
+                                     alt="<?php echo htmlspecialchars($partner['name']); ?>"
+                                     class="partner-logo">
                             </div>
                         <?php endforeach; ?>
                     </div>
-                </div>
-                
-                <div class="partners-cta text-center">
-                    <a href="<?php echo $lang->pageUrl('partners'); ?>" class="btn btn-outline">
-                        Découvrir tous nos partenaires
-                    </a>
                 </div>
             </div>
         </section>
         <?php endif; ?>
         
- 
         <?php if (!empty($blogPosts)): ?>
         <section class="blog-section">
             <div class="container">
@@ -413,17 +312,7 @@ $blogPosts = $db->fetchAll("
                 <div class="blog-grid">
                     <?php foreach ($blogPosts as $index => $post): ?>
                         <article class="blog-card animate-on-scroll delay-<?php echo $index; ?>">
-                            <?php if (!empty($post['featured_image'])): ?>
-                                <div class="blog-image">
-                                    <img src="<?php echo htmlspecialchars($post['featured_image']); ?>" 
-                                         alt="<?php echo htmlspecialchars($post['title']); ?>">
-                                </div>
-                            <?php endif; ?>
                             <div class="blog-content">
-                                <div class="blog-meta">
-                                    <span class="blog-date"><?php echo $lang->formatDate($post['created_at']); ?></span>
-                                    <span class="blog-author"><?php echo htmlspecialchars($post['author']); ?></span>
-                                </div>
                                 <h3 class="blog-title">
                                     <a href="<?php echo $lang->pageUrl('blog', $post['slug']); ?>">
                                         <?php echo htmlspecialchars($post['title']); ?>
@@ -437,12 +326,6 @@ $blogPosts = $db->fetchAll("
                         </article>
                     <?php endforeach; ?>
                 </div>
-                
-                <div class="blog-cta text-center">
-                    <a href="<?php echo $lang->pageUrl('blog'); ?>" class="btn btn-outline">
-                        Voir tous les articles
-                    </a>
-                </div>
             </div>
         </section>
         <?php endif; ?>
@@ -452,41 +335,10 @@ $blogPosts = $db->fetchAll("
                 <div class="cta-content text-center">
                     <h2 class="cta-title">Prêt à concrétiser votre projet ?</h2>
                     <p class="cta-subtitle">Rejoignez plus de 10 000 clients qui nous font confiance</p>
-                    
-                    <div class="cta-stats">
-                        <div class="stat-item">
-                            <div class="stat-number">10,000+</div>
-                            <div class="stat-label">Clients satisfaits</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-number">€25M</div>
-                            <div class="stat-label">Prêts accordés</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-number">24h</div>
-                            <div class="stat-label">Temps de réponse</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-number">4.8/5</div>
-                            <div class="stat-label">Note client</div>
-                        </div>
-                    </div>
-                    
                     <div class="cta-actions">
                         <a href="<?php echo $lang->pageUrl('register'); ?>" class="btn btn-primary btn-large">
                             <?php echo $lang->get('hero_cta_primary'); ?>
                         </a>
-                        <a href="<?php echo $lang->pageUrl('contact'); ?>" class="btn btn-outline btn-large">
-                            <?php echo $lang->get('contact'); ?>
-                        </a>
-                    </div>
-                    
-                    <div class="cta-security">
-                        <div class="security-badges">
-                            <div class="badge">🔒 SSL 256-bit</div>
-                            <div class="badge">🛡️ RGPD Conforme</div>
-                            <div class="badge">🏦 Agréé ACPR</div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -495,16 +347,15 @@ $blogPosts = $db->fetchAll("
     
     <?php include 'includes/footer.php'; ?>
     
-    <script src="/js/main.js"></script>
     <script>
         function startApplication() {
-            <?php if ($user->isLoggedIn()): ?>
-                window.location.href = '<?php echo $lang->pageUrl('loan_request'); ?>';
-            <?php else: ?>
-                window.location.href = '<?php echo $lang->pageUrl('register'); ?>';
-            <?php endif; ?>
+            const amount = document.getElementById('loanAmount').value;
+            const duration = document.getElementById('loanDuration').value;
+
+            const loanRequestUrl = `<?php echo $lang->pageUrl('loan_request'); ?>?amount=${amount}&duration=${duration}`;
+            window.location.href = loanRequestUrl;
         }
-        
+
         document.addEventListener('DOMContentLoaded', function() {
             const loanAmountSlider = document.getElementById('loanAmount');
             const loanDurationSlider = document.getElementById('loanDuration');
@@ -534,7 +385,5 @@ $blogPosts = $db->fetchAll("
             }
         });
     </script>
-    
-    <?php echo $seo->generateStructuredData('organization', []); ?>
 </body>
 </html>

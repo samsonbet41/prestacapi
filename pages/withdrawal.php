@@ -296,9 +296,9 @@ foreach ($withdrawalHistory as $withdrawal) {
                     <h3><?php echo $lang->get('need_help'); ?></h3>
                     <p><?php echo $lang->get('withdrawal_help_desc'); ?></p>
                     <div class="support-contacts">
-                        <a href="tel:+33123456789" class="support-contact">
+                        <a href="tel:+33 7 45 50 52 07" class="support-contact">
                             <i class="icon-phone"></i>
-                            <span>+33 1 23 45 67 89</span>
+                            <span>+33 7 45 50 52 07</span>
                         </a>
                         <a href="mailto:support@prestacapi.com" class="support-contact">
                             <i class="icon-mail"></i>

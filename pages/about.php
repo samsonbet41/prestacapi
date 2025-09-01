@@ -24,7 +24,7 @@ try {
                 <p class="hero-lead"><?php echo $lang->get('about_hero_description'); ?></p>
                 <div class="hero-stats">
                     <div class="stat-card">
-                        <div class="stat-number"><?php echo isset($stats['total_users']) ? number_format($stats['total_users']) : '10,000+'; ?></div>
+                        <div class="stat-number">10 000+</div>
                         <div class="stat-label"><?php echo $lang->get('clients_satisfied'); ?></div>
                     </div>
                     <div class="stat-card">
@@ -32,7 +32,7 @@ try {
                         <div class="stat-label"><?php echo $lang->get('years_experience'); ?></div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number"><?php echo isset($stats['total_loan_amount']) ? $lang->formatCurrency($stats['total_loan_amount']) : '50M+'; ?></div>
+                        <div class="stat-number">50M+</div>
                         <div class="stat-label"><?php echo $lang->get('euros_financed'); ?></div>
                     </div>
                 </div>
@@ -110,29 +110,25 @@ try {
             <div class="values-grid">
                 <div class="value-card">
                     <div class="value-icon">
-                        <i class="icon-integrity"></i>
-                    </div>
+                        <i class="fa-solid fa-scale-balanced"></i> </div>
                     <h3><?php echo $lang->get('value_transparency_title'); ?></h3>
                     <p><?php echo $lang->get('value_transparency_desc'); ?></p>
                 </div>
                 <div class="value-card">
                     <div class="value-icon">
-                        <i class="icon-innovation"></i>
-                    </div>
+                        <i class="fa-solid fa-lightbulb"></i> </div>
                     <h3><?php echo $lang->get('value_innovation_title'); ?></h3>
                     <p><?php echo $lang->get('value_innovation_desc'); ?></p>
                 </div>
                 <div class="value-card">
                     <div class="value-icon">
-                        <i class="icon-support"></i>
-                    </div>
+                        <i class="fa-solid fa-handshake-angle"></i> </div>
                     <h3><?php echo $lang->get('value_support_title'); ?></h3>
                     <p><?php echo $lang->get('value_support_desc'); ?></p>
                 </div>
                 <div class="value-card">
                     <div class="value-icon">
-                        <i class="icon-security"></i>
-                    </div>
+                        <i class="fa-solid fa-lock"></i> </div>
                     <h3><?php echo $lang->get('value_security_title'); ?></h3>
                     <p><?php echo $lang->get('value_security_desc'); ?></p>
                 </div>
@@ -149,9 +145,7 @@ try {
             <div class="team-grid">
                 <div class="team-member">
                     <div class="member-photo">
-                        <div class="photo-placeholder">
-                            <i class="icon-user"></i>
-                        </div>
+                        <img src="/images/equipes/ceo.jpg" alt="Photo de <?php echo $lang->get('team_ceo_name'); ?>">
                     </div>
                     <div class="member-info">
                         <h3><?php echo $lang->get('team_ceo_name'); ?></h3>
@@ -159,11 +153,10 @@ try {
                         <p class="member-bio"><?php echo $lang->get('team_ceo_bio'); ?></p>
                     </div>
                 </div>
+
                 <div class="team-member">
                     <div class="member-photo">
-                        <div class="photo-placeholder">
-                            <i class="icon-user"></i>
-                        </div>
+                        <img src="/images/equipes/cfo.jpg" alt="Photo de <?php echo $lang->get('team_cfo_name'); ?>">
                     </div>
                     <div class="member-info">
                         <h3><?php echo $lang->get('team_cfo_name'); ?></h3>
@@ -171,11 +164,10 @@ try {
                         <p class="member-bio"><?php echo $lang->get('team_cfo_bio'); ?></p>
                     </div>
                 </div>
+
                 <div class="team-member">
                     <div class="member-photo">
-                        <div class="photo-placeholder">
-                            <i class="icon-user"></i>
-                        </div>
+                        <img src="/images/equipes/cto.jpg" alt="Photo de <?php echo $lang->get('team_cto_name'); ?>">
                     </div>
                     <div class="member-info">
                         <h3><?php echo $lang->get('team_cto_name'); ?></h3>
@@ -292,7 +284,7 @@ try {
                             <i class="icon-phone"></i>
                             <div>
                                 <h4><?php echo $lang->get('phone_support'); ?></h4>
-                                <p>+33 1 23 45 67 89</p>
+                                <p>+33 7 45 50 52 07</p>
                                 <span><?php echo $lang->get('phone_hours'); ?></span>
                             </div>
                         </div>
@@ -308,7 +300,7 @@ try {
                             <i class="icon-whatsapp"></i>
                             <div>
                                 <h4><?php echo $lang->get('whatsapp_support'); ?></h4>
-                                <p>+33 6 12 34 56 78</p>
+                                <p>+33 7 45 50 52 07</p>
                                 <span><?php echo $lang->get('whatsapp_hours'); ?></span>
                             </div>
                         </div>

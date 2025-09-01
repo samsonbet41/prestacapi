@@ -172,17 +172,14 @@
 .team-member {
     text-align: center;
 }
-.member-photo .photo-placeholder {
+.member-photo img {
     width: 150px;
     height: 150px;
     margin: 0 auto var(--spacing-lg);
     border-radius: 50%;
-    background: var(--secondary-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 50px;
-    color: var(--border-color);
+    object-fit: cover; /* Assure que l'image remplit le cercle sans être déformée */
+    display: block; /* Évite les espaces superflus sous l'image */
+    box-shadow: var(--shadow-sm); /* Optionnel : ajoute une légère ombre */
 }
 .member-info h3 { font-size: var(--font-lg); color: var(--primary-color); }
 .member-role { font-weight: 500; color: var(--accent-color); margin-bottom: var(--spacing-sm); }

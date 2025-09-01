@@ -166,15 +166,15 @@ if (!isset($user)) {
                         <div class="contact-details">
                             <div class="contact-item">
                                 <span class="contact-icon">📞</span>
-                                <a href="tel:+33123456789">+33 1 23 45 67 89</a>
+                                <a href="tel:+3333745505207">+33 7 45 50 52 07</a>
                             </div>
                             <div class="contact-item">
                                 <span class="contact-icon">📧</span>
-                                <a href="mailto:contact@prestacapi.com">contact@prestacapi.com</a>
+                                <a href="mailto:support@prestacapi.com">support@prestacapi.com</a>
                             </div>
                             <div class="contact-item">
                                 <span class="contact-icon">💬</span>
-                                <a href="https://wa.me/33123456789">WhatsApp</a>
+                                <a href="https://wa.me/33745505207">WhatsApp</a>
                             </div>
                             <div class="contact-item">
                                 <span class="contact-icon">🕒</span>
@@ -205,11 +205,11 @@ if (!isset($user)) {
                 <div class="regulatory-info">
                     <h4 class="regulatory-title">Informations réglementaires</h4>
                     <div class="regulatory-text">
-                        <p>PrestaCapi SAS - Capital social : 100 000€</p>
-                        <p>SIRET : 12345678901234 - RCS Paris 123 456 789</p>
+                        <p>PrestaCapi SAS - Capital social : 800 000€</p>
+                        <p>SIRET : 7458960144523 - RCS Paris 123 456 789</p>
                         <p>Intermédiaire en opérations de banque et services de paiement</p>
-                        <p>N° ORIAS : 12345678 - www.orias.fr</p>
-                        <p>Contrôlé par l'ACPR - 4 Place de Budapest, 75009 Paris</p>
+                        <p>N° ORIAS : 23054796 - www.orias.fr</p>
+                        <p>Contrôlé par l'ACPR -91, avenue du Marechal Juin, 97450 SAINT-LOUIS</p>
                     </div>
                 </div>
                 
