@@ -201,7 +201,7 @@ $pageDescription = $lang->get('page_description_' . $pageKey);
 
         function handleForgotPassword(event) {
             event.preventDefault();
-            alert('Instructions de réinitialisation envoyées !');
+            alert('<?php echo $lang->get("js_reset_instructions_sent"); ?>');
             closeForgotPasswordModal(event);
         }
     </script>

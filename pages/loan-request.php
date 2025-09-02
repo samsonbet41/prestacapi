@@ -2,8 +2,7 @@
 $pageKey = 'loan_request';
 $pageTitle = $lang->get('page_title_' . $pageKey);
 $pageDescription = $lang->get('page_description_' . $pageKey);
-?>
-<?php
+
 require_once 'classes/Database.php';
 require_once 'classes/User.php';
 require_once 'classes/Language.php';
@@ -28,7 +27,19 @@ $hasActiveLoan = !empty($existingLoanRequest) && in_array($existingLoanRequest[0
 $documentStatus = $document->getUserDocumentStatus($userId);
 $requiredDocs = $document->getMissingDocuments($userId);
 
-
+// Préparation des traductions pour JavaScript
+$js_translations = [
+    'requiredField' => $lang->get('validation_required'),
+    'amountRangeError' => $lang->get('loan_request_validation_amount_range'),
+    'expensesVsIncomeError' => $lang->get('loan_request_validation_expenses_income'),
+    'capacityExcellent' => $lang->get('loan_request_analysis_capacity_excellent'),
+    'capacityGood' => $lang->get('loan_request_analysis_capacity_good'),
+    'capacityLimited' => $lang->get('loan_request_analysis_capacity_limited'),
+    'monthsSuffix' => $lang->get('loan_duration_months'),
+    'submitSuccess' => $lang->get('loan_request_submit_success'),
+    'submitError' => $lang->get('loan_request_submit_error_general'),
+    'errorOccurred' => $lang->get('js_error_occurred'),
+];
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $lang->getCurrentLanguage(); ?>">
@@ -46,14 +57,6 @@ $requiredDocs = $document->getMissingDocuments($userId);
     <?php echo $seo->generateMetaTags(); ?>
 
     <?php echo $seo->generateStructuredData('webpage', ['title' => $pageTitle, 'description' => $pageDescription]); ?>
-    <?php // Optionnel: Ajouter un Breadcrumb si pertinent
-    /*
-    echo $seo->generateStructuredData('breadcrumb', ['items' => [
-        ['name' => $lang->get('home'), 'url' => $lang->url('home')],
-        ['name' => $pageTitle]
-    ]]);
-    */
-    ?>
     <meta name="robots" content="noindex, nofollow">
     
     <link rel="stylesheet" href="/css/style.css">
@@ -73,11 +76,11 @@ $requiredDocs = $document->getMissingDocuments($userId);
                 <div class="alert alert-info">
                     <div class="alert-icon">ℹ️</div>
                     <div class="alert-content">
-                        <h3>Demande de prêt en cours</h3>
-                        <p>Vous avez déjà une demande de prêt en cours de traitement. Vous ne pouvez pas soumettre une nouvelle demande tant que celle-ci n'est pas finalisée.</p>
+                        <h3><?php echo $lang->get('loan_request_active_loan_title'); ?></h3>
+                        <p><?php echo $lang->get('loan_request_active_loan_desc'); ?></p>
                         <div class="alert-actions">
                             <a href="<?php echo $lang->pageUrl('dashboard'); ?>" class="btn btn-outline">
-                                Voir le statut de ma demande
+                                <?php echo $lang->get('loan_request_active_loan_cta'); ?>
                             </a>
                         </div>
                     </div>
@@ -86,30 +89,30 @@ $requiredDocs = $document->getMissingDocuments($userId);
                 
                 <div class="loan-request-header">
                     <div class="page-breadcrumb">
-                        <a href="<?php echo $lang->pageUrl('dashboard'); ?>">Tableau de bord</a>
+                        <a href="<?php echo $lang->pageUrl('dashboard'); ?>"><?php echo $lang->get('dashboard'); ?></a>
                         <span class="breadcrumb-separator">→</span>
-                        <span class="breadcrumb-current">Demande de prêt</span>
+                        <span class="breadcrumb-current"><?php echo $lang->get('loan_request_title'); ?></span>
                     </div>
                     
                     <h1 class="page-title"><?php echo $lang->get('loan_request_title'); ?></h1>
-                    <p class="page-subtitle">Remplissez ce formulaire pour soumettre votre demande de financement</p>
+                    <p class="page-subtitle"><?php echo $lang->get('loan_request_subtitle'); ?></p>
                     
                     <div class="loan-form-progress">
                         <div class="loan-form-progress__step active" data-step="1">
                             <div class="loan-form-progress__step-number">1</div>
-                            <div class="loan-form-progress__step-label">Projet</div>
+                            <div class="loan-form-progress__step-label"><?php echo $lang->get('loan_request_step_project'); ?></div>
                         </div>
                         <div class="loan-form-progress__step" data-step="2">
                             <div class="loan-form-progress__step-number">2</div>
-                            <div class="loan-form-progress__step-label">Finances</div>
+                            <div class="loan-form-progress__step-label"><?php echo $lang->get('loan_request_step_finances'); ?></div>
                         </div>
                         <div class="loan-form-progress__step" data-step="3">
                             <div class="loan-form-progress__step-number">3</div>
-                            <div class="loan-form-progress__step-label">Professionnel</div>
+                            <div class="loan-form-progress__step-label"><?php echo $lang->get('loan_request_step_professional'); ?></div>
                         </div>
                         <div class="loan-form-progress__step" data-step="4">
                             <div class="loan-form-progress__step-number">4</div>
-                            <div class="loan-form-progress__step-label">Validation</div>
+                            <div class="loan-form-progress__step-label"><?php echo $lang->get('loan_request_step_validation'); ?></div>
                         </div>
                     </div>
                 </div>
@@ -120,8 +123,8 @@ $requiredDocs = $document->getMissingDocuments($userId);
                             
                             <div class="form-step active" data-step="1">
                                 <div class="step-header">
-                                    <h2 class="step-title">Votre projet de financement</h2>
-                                    <p class="step-description">Décrivez-nous votre projet et le montant souhaité</p>
+                                    <h2 class="step-title"><?php echo $lang->get('loan_request_step1_title'); ?></h2>
+                                    <p class="step-description"><?php echo $lang->get('loan_request_step1_desc'); ?></p>
                                 </div>
                                 
                                 <div class="form-grid">
@@ -141,7 +144,7 @@ $requiredDocs = $document->getMissingDocuments($userId);
                                                    required>
                                             <span class="amount-currency">€</span>
                                         </div>
-                                        <div class="form-help">Montant entre 500€ et 50 000€</div>
+                                        <div class="form-help"><?php echo $lang->get('loan_request_amount_help'); ?></div>
                                         <div class="form-error" id="amountError"></div>
                                     </div>
                                     
@@ -150,14 +153,14 @@ $requiredDocs = $document->getMissingDocuments($userId);
                                             <?php echo $lang->get('loan_duration'); ?> *
                                         </label>
                                         <select id="loanDuration" name="duration" class="form-select" required>
-                                            <option value="">Sélectionnez une durée</option>
-                                            <option value="6">6 mois</option>
-                                            <option value="12">12 mois</option>
-                                            <option value="18">18 mois</option>
-                                            <option value="24">24 mois</option>
-                                            <option value="36">36 mois</option>
-                                            <option value="48">48 mois</option>
-                                            <option value="60">60 mois</option>
+                                            <option value=""><?php echo $lang->get('loan_request_duration_placeholder'); ?></option>
+                                            <option value="6">6 <?php echo $lang->get('loan_duration_months'); ?></option>
+                                            <option value="12">12 <?php echo $lang->get('loan_duration_months'); ?></option>
+                                            <option value="18">18 <?php echo $lang->get('loan_duration_months'); ?></option>
+                                            <option value="24">24 <?php echo $lang->get('loan_duration_months'); ?></option>
+                                            <option value="36">36 <?php echo $lang->get('loan_duration_months'); ?></option>
+                                            <option value="48">48 <?php echo $lang->get('loan_duration_months'); ?></option>
+                                            <option value="60">60 <?php echo $lang->get('loan_duration_months'); ?></option>
                                         </select>
                                         <div class="form-error" id="durationError"></div>
                                     </div>
@@ -165,19 +168,19 @@ $requiredDocs = $document->getMissingDocuments($userId);
                                 
                                 <div class="loan-simulation" id="loanSimulation">
                                     <div class="simulation-header">
-                                        <h3>Simulation de votre prêt</h3>
+                                        <h3><?php echo $lang->get('loan_request_simulation_title'); ?></h3>
                                     </div>
                                     <div class="simulation-content">
                                         <div class="simulation-item">
-                                            <span class="simulation-label">Mensualité estimée</span>
+                                            <span class="simulation-label"><?php echo $lang->get('loan_request_simulation_monthly'); ?></span>
                                             <span class="simulation-value" id="monthlyPayment">-</span>
                                         </div>
                                         <div class="simulation-item">
-                                            <span class="simulation-label">Coût total</span>
+                                            <span class="simulation-label"><?php echo $lang->get('loan_request_simulation_total'); ?></span>
                                             <span class="simulation-value" id="totalCost">-</span>
                                         </div>
                                         <div class="simulation-item">
-                                            <span class="simulation-label">Taux estimé</span>
+                                            <span class="simulation-label"><?php echo $lang->get('loan_request_simulation_rate'); ?></span>
                                             <span class="simulation-value">3.9% - 12.9%</span>
                                         </div>
                                     </div>
@@ -193,15 +196,15 @@ $requiredDocs = $document->getMissingDocuments($userId);
                                               rows="4" 
                                               placeholder="<?php echo $lang->get('loan_purpose_placeholder'); ?>"
                                               required></textarea>
-                                    <div class="form-help">Décrivez précisément l'utilisation de ce financement</div>
+                                    <div class="form-help"><?php echo $lang->get('loan_request_purpose_help'); ?></div>
                                     <div class="form-error" id="purposeError"></div>
                                 </div>
                             </div>
                             
                             <div class="form-step" data-step="2">
                                 <div class="step-header">
-                                    <h2 class="step-title">Votre situation financière</h2>
-                                    <p class="step-description">Ces informations nous aident à évaluer votre capacité de remboursement</p>
+                                    <h2 class="step-title"><?php echo $lang->get('loan_request_step2_title'); ?></h2>
+                                    <p class="step-description"><?php echo $lang->get('loan_request_step2_desc'); ?></p>
                                 </div>
                                 
                                 <div class="form-grid">
@@ -218,9 +221,9 @@ $requiredDocs = $document->getMissingDocuments($userId);
                                                    step="10"
                                                    placeholder="3000"
                                                    required>
-                                            <span class="amount-currency">€/mois</span>
+                                            <span class="amount-currency">€/<?php echo $lang->get('loan_duration_months'); ?></span>
                                         </div>
-                                        <div class="form-help">Revenus nets mensuels</div>
+                                        <div class="form-help"><?php echo $lang->get('loan_request_income_help'); ?></div>
                                         <div class="form-error" id="monthlyIncomeError"></div>
                                     </div>
                                     
@@ -237,38 +240,38 @@ $requiredDocs = $document->getMissingDocuments($userId);
                                                    step="10"
                                                    placeholder="1500"
                                                    required>
-                                            <span class="amount-currency">€/mois</span>
+                                            <span class="amount-currency">€/<?php echo $lang->get('loan_duration_months'); ?></span>
                                         </div>
-                                        <div class="form-help">Charges fixes mensuelles (loyer, crédits...)</div>
+                                        <div class="form-help"><?php echo $lang->get('loan_request_expenses_help'); ?></div>
                                         <div class="form-error" id="monthlyExpensesError"></div>
                                     </div>
                                 </div>
                                 
                                 <div class="financial-analysis" id="financialAnalysis">
                                     <div class="analysis-header">
-                                        <h3>Analyse de votre capacité financière</h3>
+                                        <h3><?php echo $lang->get('loan_request_analysis_title'); ?></h3>
                                     </div>
                                     <div class="analysis-content">
                                         <div class="analysis-item">
-                                            <span class="analysis-label">Reste à vivre mensuel</span>
+                                            <span class="analysis-label"><?php echo $lang->get('loan_request_analysis_remaining'); ?></span>
                                             <span class="analysis-value" id="remainingIncome">-</span>
                                         </div>
                                         <div class="analysis-item">
-                                            <span class="analysis-label">Taux d'endettement</span>
+                                            <span class="analysis-label"><?php echo $lang->get('loan_request_analysis_debt_ratio'); ?></span>
                                             <span class="analysis-value" id="debtRatio">-</span>
                                         </div>
                                         <div class="analysis-indicator" id="analysisIndicator">
                                             <div class="indicator-bar">
                                                 <div class="indicator-fill"></div>
                                             </div>
-                                            <div class="indicator-text">Capacité d'emprunt</div>
+                                            <div class="indicator-text"><?php echo $lang->get('loan_request_analysis_capacity'); ?></div>
                                         </div>
                                     </div>
                                 </div>
                                 
                                 <div class="form-group">
                                     <label for="otherLoans" class="form-label">
-                                        Autres crédits en cours
+                                        <?php echo $lang->get('loan_other_loans'); ?>
                                     </label>
                                     <div class="amount-input-wrapper">
                                         <input type="number" 
@@ -278,16 +281,16 @@ $requiredDocs = $document->getMissingDocuments($userId);
                                                min="0" 
                                                step="10"
                                                placeholder="0">
-                                        <span class="amount-currency">€/mois</span>
+                                        <span class="amount-currency">€/<?php echo $lang->get('loan_duration_months'); ?></span>
                                     </div>
-                                    <div class="form-help">Mensualités d'autres crédits (optionnel)</div>
+                                    <div class="form-help"><?php echo $lang->get('loan_request_other_loans_help'); ?></div>
                                 </div>
                             </div>
                             
                             <div class="form-step" data-step="3">
                                 <div class="step-header">
-                                    <h2 class="step-title">Votre situation professionnelle</h2>
-                                    <p class="step-description">Informations sur votre emploi et stabilité professionnelle</p>
+                                    <h2 class="step-title"><?php echo $lang->get('loan_request_step3_title'); ?></h2>
+                                    <p class="step-description"><?php echo $lang->get('loan_request_step3_desc'); ?></p>
                                 </div>
                                 
                                 <div class="form-grid">
@@ -296,7 +299,7 @@ $requiredDocs = $document->getMissingDocuments($userId);
                                             <?php echo $lang->get('loan_employment_status'); ?> *
                                         </label>
                                         <select id="employmentStatus" name="employment_status" class="form-select" required>
-                                            <option value="">Sélectionnez votre statut</option>
+                                            <option value=""><?php echo $lang->get('loan_request_employment_status_placeholder'); ?></option>
                                             <option value="employee"><?php echo $lang->get('employment_status_employee'); ?></option>
                                             <option value="self_employed"><?php echo $lang->get('employment_status_self_employed'); ?></option>
                                             <option value="freelance"><?php echo $lang->get('employment_status_freelance'); ?></option>
@@ -311,12 +314,12 @@ $requiredDocs = $document->getMissingDocuments($userId);
                                             <?php echo $lang->get('loan_employment_duration'); ?> *
                                         </label>
                                         <select id="employmentDuration" name="employment_duration" class="form-select" required>
-                                            <option value="">Sélectionnez la durée</option>
-                                            <option value="3">Moins de 6 mois</option>
-                                            <option value="6">6 à 12 mois</option>
-                                            <option value="12">1 à 2 ans</option>
-                                            <option value="24">2 à 5 ans</option>
-                                            <option value="60">Plus de 5 ans</option>
+                                            <option value=""><?php echo $lang->get('loan_request_employment_duration_placeholder'); ?></option>
+                                            <option value="3"><?php echo $lang->get('loan_request_employment_duration_option_1'); ?></option>
+                                            <option value="6"><?php echo $lang->get('loan_request_employment_duration_option_2'); ?></option>
+                                            <option value="12"><?php echo $lang->get('loan_request_employment_duration_option_3'); ?></option>
+                                            <option value="24"><?php echo $lang->get('loan_request_employment_duration_option_4'); ?></option>
+                                            <option value="60"><?php echo $lang->get('loan_request_employment_duration_option_5'); ?></option>
                                         </select>
                                         <div class="form-error" id="employmentDurationError"></div>
                                     </div>
@@ -331,7 +334,7 @@ $requiredDocs = $document->getMissingDocuments($userId);
                                                id="employerName" 
                                                name="employer_name" 
                                                class="form-input" 
-                                               placeholder="Nom de votre employeur">
+                                               placeholder="<?php echo $lang->get('loan_request_employer_name_placeholder'); ?>">
                                     </div>
                                     
                                     <div class="form-group">
@@ -347,7 +350,7 @@ $requiredDocs = $document->getMissingDocuments($userId);
                                 </div>
                                 
                                 <div class="additional-info-section">
-                                    <h3>Informations complémentaires (optionnel)</h3>
+                                    <h3><?php echo $lang->get('loan_request_additional_info_title'); ?></h3>
                                     
                                     <div class="form-group">
                                         <label for="collateral" class="form-label">
@@ -357,7 +360,7 @@ $requiredDocs = $document->getMissingDocuments($userId);
                                                   name="collateral" 
                                                   class="form-textarea" 
                                                   rows="3" 
-                                                  placeholder="Décrivez les garanties que vous pouvez apporter (biens immobiliers, véhicules...)"></textarea>
+                                                  placeholder="<?php echo $lang->get('loan_request_collateral_placeholder'); ?>"></textarea>
                                     </div>
                                     
                                     <div class="form-grid">
@@ -369,7 +372,7 @@ $requiredDocs = $document->getMissingDocuments($userId);
                                                    id="coSignerName" 
                                                    name="co_signer_name" 
                                                    class="form-input" 
-                                                   placeholder="Nom du co-signataire">
+                                                   placeholder="<?php echo $lang->get('loan_request_co_signer_name_placeholder'); ?>">
                                         </div>
                                         
                                         <div class="form-group">
@@ -392,65 +395,65 @@ $requiredDocs = $document->getMissingDocuments($userId);
                                                   name="notes" 
                                                   class="form-textarea" 
                                                   rows="4" 
-                                                  placeholder="Informations complémentaires que vous souhaitez nous communiquer"></textarea>
+                                                  placeholder="<?php echo $lang->get('loan_request_notes_placeholder'); ?>"></textarea>
                                     </div>
                                 </div>
                             </div>
                             
                             <div class="form-step" data-step="4">
                                 <div class="step-header">
-                                    <h2 class="step-title">Validation et soumission</h2>
-                                    <p class="step-description">Vérifiez vos informations avant de soumettre votre demande</p>
+                                    <h2 class="step-title"><?php echo $lang->get('loan_request_step4_title'); ?></h2>
+                                    <p class="step-description"><?php echo $lang->get('loan_request_step4_desc'); ?></p>
                                 </div>
                                 
                                 <div class="validation-summary" id="validationSummary">
                                     <div class="summary-section">
-                                        <h3>📋 Récapitulatif de votre demande</h3>
+                                        <h3><?php echo $lang->get('loan_request_summary_title'); ?></h3>
                                         <div class="summary-grid">
                                             <div class="summary-item">
-                                                <span class="summary-label">Montant demandé</span>
+                                                <span class="summary-label"><?php echo $lang->get('loan_amount'); ?></span>
                                                 <span class="summary-value" id="summaryAmount">-</span>
                                             </div>
                                             <div class="summary-item">
-                                                <span class="summary-label">Durée</span>
+                                                <span class="summary-label"><?php echo $lang->get('loan_duration'); ?></span>
                                                 <span class="summary-value" id="summaryDuration">-</span>
                                             </div>
                                             <div class="summary-item">
-                                                <span class="summary-label">Mensualité estimée</span>
+                                                <span class="summary-label"><?php echo $lang->get('loan_request_simulation_monthly'); ?></span>
                                                 <span class="summary-value" id="summaryMonthlyPayment">-</span>
                                             </div>
                                             <div class="summary-item">
-                                                <span class="summary-label">Revenus mensuels</span>
+                                                <span class="summary-label"><?php echo $lang->get('loan_monthly_income'); ?></span>
                                                 <span class="summary-value" id="summaryIncome">-</span>
                                             </div>
                                         </div>
                                     </div>
                                     
                                     <div class="summary-section">
-                                        <h3>📄 État des documents</h3>
+                                        <h3><?php echo $lang->get('loan_request_docs_status_title'); ?></h3>
                                         <div class="documents-status">
                                             <div class="doc-progress">
                                                 <div class="doc-progress-bar">
                                                     <div class="doc-progress-fill" style="width: <?php echo $documentStatus['completion_percentage']; ?>%"></div>
                                                 </div>
-                                                <span class="doc-progress-text"><?php echo $documentStatus['verified']; ?>/<?php echo $documentStatus['total_required']; ?> documents vérifiés</span>
+                                                <span class="doc-progress-text"><?php echo $lang->get('loan_request_docs_verified_text', ['verified' => $documentStatus['verified'], 'total' => $documentStatus['total_required']]); ?></span>
                                             </div>
                                             
                                             <?php if (!empty($requiredDocs)): ?>
                                                 <div class="missing-docs">
-                                                    <h4>Documents manquants :</h4>
+                                                    <h4><?php echo $lang->get('loan_request_docs_missing_title'); ?></h4>
                                                     <ul>
                                                         <?php foreach ($requiredDocs as $doc): ?>
-                                                            <li><?php echo $doc['name']; ?></li>
+                                                            <li><?php echo $lang->get('document_type_' . strtolower(str_replace(' ', '_', $doc['name']))); ?></li>
                                                         <?php endforeach; ?>
                                                     </ul>
                                                     <p class="doc-note">
-                                                        ⚠️ Vous pouvez soumettre votre demande maintenant et compléter vos documents après.
+                                                        <?php echo $lang->get('loan_request_docs_missing_note'); ?>
                                                     </p>
                                                 </div>
                                             <?php else: ?>
                                                 <div class="docs-complete">
-                                                    ✅ Tous vos documents requis sont présents et vérifiés !
+                                                    <?php echo $lang->get('loan_request_docs_complete_text'); ?>
                                                 </div>
                                             <?php endif; ?>
                                         </div>
@@ -462,7 +465,7 @@ $requiredDocs = $document->getMissingDocuments($userId);
                                         <label class="checkbox-label">
                                             <input type="checkbox" name="consent_verification" id="consentVerification" required>
                                             <span class="checkbox-custom"></span>
-                                            J'autorise PrestaCapi à vérifier mes informations auprès de ses partenaires et organismes de crédit
+                                            <?php echo $lang->get('loan_request_consent_verification'); ?>
                                         </label>
                                     </div>
                                     
@@ -470,7 +473,7 @@ $requiredDocs = $document->getMissingDocuments($userId);
                                         <label class="checkbox-label">
                                             <input type="checkbox" name="consent_processing" id="consentProcessing" required>
                                             <span class="checkbox-custom"></span>
-                                            J'accepte que ma demande soit transmise aux partenaires financiers de PrestaCapi
+                                            <?php echo $lang->get('loan_request_consent_processing'); ?>
                                         </label>
                                     </div>
                                     
@@ -478,8 +481,10 @@ $requiredDocs = $document->getMissingDocuments($userId);
                                         <label class="checkbox-label">
                                             <input type="checkbox" name="consent_terms" id="consentTerms" required>
                                             <span class="checkbox-custom"></span>
-                                            J'ai lu et j'accepte les <a href="<?php echo $lang->pageUrl('terms'); ?>" target="_blank">conditions générales</a> 
-                                            et la <a href="<?php echo $lang->pageUrl('privacy'); ?>" target="_blank">politique de confidentialité</a>
+                                            <?php echo $lang->get('loan_request_consent_terms', [
+                                                'terms_link' => '<a href="' . $lang->pageUrl('terms') . '" target="_blank">' . $lang->get('terms') . '</a>',
+                                                'privacy_link' => '<a href="' . $lang->pageUrl('privacy') . '" target="_blank">' . $lang->get('privacy') . '</a>'
+                                            ]); ?>
                                         </label>
                                     </div>
                                 </div>
@@ -487,15 +492,15 @@ $requiredDocs = $document->getMissingDocuments($userId);
                             
                             <div class="form-actions">
                                 <button type="button" id="prevStepBtn" class="btn btn-outline" onclick="previousStep()" style="display: none;">
-                                    Précédent
+                                    <?php echo $lang->get('previous'); ?>
                                 </button>
                                 
                                 <button type="button" id="nextStepBtn" class="btn btn-primary" onclick="nextStep()">
-                                    Suivant
+                                    <?php echo $lang->get('next'); ?>
                                 </button>
                                 
                                 <button type="submit" id="submitBtn" class="btn btn-primary btn-large" style="display: none;">
-                                    <span class="btn-text">Soumettre ma demande</span>
+                                    <span class="btn-text"><?php echo $lang->get('loan_request_submit_btn'); ?></span>
                                     <span class="btn-loader"></span>
                                 </button>
                             </div>
@@ -504,57 +509,57 @@ $requiredDocs = $document->getMissingDocuments($userId);
                     
                     <div class="loan-sidebar">
                         <div class="help-card">
-                            <h3>💡 Conseils pour votre demande</h3>
+                            <h3><?php echo $lang->get('loan_request_sidebar_help_title'); ?></h3>
                             <ul>
-                                <li>Soyez précis dans la description de votre projet</li>
-                                <li>Indiquez vos revenus nets réels</li>
-                                <li>N'oubliez pas de mentionner tous vos crédits en cours</li>
-                                <li>Préparez vos documents à l'avance</li>
+                                <li><?php echo $lang->get('loan_request_sidebar_help_item1'); ?></li>
+                                <li><?php echo $lang->get('loan_request_sidebar_help_item2'); ?></li>
+                                <li><?php echo $lang->get('loan_request_sidebar_help_item3'); ?></li>
+                                <li><?php echo $lang->get('loan_request_sidebar_help_item4'); ?></li>
                             </ul>
                         </div>
                         
                         <div class="process-card">
-                            <h3>⏱️ Processus de traitement</h3>
+                            <h3><?php echo $lang->get('loan_request_sidebar_process_title'); ?></h3>
                             <div class="sidebar-process">
                                 <div class="sidebar-process__item">
                                     <span class="sidebar-process__item-number">1</span>
                                     <div class="sidebar-process__item-content">
-                                        <strong>Soumission</strong>
-                                        <small>Votre demande nous parvient instantanément</small>
+                                        <strong><?php echo $lang->get('loan_request_sidebar_process1_title'); ?></strong>
+                                        <small><?php echo $lang->get('loan_request_sidebar_process1_desc'); ?></small>
                                     </div>
                                 </div>
                                 <div class="sidebar-process__item">
                                     <span class="sidebar-process__item-number">2</span>
                                     <div class="sidebar-process__item-content">
-                                        <strong>Analyse</strong>
-                                        <small>Étude de votre dossier sous 24h</small>
+                                        <strong><?php echo $lang->get('loan_request_sidebar_process2_title'); ?></strong>
+                                        <small><?php echo $lang->get('loan_request_sidebar_process2_desc'); ?></small>
                                     </div>
                                 </div>
                                 <div class="sidebar-process__item">
                                     <span class="sidebar-process__item-number">3</span>
                                     <div class="sidebar-process__item-content">
-                                        <strong>Partenaires</strong>
-                                        <small>Transmission aux institutions financières</small>
+                                        <strong><?php echo $lang->get('loan_request_sidebar_process3_title'); ?></strong>
+                                        <small><?php echo $lang->get('loan_request_sidebar_process3_desc'); ?></small>
                                     </div>
                                 </div>
                                 <div class="sidebar-process__item">
                                     <span class="sidebar-process__item-number">4</span>
                                     <div class="sidebar-process__item-content">
-                                        <strong>Réponse</strong>
-                                        <small>Notification sous 48-72h maximum</small>
+                                        <strong><?php echo $lang->get('loan_request_sidebar_process4_title'); ?></strong>
+                                        <small><?php echo $lang->get('loan_request_sidebar_process4_desc'); ?></small>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         
                         <div class="contact-card">
-                            <h3>❓ Besoin d'aide ?</h3>
-                            <p>Notre équipe est disponible pour vous accompagner</p>
+                            <h3><?php echo $lang->get('loan_request_sidebar_contact_title'); ?></h3>
+                            <p><?php echo $lang->get('loan_request_sidebar_contact_desc'); ?></p>
                             <div class="contact-options">
                                 <a href="tel:+33745505207" class="contact-option">
                                     <span class="contact-icon">📞</span>
                                     <span>+33 7 45 50 52 07</span>
-                                </a>
+                                a>
                                 <a href="mailto:support@prestacapi.com" class="contact-option">
                                     <span class="contact-icon">📧</span>
                                     <span>support@prestacapi.com</span>
@@ -574,6 +579,7 @@ $requiredDocs = $document->getMissingDocuments($userId);
     <script src="/js/main.js"></script>
     <script src="/js/modules/forms.js"></script>
     <script>
+        const translations = <?php echo json_encode($js_translations); ?>;
         let currentStep = 1;
         const totalSteps = 4;
         
@@ -618,8 +624,8 @@ $requiredDocs = $document->getMissingDocuments($userId);
             const requiredInputs = currentStepElement.querySelectorAll('input[required], select[required], textarea[required]');
             
             requiredInputs.forEach(input => {
-                if (!input.value.trim()) {
-                    showFieldError(input, 'Ce champ est obligatoire');
+                if ((input.type === 'checkbox' && !input.checked) || (input.type !== 'checkbox' && !input.value.trim())) {
+                    showFieldError(input, translations.requiredField);
                     isValid = false;
                 } else {
                     clearFieldError(input);
@@ -627,9 +633,10 @@ $requiredDocs = $document->getMissingDocuments($userId);
             });
             
             if (currentStep === 1) {
-                const amount = parseFloat(document.getElementById('loanAmount').value);
+                const amountInput = document.getElementById('loanAmount');
+                const amount = parseFloat(amountInput.value);
                 if (amount < 500 || amount > 50000) {
-                    showFieldError(document.getElementById('loanAmount'), 'Le montant doit être entre 500€ et 50 000€');
+                    showFieldError(amountInput, translations.amountRangeError);
                     isValid = false;
                 }
             }
@@ -639,7 +646,7 @@ $requiredDocs = $document->getMissingDocuments($userId);
                 const expenses = parseFloat(document.getElementById('monthlyExpenses').value);
                 
                 if (expenses >= income) {
-                    showFieldError(document.getElementById('monthlyExpenses'), 'Vos charges ne peuvent pas être supérieures ou égales à vos revenus');
+                    showFieldError(document.getElementById('monthlyExpenses'), translations.expensesVsIncomeError);
                     isValid = false;
                 }
             }
@@ -648,16 +655,23 @@ $requiredDocs = $document->getMissingDocuments($userId);
         }
         
         function showFieldError(field, message) {
-            const errorElement = document.getElementById(field.id + 'Error') || field.parentNode.querySelector('.form-error');
-            if (errorElement) {
-                errorElement.textContent = message;
-                errorElement.style.display = 'block';
+            const formGroup = field.closest('.form-group');
+            if (!formGroup) return;
+            let errorElement = formGroup.querySelector('.form-error');
+            if (!errorElement) {
+                errorElement = document.createElement('div');
+                errorElement.className = 'form-error';
+                formGroup.appendChild(errorElement);
             }
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
             field.classList.add('error');
         }
-        
+
         function clearFieldError(field) {
-            const errorElement = document.getElementById(field.id + 'Error') || field.parentNode.querySelector('.form-error');
+            const formGroup = field.closest('.form-group');
+            if (!formGroup) return;
+            const errorElement = formGroup.querySelector('.form-error');
             if (errorElement) {
                 errorElement.textContent = '';
                 errorElement.style.display = 'none';
@@ -670,13 +684,16 @@ $requiredDocs = $document->getMissingDocuments($userId);
             const duration = parseInt(document.getElementById('loanDuration').value) || 24;
             
             if (amount > 0 && duration > 0) {
-                const monthlyRate = 0.06 / 12;
+                const monthlyRate = 0.06 / 12; // Taux moyen pour la simulation
                 const monthlyPayment = (amount * monthlyRate * Math.pow(1 + monthlyRate, duration)) / 
                                     (Math.pow(1 + monthlyRate, duration) - 1);
                 const totalCost = monthlyPayment * duration;
                 
                 document.getElementById('monthlyPayment').textContent = Math.round(monthlyPayment) + '€';
                 document.getElementById('totalCost').textContent = Math.round(totalCost) + '€';
+            } else {
+                document.getElementById('monthlyPayment').textContent = '-';
+                document.getElementById('totalCost').textContent = '-';
             }
         }
         
@@ -685,29 +702,36 @@ $requiredDocs = $document->getMissingDocuments($userId);
             const expenses = parseFloat(document.getElementById('monthlyExpenses').value) || 0;
             const otherLoans = parseFloat(document.getElementById('otherLoans').value) || 0;
             
+            const remainingEl = document.getElementById('remainingIncome');
+            const debtRatioEl = document.getElementById('debtRatio');
+            const indicator = document.querySelector('#analysisIndicator .indicator-fill');
+            const indicatorText = document.querySelector('#analysisIndicator .indicator-text');
+
             if (income > 0) {
                 const remaining = income - expenses - otherLoans;
                 const debtRatio = ((expenses + otherLoans) / income * 100);
                 
-                document.getElementById('remainingIncome').textContent = remaining + '€';
-                document.getElementById('debtRatio').textContent = debtRatio.toFixed(1) + '%';
-                
-                const indicator = document.querySelector('.indicator-fill');
-                const indicatorText = document.querySelector('.indicator-text');
+                remainingEl.textContent = remaining.toFixed(2) + '€';
+                debtRatioEl.textContent = debtRatio.toFixed(1) + '%';
                 
                 if (debtRatio < 33) {
                     indicator.style.width = '80%';
                     indicator.style.background = '#4CAF50';
-                    indicatorText.textContent = 'Excellente capacité';
+                    indicatorText.textContent = translations.capacityExcellent;
                 } else if (debtRatio < 50) {
                     indicator.style.width = '60%';
                     indicator.style.background = '#FF9800';
-                    indicatorText.textContent = 'Capacité correcte';
+                    indicatorText.textContent = translations.capacityGood;
                 } else {
                     indicator.style.width = '30%';
                     indicator.style.background = '#E53935';
-                    indicatorText.textContent = 'Capacité limitée';
+                    indicatorText.textContent = translations.capacityLimited;
                 }
+            } else {
+                remainingEl.textContent = '-';
+                debtRatioEl.textContent = '-';
+                indicator.style.width = '0%';
+                indicatorText.textContent = '...';
             }
         }
         
@@ -718,7 +742,7 @@ $requiredDocs = $document->getMissingDocuments($userId);
             const monthlyPayment = document.getElementById('monthlyPayment').textContent;
             
             document.getElementById('summaryAmount').textContent = amount ? amount + '€' : '-';
-            document.getElementById('summaryDuration').textContent = duration ? duration + ' mois' : '-';
+            document.getElementById('summaryDuration').textContent = duration ? `${duration} ${translations.monthsSuffix}` : '-';
             document.getElementById('summaryMonthlyPayment').textContent = monthlyPayment || '-';
             document.getElementById('summaryIncome').textContent = income ? income + '€' : '-';
         }
@@ -726,6 +750,7 @@ $requiredDocs = $document->getMissingDocuments($userId);
         function handleLoanSubmit(event) {
             event.preventDefault();
             
+            // Re-valider la dernière étape avant soumission
             if (!validateCurrentStep()) {
                 return;
             }
@@ -744,79 +769,20 @@ $requiredDocs = $document->getMissingDocuments($userId);
                 submitBtn.classList.remove('loading');
                 
                 if (data.success) {
-                    showToast('Demande soumise avec succès !', 'success');
+                    showToast(translations.submitSuccess, 'success');
                     setTimeout(() => {
                         window.location.href = '<?php echo $lang->pageUrl('dashboard'); ?>';
                     }, 2000);
                 } else {
-
-                    // 1. Affichez une notification générale
-                    showToast(data.message || 'Erreur lors de la soumission', 'error');
-                    
-                    // 2. Essayez de trouver le champ correspondant à l'erreur
-                    const errorMessage = data.message.toLowerCase();
-                    let fieldToHighlight = null;
-
-                    if (errorMessage.includes('objectif') || errorMessage.includes('purpose')) {
-                        fieldToHighlight = document.getElementById('loanPurpose');
-                    } else if (errorMessage.includes('montant') || errorMessage.includes('amount')) {
-                        fieldToHighlight = document.getElementById('loanAmount');
-                    } else if (errorMessage.includes('revenus') || errorMessage.includes('income')) {
-                        fieldToHighlight = document.getElementById('monthlyIncome');
-                    } else if (errorMessage.includes('charges') || errorMessage.includes('expenses')) {
-                        fieldToHighlight = document.getElementById('monthlyExpenses');
-                    }
-                    // Ajoutez d'autres conditions pour les autres champs si nécessaire
-
-                    // 3. Si un champ est trouvé, affichez l'erreur sous ce champ
-                    if (fieldToHighlight) {
-                        showFieldError(fieldToHighlight, data.message);
-                        
-                        // Optionnel : faites défiler la page jusqu'au champ en erreur
-                        fieldToHighlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }
-                    // -- FIN DE LA MODIFICATION --
+                    showToast(data.message || translations.submitError, 'error');
                 }
             })
             .catch(error => {
                 submitBtn.classList.remove('loading');
-                showToast('Une erreur est survenue', 'error');
+                showToast(translations.errorOccurred, 'error');
             });
         }
         
-        function showToast(message, type = 'success') {
-            // Nous nous assurons que l'élément HTML pour la notification existe
-            let toast = document.getElementById('toast');
-            if (!toast) {
-                toast = document.createElement('div');
-                toast.id = 'toast';
-                toast.innerHTML = `
-                    <div class="toast-content">
-                        <div class="toast-icon" id="toastIcon"></div>
-                        <div class="toast-message" id="toastMessage"></div>
-                    </div>`;
-                document.body.appendChild(toast);
-            }
-
-            const iconEl = document.getElementById('toastIcon');
-            const messageEl = document.getElementById('toastMessage');
-
-            const icons = {
-                success: '✅',
-                error: '❌',
-                warning: '⚠️',
-                info: 'ℹ️'
-            };
-
-            if(iconEl) iconEl.textContent = icons[type] || icons.info;
-            if(messageEl) messageEl.textContent = message;
-
-            toast.className = `toast show ${type}`;
-
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 4000);
-        }
         
         document.addEventListener('DOMContentLoaded', function() {
             const amountInput = document.getElementById('loanAmount');

@@ -391,29 +391,15 @@ class Document {
     }
     
     public function getDocumentTypeName($type) {
-        $names = [
-            'identity' => 'Pièce d\'identité',
-            'birth_certificate' => 'Acte de naissance',
-            'income_proof' => 'Justificatif de revenus',
-            'bank_statement' => 'Relevé bancaire',
-            'employment_certificate' => 'Attestation d\'emploi',
-            'other' => 'Autre document'
-        ];
-        
-        return $names[$type] ?? 'Document';
+        $lang = Language::getInstance();
+        $key = 'document_type_' . $type;
+        return $lang->get($key, ucfirst(str_replace('_', ' ', $type)));
     }
     
     public function getDocumentTypeDescription($type) {
-        $descriptions = [
-            'identity' => 'Carte d\'identité, passeport ou permis de conduire en cours de validité',
-            'birth_certificate' => 'Acte de naissance de moins de 3 mois',
-            'income_proof' => '3 derniers bulletins de paie ou attestation de revenus',
-            'bank_statement' => '3 derniers relevés de compte bancaire',
-            'employment_certificate' => 'Certificat de travail ou contrat de travail',
-            'other' => 'Tout autre document justificatif'
-        ];
-        
-        return $descriptions[$type] ?? '';
+        $lang = Language::getInstance();
+        $key = 'document_type_' . $type . '_desc';
+        return $lang->get($key, '');
     }
     
     public function getMissingDocuments($userId, $loanAmount = 0) {

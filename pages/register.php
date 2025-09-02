@@ -1,9 +1,4 @@
 <?php
-$pageKey = 'register';
-$pageTitle = $lang->get('page_title_' . $pageKey);
-$pageDescription = $lang->get('page_description_' . $pageKey);
-?>
-<?php
 require_once 'classes/Database.php';
 require_once 'classes/Language.php';
 require_once 'classes/SEO.php';
@@ -18,7 +13,9 @@ if ($user->isLoggedIn()) {
     exit;
 }
 
-
+$pageKey = 'register';
+$pageTitle = $lang->get('page_title_' . $pageKey);
+$pageDescription = $lang->get('page_description_' . $pageKey);
 
 $countries = [
     'France', 'Belgique', 'Suisse', 'Luxembourg', 'Monaco',
@@ -35,21 +32,10 @@ $countries = [
     <link rel="canonical" href="<?php echo $seo->generateCanonicalUrl($lang->pageUrl($pageKey)); ?>">
     
     <?php echo $seo->generateAlternateLinks(); ?>
-    
     <?php echo $seo->generateOpenGraphTags(['title' => $pageTitle, 'description' => $pageDescription]); ?>
     <?php echo $seo->generateTwitterCard(['title' => $pageTitle, 'description' => $pageDescription]); ?>
-    
     <?php echo $seo->generateMetaTags(); ?>
-
     <?php echo $seo->generateStructuredData('webpage', ['title' => $pageTitle, 'description' => $pageDescription]); ?>
-    <?php // Optionnel: Ajouter un Breadcrumb si pertinent
-    /*
-    echo $seo->generateStructuredData('breadcrumb', ['items' => [
-        ['name' => $lang->get('home'), 'url' => $lang->url('home')],
-        ['name' => $pageTitle]
-    ]]);
-    */
-    ?>
     
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/forms.css">
@@ -71,23 +57,22 @@ $countries = [
             <div class="auth-form-section">
                 <div class="form-header">
                     <h1 class="form-title"><?php echo $lang->get('auth_register_title'); ?></h1>
-                    <p class="form-subtitle">Créez votre compte et commencez votre demande</p>
+                    <p class="form-subtitle"><?php echo $lang->get('register_subtitle'); ?></p>
                 </div>
 
                 <div class="alert alert-success" style="display: none;">
                     <i class="fas fa-check-circle"></i>
                     <div class="alert-content">
-                        <h3>Inscription réussie !</h3>
-                        <p>Votre compte a été créé avec succès. Vous allez être redirigé vers la page de connexion.</p>
+                        <h3><?php echo $lang->get('register_success_title'); ?></h3>
+                        <p><?php echo $lang->get('register_success_message'); ?></p>
                     </div>
                 </div>
 
                 <div class="alert alert-error" style="display: none;">
                     <i class="fas fa-exclamation-circle"></i>
                     <div class="alert-content">
-                        <h3>Erreur</h3>
-                        <ul class="error-list" style="list-style: none; padding-left: 0;">
-                            </ul>
+                        <h3><?php echo $lang->get('register_error_title'); ?></h3>
+                        <ul class="error-list" style="list-style: none; padding-left: 0;"></ul>
                     </div>
                 </div>
                 
@@ -96,15 +81,15 @@ $countries = [
                         <div class="progress-steps">
                             <div class="step active" data-step="1">
                                 <span class="step-number">1</span>
-                                <span class="step-label">Compte</span>
+                                <span class="step-label"><?php echo $lang->get('register_step_account'); ?></span>
                             </div>
                             <div class="step" data-step="2">
                                 <span class="step-number">2</span>
-                                <span class="step-label">Infos</span>
+                                <span class="step-label"><?php echo $lang->get('register_step_info'); ?></span>
                             </div>
                             <div class="step" data-step="3">
                                 <span class="step-number">3</span>
-                                <span class="step-label">Adresse</span>
+                                <span class="step-label"><?php echo $lang->get('register_step_address'); ?></span>
                             </div>
                         </div>
                         <div class="progress-bar">
@@ -113,7 +98,7 @@ $countries = [
                     </div>
                     
                     <div class="form-step active" data-step="1">
-                        <h3 class="step-title">Créer votre compte</h3>
+                        <h3 class="step-title"><?php echo $lang->get('register_step_title_account'); ?></h3>
                         
                         <div class="form-row">
                             <div class="form-group">
@@ -156,16 +141,16 @@ $countries = [
                     </div>
                     
                     <div class="form-step" data-step="2">
-                        <h3 class="step-title">Vos informations personnelles</h3>
+                        <h3 class="step-title"><?php echo $lang->get('register_step_title_info'); ?></h3>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="phone" class="form-label"><?php echo $lang->get('auth_phone'); ?> <span class="required">*</span></label>
-                                <input type="tel" id="phone" name="phone" class="form-input" required autocomplete="tel" placeholder="+33 7 45 50 52 07">
+                                <input type="tel" id="phone" name="phone" class="form-input" required autocomplete="tel" placeholder="<?php echo $lang->get('register_placeholder_phone'); ?>">
                                 <div class="form-feedback"></div>
                             </div>
                             <div class="form-group">
                                 <label for="whatsapp" class="form-label"><?php echo $lang->get('auth_whatsapp'); ?></label>
-                                <input type="tel" id="whatsapp" name="whatsapp" class="form-input" autocomplete="tel" placeholder="+33 7 45 50 52 07">
+                                <input type="tel" id="whatsapp" name="whatsapp" class="form-input" autocomplete="tel" placeholder="<?php echo $lang->get('register_placeholder_whatsapp'); ?>">
                                 <div class="form-feedback"></div>
                             </div>
                         </div>
@@ -173,26 +158,26 @@ $countries = [
                             <label for="date_of_birth" class="form-label"><?php echo $lang->get('profile_date_of_birth'); ?> <span class="required">*</span></label>
                             <input type="date" id="date_of_birth" name="date_of_birth" class="form-input" required max="<?php echo date('Y-m-d', strtotime('-18 years')); ?>">
                             <div class="form-feedback"></div>
-                            <div class="form-hint">Vous devez être majeur(e) pour utiliser nos services.</div>
+                            <div class="form-hint"><?php echo $lang->get('register_age_requirement_hint'); ?></div>
                         </div>
                     </div>
                     
                     <div class="form-step" data-step="3">
-                        <h3 class="step-title">Votre adresse</h3>
+                        <h3 class="step-title"><?php echo $lang->get('register_step_title_address'); ?></h3>
                         <div class="form-group">
                             <label for="address" class="form-label"><?php echo $lang->get('profile_address'); ?></label>
-                            <input type="text" id="address" name="address" class="form-input" autocomplete="street-address" placeholder="123 rue de la République">
+                            <input type="text" id="address" name="address" class="form-input" autocomplete="street-address" placeholder="<?php echo $lang->get('register_placeholder_address'); ?>">
                             <div class="form-feedback"></div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="city" class="form-label"><?php echo $lang->get('profile_city'); ?></label>
-                                <input type="text" id="city" name="city" class="form-input" autocomplete="address-level2" placeholder="Paris">
+                                <input type="text" id="city" name="city" class="form-input" autocomplete="address-level2" placeholder="<?php echo $lang->get('register_placeholder_city'); ?>">
                                 <div class="form-feedback"></div>
                             </div>
                             <div class="form-group">
                                 <label for="postal_code" class="form-label"><?php echo $lang->get('profile_postal_code'); ?></label>
-                                <input type="text" id="postal_code" name="postal_code" class="form-input" autocomplete="postal-code" placeholder="75001">
+                                <input type="text" id="postal_code" name="postal_code" class="form-input" autocomplete="postal-code" placeholder="<?php echo $lang->get('register_placeholder_postal_code'); ?>">
                                 <div class="form-feedback"></div>
                             </div>
                         </div>
@@ -213,22 +198,22 @@ $countries = [
                                 <label for="terms_consent" class="checkbox-label">
                                     <input type="checkbox" id="terms_consent" name="terms" required>
                                     <span class="checkbox-custom"></span>
-                                    <span>J'accepte les <a href="<?php echo $lang->pageUrl('terms'); ?>" target="_blank">conditions d'utilisation</a> et la <a href="<?php echo $lang->pageUrl('privacy'); ?>" target="_blank">politique de confidentialité</a>.</span>
+                                    <span><?php echo sprintf($lang->get('register_terms_consent_full'), $lang->pageUrl('terms'), $lang->pageUrl('privacy')); ?></span>
                                 </label>
                             </div>
                             <div class="checkbox-group">
                                 <label for="newsletter_consent" class="checkbox-label">
                                     <input type="checkbox" id="newsletter_consent" name="newsletter_consent">
                                     <span class="checkbox-custom"></span>
-                                    <span>Je souhaite recevoir les actualités et conseils de PrestaCapi.</span>
+                                    <span><?php echo $lang->get('register_newsletter_consent'); ?></span>
                                 </label>
                             </div>
                         </div>
                     </div>
                     
                     <div class="form-actions">
-                        <button type="button" class="btn btn-outline" id="prevBtn" onclick="previousStep()">Précédent</button>
-                        <button type="button" class="btn btn-primary" id="nextBtn" onclick="nextStep()">Suivant</button>
+                        <button type="button" class="btn btn-outline" id="prevBtn" onclick="previousStep()"><?php echo $lang->get('btn_previous'); ?></button>
+                        <button type="button" class="btn btn-primary" id="nextBtn" onclick="nextStep()"><?php echo $lang->get('btn_next'); ?></button>
                         <button type="submit" class="btn btn-primary" id="submitBtn">
                             <span class="btn-text"><?php echo $lang->get('auth_register_btn'); ?></span>
                             <div class="btn-loader"></div>
@@ -329,7 +314,7 @@ $countries = [
                     isValid = false;
                     if (formGroup) {
                         passwordConfirm.classList.add('error');
-                        if(feedbackEl) feedbackEl.textContent = 'Les mots de passe ne correspondent pas.';
+                        if(feedbackEl) feedbackEl.textContent = '<?php echo $lang->get("js_passwords_do_not_match"); ?>';
                     }
                 }
             }
@@ -341,7 +326,7 @@ $countries = [
             event.preventDefault();
             
             if (!validateCurrentStep()) {
-                alert('Veuillez corriger les erreurs ou cocher la case des conditions générales pour continuer.');
+                alert('<?php echo $lang->get("js_form_errors_or_terms"); ?>');
                 return false;
             }
 
@@ -378,7 +363,7 @@ $countries = [
                         window.location.href = '<?php echo $lang->pageUrl('login'); ?>?status=registered';
                     }, 3000);
                 } else {
-                    errorList.innerHTML = `<li>${data.message || 'Une erreur est survenue.'}</li>`;
+                    errorList.innerHTML = `<li>${data.message || '<?php echo $lang->get("js_error_occurred"); ?>'}</li>`;
                     alertError.style.display = 'flex';
                     submitBtn.classList.remove('loading');
                     submitBtn.disabled = false;
@@ -386,7 +371,7 @@ $countries = [
             })
             .catch(error => {
                 console.error('Registration Fetch Error:', error);
-                errorList.innerHTML = '<li>Une erreur de communication est survenue. Veuillez réessayer.</li>';
+                errorList.innerHTML = '<li><?php echo $lang->get("js_communication_error"); ?></li>';
                 alertError.style.display = 'flex';
                 submitBtn.classList.remove('loading');
                 submitBtn.disabled = false;
