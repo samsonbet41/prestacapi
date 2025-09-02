@@ -854,5 +854,29 @@ return [
     'js_passwords_do_not_match' => 'Passwords do not match.',
     'js_form_errors_or_terms' => 'Please correct the errors or check the terms and conditions box to continue.',
     'js_communication_error' => 'A communication error occurred. Please try again.',
+    // --- Email sent to the user after uploading a document ---
+    'email_doc_received_subject' => 'We have received your document',
+    'email_doc_received_header' => 'Document Received',
+    'email_doc_received_greeting' => 'Hello {name},',
+    'email_doc_received_intro' => 'We confirm that we have successfully received your document. It is now being processed by our team.',
+    'email_doc_received_next_steps' => 'You will receive another email as soon as your document\'s status has been updated after verification.',
+    'document_type' => 'Document Type',
+    'file_name' => 'File Name',
+
+    // --- Email sent to the user when a document is VERIFIED ---
+    'email_doc_verified_subject' => 'Good news! Your document "{type}" has been verified',
+    'email_doc_verified_header' => 'Document Verified',
+    'email_doc_verified_greeting' => 'Hello {name},',
+    'email_doc_verified_body' => 'We are pleased to inform you that your document (<strong>{type}</strong>) has been reviewed and approved by our team. You are one step closer to completing your file!',
+
+    // --- Email sent to the user when a document is REJECTED ---
+    'email_doc_rejected_subject' => 'Important information regarding your document "{type}"',
+    'email_doc_rejected_header' => 'Document Rejected',
+    'email_doc_rejected_greeting' => 'Hello {name},',
+    'email_doc_rejected_body' => 'After review, your document (<strong>{type}</strong>) could not be validated. Please see the reason below and submit a new document from your personal area.',
+    'email_doc_rejected_reason' => 'Reason for rejection',
+
+    // --- Generic key for the closing ---
+    'email_sincerely' => 'Sincerely,',
 ];
 ?>

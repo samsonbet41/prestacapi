@@ -669,6 +669,55 @@ class Mailer {
         </body>
         </html>";
     }
+
+
+    public function sendDocumentReceivedEmail($userData, $documentType, $fileName, $languageCode) {
+        try {
+            $subject = $this->lang->get('email_doc_received_subject', [], $languageCode);
+            $message = $this->buildDocumentReceivedTemplate($userData, $documentType, $fileName, $languageCode);
+            
+            $result = $this->send($userData['email'], $subject, $message);
+            
+            if ($result) {
+                $this->log("Email de confirmation d'upload ($languageCode) envoyé à : " . $userData['email'], 'SUCCESS');
+            } else {
+                $this->log("Échec de l'envoi de l'email de confirmation d'upload ($languageCode) à : " . $userData['email'], 'ERROR');
+            }
+            
+            return $result;
+            
+        } catch (Exception $e) {
+            $this->log("Erreur lors de l'envoi de l'email de confirmation de document : " . $e->getMessage(), 'ERROR');
+            return false;
+        }
+    }
+
+    private function buildDocumentReceivedTemplate($userData, $documentType, $fileName, $languageCode) {
+        $styles = "
+        <style>
+            body { font-family: 'Arial', sans-serif; } .container { max-width: 600px; margin: 0 auto; background: #f9f9f9; padding: 20px; }
+            .header { background: #1F3B73; color: white; padding: 1rem; text-align: center; }
+            .content { padding: 1rem; } .footer { text-align: center; font-size: 0.8rem; color: #888; }
+        </style>";
+
+        return "
+        <!DOCTYPE html><html lang='{$languageCode}'><head><meta charset='UTF-8'><title>{$this->lang->get('email_doc_received_subject', [], $languageCode)}</title>{$styles}</head>
+        <body>
+            <div class='container'>
+                <div class='header'><h1>{$this->lang->get('email_doc_received_header', [], $languageCode)}</h1></div>
+                <div class='content'>
+                    <h2>{$this->lang->get('email_doc_received_greeting', ['name' => htmlspecialchars($userData['first_name'])], $languageCode)}</h2>
+                    <p>{$this->lang->get('email_doc_received_intro', [], $languageCode)}</p>
+                    <ul>
+                        <li><strong>{$this->lang->get('document_type', [], $languageCode)}:</strong> {$documentType}</li>
+                        <li><strong>{$this->lang->get('file_name', [], $languageCode)}:</strong> " . htmlspecialchars($fileName) . "</li>
+                    </ul>
+                    <p>{$this->lang->get('email_doc_received_next_steps', [], $languageCode)}</p>
+                </div>
+                <div class='footer'><p>PrestaCapi</p></div>
+            </div>
+        </body></html>";
+    }
     
     public function sendPasswordResetEmail($email, $token) {
         try {
@@ -703,13 +752,80 @@ class Mailer {
             
             $subject = $subjects[$type] ?? 'Notification PrestaCapi';
             $message = $this->buildAdminNotificationTemplate($type, $data);
+
+            // AJOUT : Gestion de la pièce jointe
+            $attachments = [];
+            if ($type === 'document_uploaded' && isset($data['file_path'])) {
+                $attachments[] = [
+                    'path' => $data['file_path'],
+                    'name' => $data['original_name'] ?? 'document.dat'
+                ];
+            }
             
-            return $this->send($this->adminEmail, $subject, $message);
+            // On passe les pièces jointes à la méthode send
+            return $this->send($this->adminEmail, $subject, $message, $attachments);
             
         } catch (Exception $e) {
             $this->log("Erreur notification admin: " . $e->getMessage(), 'ERROR');
             return false;
         }
+    }
+
+
+    public function sendDocumentVerifiedEmail($userData, $documentTypeName, $languageCode) {
+        try {
+            $subject = $this->lang->get('email_doc_verified_subject', ['type' => $documentTypeName], $languageCode);
+            $message = $this->buildSimpleDocumentStatusTemplate(
+                $languageCode,
+                $subject,
+                $this->lang->get('email_doc_verified_header', [], $languageCode),
+                $this->lang->get('email_doc_verified_greeting', ['name' => $userData['first_name']], $languageCode),
+                $this->lang->get('email_doc_verified_body', ['type' => $documentTypeName], $languageCode)
+            );
+            return $this->send($userData['email'], $subject, $message);
+        } catch (Exception $e) {
+            $this->log("Erreur envoi email document vérifié: " . $e->getMessage(), 'ERROR');
+            return false;
+        }
+    }
+
+    public function sendDocumentRejectedEmail($userData, $documentTypeName, $notes, $languageCode) {
+        try {
+            $subject = $this->lang->get('email_doc_rejected_subject', ['type' => $documentTypeName], $languageCode);
+            $rejectionReasonText = $this->lang->get('email_doc_rejected_reason', [], $languageCode);
+            $body = $this->lang->get('email_doc_rejected_body', ['type' => $documentTypeName], $languageCode);
+            if (!empty($notes)) {
+                $body .= "<p><strong>{$rejectionReasonText}:</strong> " . htmlspecialchars($notes) . "</p>";
+            }
+            
+            $message = $this->buildSimpleDocumentStatusTemplate(
+                $languageCode,
+                $subject,
+                $this->lang->get('email_doc_rejected_header', [], $languageCode),
+                $this->lang->get('email_doc_rejected_greeting', ['name' => $userData['first_name']], $languageCode),
+                $body
+            );
+            return $this->send($userData['email'], $subject, $message);
+        } catch (Exception $e) {
+            $this->log("Erreur envoi email document rejeté: " . $e->getMessage(), 'ERROR');
+            return false;
+        }
+    }
+
+    private function buildSimpleDocumentStatusTemplate($langCode, $title, $header, $greeting, $body) {
+        return "<!DOCTYPE html>
+        <html lang='{$langCode}'>
+        <head><title>{$title}</title></head>
+        <body style='font-family: Arial, sans-serif; padding: 20px;'>
+            <div style='max-width: 600px; margin: auto; border: 1px solid #ddd;'>
+                <div style='background: #007bff; color: white; padding: 10px; text-align: center;'><h1>{$header}</h1></div>
+                <div style='padding: 20px;'>
+                    <h2>{$greeting}</h2>
+                    {$body}
+                    <p>{$this->lang->get('email_sincerely', [], $langCode)}<br>PrestaCapi</p>
+                </div>
+            </div>
+        </body></html>";
     }
     
     private function buildAdminNotificationTemplate($type, $data) {

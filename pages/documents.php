@@ -8,6 +8,7 @@ require_once 'classes/Language.php';
 require_once 'classes/SEO.php';
 require_once 'classes/Document.php';
 
+
 $lang = Language::getInstance();
 $seo = new SEO();
 $document = new Document();

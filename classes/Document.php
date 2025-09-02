@@ -1,4 +1,7 @@
 <?php
+require_once __DIR__ . '/Mailer.php';
+require_once __DIR__ . '/Language.php';
+require_once __DIR__ . '/User.php';
 
 class Document {
     private $db;
@@ -97,17 +100,32 @@ class Document {
             $this->db->logActivity($userId, null, $action, "Document $documentType uploadé: $fileName");
             
             try {
+                $lang = Language::getInstance();
+                $userFullData = $this->db->fetchOne("SELECT first_name, email FROM users WHERE id = ?", [$userId]);
+
                 $mailer = new Mailer();
+
                 $mailer->sendAdminNotification('document_uploaded', [
                     'user_id' => $userId,
                     'document_type' => $this->getDocumentTypeName($documentType),
-                    'file_name' => $fileName
+                    'file_name' => $fileName,
+                    'file_path' => $targetPath,
+                    'original_name' => $file['name']
                 ]);
+
+                if ($userFullData) {
+                    $mailer->sendDocumentReceivedEmail(
+                        $userFullData,
+                        $this->getDocumentTypeName($documentType),
+                        $fileName,
+                        $lang->getCurrentLanguage() 
+                    );
+                }
+
             } catch (Exception $e) {
-                // Log the mailer error but continue as the file upload was successful
                 error_log("Erreur Mailer dans uploadDocument: " . $e->getMessage());
             }
-            
+
             return [
                 'success' => true,
                 'message' => 'Document uploadé avec succès',
@@ -194,6 +212,26 @@ class Document {
                     'message' => $notification_message,
                     'related_id' => $documentId
                 ]);
+
+                try {
+                    $user_obj = new User(); // Assurez-vous que la classe User est disponible
+                    $userData = $user_obj->getUserById($document['user_id']);
+                    
+                    if ($userData) {
+                        $mailer = new Mailer();
+                        // La langue de l'utilisateur est stockée dans la base de données
+                        $userLanguage = $userData['language'] ?? 'fr';
+                        $documentTypeName = $this->getDocumentTypeName($document['document_type']);
+
+                        if ($isVerified) {
+                            $mailer->sendDocumentVerifiedEmail($userData, $documentTypeName, $userLanguage);
+                        } else {
+                            $mailer->sendDocumentRejectedEmail($userData, $documentTypeName, $notes, $userLanguage);
+                        }
+                    }
+                } catch (Exception $e) {
+                    error_log("Erreur Mailer dans verifyDocument: " . $e->getMessage());
+                }
                 
                 return ['success' => true, 'message' => 'Statut du document mis à jour avec succès'];
             } else {

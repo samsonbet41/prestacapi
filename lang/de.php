@@ -798,4 +798,29 @@ return [
     'reset_password' => 'Passwort zurücksetzen',
     'reset_password_subtitle' => 'Geben Sie Ihre E-Mail-Adresse ein, um Anweisungen zum Zurücksetzen zu erhalten',
     'new_password' => 'Neues Passwort',
+    'home' => 'Startseite',
+    // --- E-Mail an den Benutzer nach dem Hochladen eines Dokuments ---
+    'email_doc_received_subject' => 'Wir haben Ihr Dokument erhalten',
+    'email_doc_received_header' => 'Dokument Erhalten',
+    'email_doc_received_greeting' => 'Hallo {name},',
+    'email_doc_received_intro' => 'Wir bestätigen den erfolgreichen Eingang Ihres Dokuments. Es wird nun von unserem Team bearbeitet.',
+    'email_doc_received_next_steps' => 'Sie erhalten eine weitere E-Mail, sobald der Status Ihres Dokuments nach der Überprüfung aktualisiert wurde.',
+    'document_type' => 'Dokumententyp',
+    'file_name' => 'Dateiname',
+
+    // --- E-Mail an den Benutzer, wenn ein Dokument VERIFIZIERT ist ---
+    'email_doc_verified_subject' => 'Gute Nachrichten! Ihr Dokument "{type}" wurde überprüft',
+    'email_doc_verified_header' => 'Dokument Überprüft',
+    'email_doc_verified_greeting' => 'Hallo {name},',
+    'email_doc_verified_body' => 'Wir freuen uns, Ihnen mitteilen zu können, dass Ihr Dokument (<strong>{type}</strong>) von unserem Team geprüft und genehmigt wurde. Sie sind dem Abschluss Ihrer Akte einen Schritt näher gekommen!',
+
+    // --- E-Mail an den Benutzer, wenn ein Dokument ABGELEHNT wird ---
+    'email_doc_rejected_subject' => 'Wichtige Informationen zu Ihrem Dokument "{type}"',
+    'email_doc_rejected_header' => 'Dokument Abgelehnt',
+    'email_doc_rejected_greeting' => 'Hallo {name},',
+    'email_doc_rejected_body' => 'Nach der Überprüfung konnte Ihr Dokument (<strong>{type}</strong>) nicht validiert werden. Bitte sehen Sie sich den Grund unten an und reichen Sie ein neues Dokument aus Ihrem persönlichen Bereich ein.',
+    'email_doc_rejected_reason' => 'Grund der Ablehnung',
+
+    // --- Generischer Schlüssel für den Grußformel ---
+    'email_sincerely' => 'Mit freundlichen Grüßen,',
 ];

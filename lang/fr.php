@@ -853,5 +853,32 @@ return [
     'js_passwords_do_not_match' => 'Les mots de passe ne correspondent pas.',
     'js_form_errors_or_terms' => 'Veuillez corriger les erreurs ou cocher la case des conditions générales pour continuer.',
     'js_communication_error' => 'Une erreur de communication est survenue. Veuillez réessayer.',
+    // --- E-mail envoyé à l'utilisateur après l'upload d'un document ---
+    'email_doc_received_subject' => 'Nous avons bien reçu votre document',
+    'email_doc_received_header' => 'Document Réceptionné',
+    'email_doc_received_greeting' => 'Bonjour {name},',
+    'email_doc_received_intro' => 'Nous vous confirmons la bonne réception de votre document. Il est maintenant en cours de traitement par notre équipe.',
+    'email_doc_received_next_steps' => 'Vous recevrez un nouvel e-mail dès que le statut de votre document aura été mis à jour après vérification.',
+    'document_type' => 'Type de document',
+    'file_name' => 'Nom du fichier',
+
+
+    // --- E-mail envoyé à l'utilisateur quand un document est VÉRIFIÉ ---
+    'email_doc_verified_subject' => 'Bonne nouvelle ! Votre document "{type}" a été vérifié',
+    'email_doc_verified_header' => 'Document Vérifié',
+    'email_doc_verified_greeting' => 'Bonjour {name},',
+    'email_doc_verified_body' => 'Nous avons le plaisir de vous informer que votre document (<strong>{type}</strong>) a été examiné et approuvé par notre équipe. Vous êtes un pas de plus vers la finalisation de votre dossier !',
+
+
+    // --- E-mail envoyé à l'utilisateur quand un document est REJETÉ ---
+    'email_doc_rejected_subject' => 'Information importante concernant votre document "{type}"',
+    'email_doc_rejected_header' => 'Document Rejeté',
+    'email_doc_rejected_greeting' => 'Bonjour {name},',
+    'email_doc_rejected_body' => 'Après examen, votre document (<strong>{type}</strong>) n\'a pas pu être validé. Veuillez consulter le motif ci-dessous et soumettre un nouveau document depuis votre espace personnel.',
+    'email_doc_rejected_reason' => 'Motif du rejet',
+
+
+    // --- Clé générique pour la formule de politesse ---
+    'email_sincerely' => 'Cordialement,'
 ];
 ?>

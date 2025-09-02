@@ -793,4 +793,29 @@ return [
     'logout' => 'Cerrar sesión',
     'remember_me' => 'Recuérdame',
     'forgot_password' => '¿Olvidaste tu contraseña?',
+    'home' => 'Inicio',
+    // --- Email enviado al usuario tras subir un documento ---
+    'email_doc_received_subject' => 'Hemos recibido su documento',
+    'email_doc_received_header' => 'Documento Recibido',
+    'email_doc_received_greeting' => 'Hola {name},',
+    'email_doc_received_intro' => 'Le confirmamos que hemos recibido correctamente su documento. Nuestro equipo lo está procesando.',
+    'email_doc_received_next_steps' => 'Recibirá un nuevo correo electrónico tan pronto como el estado de su documento se actualice después de la verificación.',
+    'document_type' => 'Tipo de documento',
+    'file_name' => 'Nombre del archivo',
+
+    // --- Email enviado al usuario cuando un documento es VERIFICADO ---
+    'email_doc_verified_subject' => '¡Buenas noticias! Su documento "{type}" ha sido verificado',
+    'email_doc_verified_header' => 'Documento Verificado',
+    'email_doc_verified_greeting' => 'Hola {name},',
+    'email_doc_verified_body' => 'Nos complace informarle que su documento (<strong>{type}</strong>) ha sido revisado y aprobado por nuestro equipo. ¡Está un paso más cerca de completar su expediente!',
+
+    // --- Email enviado al usuario cuando un documento es RECHAZADO ---
+    'email_doc_rejected_subject' => 'Información importante sobre su documento "{type}"',
+    'email_doc_rejected_header' => 'Documento Rechazado',
+    'email_doc_rejected_greeting' => 'Hola {name},',
+    'email_doc_rejected_body' => 'Después de revisarlo, su documento (<strong>{type}</strong>) no ha podido ser validado. Por favor, consulte el motivo a continuación y envíe un nuevo documento desde su área personal.',
+    'email_doc_rejected_reason' => 'Motivo del rechazo',
+
+    // --- Clave genérica para la despedida ---
+    'email_sincerely' => 'Atentamente,',
 ];
