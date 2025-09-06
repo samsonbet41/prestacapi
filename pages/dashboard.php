@@ -49,14 +49,6 @@ $pageTitle = $lang->get('dashboard_title');
     <?php echo $seo->generateMetaTags(); ?>
 
     <?php echo $seo->generateStructuredData('webpage', ['title' => $pageTitle, 'description' => $pageDescription]); ?>
-    <?php // Optionnel: Ajouter un Breadcrumb si pertinent
-    /*
-    echo $seo->generateStructuredData('breadcrumb', ['items' => [
-        ['name' => $lang->get('home'), 'url' => $lang->url('home')],
-        ['name' => $pageTitle]
-    ]]);
-    */
-    ?>
     <meta name="robots" content="noindex, nofollow">
     
     <link rel="stylesheet" href="/css/style.css">
@@ -65,6 +57,53 @@ $pageTitle = $lang->get('dashboard_title');
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="/images/favicon/favicon.ico">
+    <style>
+        .dashboard-alert {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            background-color: #FFEBEE;
+            color: #D32F2F;
+            border: 1px solid #FFCDD2;
+        }
+        .dashboard-alert .alert-icon {
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+        .dashboard-alert .alert-content {
+            flex-grow: 1;
+        }
+        .dashboard-alert .alert-content h4 {
+            margin: 0 0 0.25rem 0;
+            font-weight: 600;
+            color: #C62828;
+        }
+        .dashboard-alert .alert-content p {
+            margin: 0;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        .dashboard-alert .alert-action {
+            margin-left: 1rem;
+            flex-shrink: 0;
+        }
+        .dashboard-alert .alert-action .btn {
+            background-color: #D32F2F;
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        .dashboard-alert .alert-action .btn:hover {
+            background-color: #C62828;
+        }
+    </style>
 </head>
 <body class="dashboard-page">
     <?php include 'includes/header.php'; ?>
@@ -76,7 +115,7 @@ $pageTitle = $lang->get('dashboard_title');
                     <h1 class="dashboard-title">
                         <?php echo $lang->get('dashboard_welcome', ['name' => htmlspecialchars($currentUser['first_name'])]); ?>
                     </h1>
-                    <p class="dashboard-subtitle">Voici un aperçu de votre compte PrestaCapi</p>
+                    <p class="dashboard-subtitle"><?php echo $lang->get('dashboard_subtitle'); ?></p>
                 </div>
                 
                 <div class="user-profile-summary">
@@ -93,6 +132,23 @@ $pageTitle = $lang->get('dashboard_title');
                     </div>
                 </div>
             </div>
+
+            <?php if ($documentStatus['completion_percentage'] < 100): ?>
+            <div class="dashboard-alert">
+                <div class="alert-icon">
+                    ⚠️
+                </div>
+                <div class="alert-content">
+                    <h4><?php echo $lang->get('dashboard_documents_warning_title'); ?></h4>
+                    <p><?php echo $lang->get('dashboard_documents_warning_desc'); ?></p>
+                </div>
+                <div class="alert-action">
+                    <a href="<?php echo $lang->pageUrl('documents'); ?>" class="btn">
+                        <?php echo $lang->get('dashboard_documents_warning_btn'); ?>
+                    </a>
+                </div>
+            </div>
+            <?php endif; ?>
             
             <div class="dashboard-content">
                 <div class="stats-grid">
@@ -127,7 +183,7 @@ $pageTitle = $lang->get('dashboard_title');
                             <div class="stat-label"><?php echo $lang->get('dashboard_stats_pending'); ?></div>
                         </div>
                         <div class="stat-detail">
-                            <?php echo $stats['pending_withdrawals']; ?> retraits en cours
+                            <?php echo $lang->get('dashboard_pending_withdrawals_detail', ['count' => $stats['pending_withdrawals']]); ?>
                         </div>
                     </div>
                     
@@ -135,10 +191,10 @@ $pageTitle = $lang->get('dashboard_title');
                         <div class="stat-icon">🔔</div>
                         <div class="stat-content">
                             <div class="stat-value"><?php echo $stats['unread_notifications']; ?></div>
-                            <div class="stat-label">Notifications</div>
+                            <div class="stat-label"><?php echo $lang->get('notifications_title'); ?></div>
                         </div>
                         <div class="stat-detail">
-                            Messages non lus
+                           <?php echo $lang->get('dashboard_unread_messages_detail'); ?>
                         </div>
                     </div>
                 </div>
@@ -147,7 +203,7 @@ $pageTitle = $lang->get('dashboard_title');
                     <div class="dashboard-section">
                         <div class="section-header">
                             <h2 class="section-title"><?php echo $lang->get('dashboard_quick_actions'); ?></h2>
-                            <p class="section-subtitle">Actions rapides depuis votre tableau de bord</p>
+                            <p class="section-subtitle"><?php echo $lang->get('dashboard_quick_actions_subtitle'); ?></p>
                         </div>
                         
                         <div class="quick-actions">
@@ -155,7 +211,7 @@ $pageTitle = $lang->get('dashboard_title');
                                 <div class="action-icon">📝</div>
                                 <div class="action-content">
                                     <h3 class="action-title"><?php echo $lang->get('dashboard_new_loan_request'); ?></h3>
-                                    <p class="action-description">Faire une nouvelle demande de prêt</p>
+                                    <p class="action-description"><?php echo $lang->get('dashboard_new_loan_request_desc'); ?></p>
                                 </div>
                                 <div class="action-arrow">→</div>
                             </a>
@@ -165,7 +221,7 @@ $pageTitle = $lang->get('dashboard_title');
                                     <div class="action-icon">💸</div>
                                     <div class="action-content">
                                         <h3 class="action-title"><?php echo $lang->get('dashboard_request_withdrawal'); ?></h3>
-                                        <p class="action-description">Jusqu'à <?php echo $lang->formatCurrency($withdrawalCheck['max_amount']); ?></p>
+                                        <p class="action-description"><?php echo $lang->get('dashboard_withdrawal_up_to', ['amount' => $lang->formatCurrency($withdrawalCheck['max_amount'])]); ?></p>
                                     </div>
                                     <div class="action-arrow">→</div>
                                 </a>
@@ -183,7 +239,7 @@ $pageTitle = $lang->get('dashboard_title');
                                 <div class="action-icon">📄</div>
                                 <div class="action-content">
                                     <h3 class="action-title"><?php echo $lang->get('dashboard_view_documents'); ?></h3>
-                                    <p class="action-description"><?php echo $documentStatus['verified']; ?>/<?php echo $documentStatus['total_required']; ?> documents vérifiés</p>
+                                    <p class="action-description"><?php echo $lang->get('dashboard_docs_verified_count', ['verified' => $documentStatus['verified'], 'total' => $documentStatus['total_required']]); ?></p>
                                 </div>
                                 <div class="action-arrow">→</div>
                             </a>
@@ -192,7 +248,7 @@ $pageTitle = $lang->get('dashboard_title');
                                 <div class="action-icon">👤</div>
                                 <div class="action-content">
                                     <h3 class="action-title"><?php echo $lang->get('dashboard_update_profile'); ?></h3>
-                                    <p class="action-description">Mettre à jour vos informations</p>
+                                    <p class="action-description"><?php echo $lang->get('dashboard_update_profile_desc'); ?></p>
                                 </div>
                                 <div class="action-arrow">→</div>
                             </a>
@@ -201,8 +257,8 @@ $pageTitle = $lang->get('dashboard_title');
                     
                     <div class="dashboard-section">
                         <div class="section-header">
-                            <h2 class="section-title">Mes demandes de prêt</h2>
-                            <a href="<?php echo $lang->pageUrl('loan_request'); ?>" class="section-link">Faire une demande</a>
+                            <h2 class="section-title"><?php echo $lang->get('dashboard_loan_requests_title'); ?></h2>
+                            <a href="<?php echo $lang->pageUrl('loan_request'); ?>" class="section-link"><?php echo $lang->get('dashboard_apply_link'); ?></a>
                         </div>
                         
                         <div class="data-table-container">
@@ -210,10 +266,10 @@ $pageTitle = $lang->get('dashboard_title');
                                 <table class="data-table">
                                     <thead>
                                         <tr>
-                                            <th>Montant</th>
-                                            <th>Statut</th>
-                                            <th>Date</th>
-                                            <th>Actions</th>
+                                            <th><?php echo $lang->get('amount'); ?></th>
+                                            <th><?php echo $lang->get('status'); ?></th>
+                                            <th><?php echo $lang->get('date'); ?></th>
+                                            <th><?php echo $lang->get('common_actions'); ?></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -223,7 +279,7 @@ $pageTitle = $lang->get('dashboard_title');
                                                     <div class="amount-cell">
                                                         <?php echo $lang->formatCurrency($loan['amount']); ?>
                                                         <?php if ($loan['approved_amount']): ?>
-                                                            <small class="approved-amount">Approuvé: <?php echo $lang->formatCurrency($loan['approved_amount']); ?></small>
+                                                            <small class="approved-amount"><?php echo $lang->get('dashboard_loan_approved_label'); ?> <?php echo $lang->formatCurrency($loan['approved_amount']); ?></small>
                                                         <?php endif; ?>
                                                     </div>
                                                 </td>
@@ -240,7 +296,7 @@ $pageTitle = $lang->get('dashboard_title');
                                                 </td>
                                                 <td>
                                                     <div class="table-actions">
-                                                        <button class="btn-icon" onclick="viewLoanDetails(<?php echo $loan['id']; ?>)" title="Voir les détails">
+                                                        <button class="btn-icon" onclick="viewLoanDetails(<?php echo $loan['id']; ?>)" title="<?php echo $lang->get('dashboard_view_details_title'); ?>">
                                                             👁️
                                                         </button>
                                                     </div>
@@ -252,10 +308,10 @@ $pageTitle = $lang->get('dashboard_title');
                             <?php else: ?>
                                 <div class="empty-state">
                                     <div class="empty-icon">📋</div>
-                                    <h3>Aucune demande de prêt</h3>
-                                    <p>Vous n'avez pas encore fait de demande de prêt.</p>
+                                    <h3><?php echo $lang->get('dashboard_no_loan_requests_title'); ?></h3>
+                                    <p><?php echo $lang->get('dashboard_no_loan_requests_desc'); ?></p>
                                     <a href="<?php echo $lang->pageUrl('loan_request'); ?>" class="btn btn-primary">
-                                        Faire ma première demande
+                                        <?php echo $lang->get('dashboard_make_first_request_btn'); ?>
                                     </a>
                                 </div>
                             <?php endif; ?>
@@ -264,9 +320,9 @@ $pageTitle = $lang->get('dashboard_title');
                     
                     <div class="dashboard-section">
                         <div class="section-header">
-                            <h2 class="section-title">Mes retraits</h2>
+                            <h2 class="section-title"><?php echo $lang->get('dashboard_withdrawals_title'); ?></h2>
                             <?php if ($withdrawalCheck['can_request']): ?>
-                                <a href="<?php echo $lang->pageUrl('withdrawal'); ?>" class="section-link">Nouveau retrait</a>
+                                <a href="<?php echo $lang->pageUrl('withdrawal'); ?>" class="section-link"><?php echo $lang->get('dashboard_new_withdrawal_link'); ?></a>
                             <?php endif; ?>
                         </div>
                         
@@ -275,10 +331,10 @@ $pageTitle = $lang->get('dashboard_title');
                                 <table class="data-table">
                                     <thead>
                                         <tr>
-                                            <th>Montant</th>
-                                            <th>Banque</th>
-                                            <th>Statut</th>
-                                            <th>Date</th>
+                                            <th><?php echo $lang->get('amount'); ?></th>
+                                            <th><?php echo $lang->get('bank'); ?></th>
+                                            <th><?php echo $lang->get('status'); ?></th>
+                                            <th><?php echo $lang->get('date'); ?></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -309,11 +365,11 @@ $pageTitle = $lang->get('dashboard_title');
                             <?php else: ?>
                                 <div class="empty-state">
                                     <div class="empty-icon">💸</div>
-                                    <h3>Aucune demande de retrait</h3>
-                                    <p>Vous n'avez pas encore fait de demande de retrait.</p>
+                                    <h3><?php echo $lang->get('dashboard_no_withdrawals_title'); ?></h3>
+                                    <p><?php echo $lang->get('dashboard_no_withdrawals_desc'); ?></p>
                                     <?php if ($withdrawalCheck['can_request']): ?>
                                         <a href="<?php echo $lang->pageUrl('withdrawal'); ?>" class="btn btn-outline">
-                                            Faire une demande
+                                            <?php echo $lang->get('dashboard_make_withdrawal_request_btn'); ?>
                                         </a>
                                     <?php endif; ?>
                                 </div>
@@ -373,8 +429,8 @@ $pageTitle = $lang->get('dashboard_title');
                     
                     <div class="sidebar-section">
                         <div class="section-header">
-                            <h3 class="section-title">État des documents</h3>
-                            <a href="<?php echo $lang->pageUrl('documents'); ?>" class="section-action">Gérer</a>
+                            <h3 class="section-title"><?php echo $lang->get('dashboard_doc_status_title'); ?></h3>
+                            <a href="<?php echo $lang->pageUrl('documents'); ?>" class="section-action"><?php echo $lang->get('dashboard_manage_link'); ?></a>
                         </div>
                         
                         <div class="document-progress">
@@ -387,16 +443,16 @@ $pageTitle = $lang->get('dashboard_title');
                                 <div class="progress-text"><?php echo $documentStatus['completion_percentage']; ?>%</div>
                             </div>
                             <div class="progress-info">
-                                <div class="progress-label">Documents vérifiés</div>
+                                <div class="progress-label"><?php echo $lang->get('dashboard_verified_documents_label'); ?></div>
                                 <div class="progress-detail">
-                                    <?php echo $documentStatus['verified']; ?> sur <?php echo $documentStatus['total_required']; ?> requis
+                                    <?php echo $lang->get('dashboard_doc_status_detail', ['verified' => $documentStatus['verified'], 'total' => $documentStatus['total_required']]); ?>
                                 </div>
                             </div>
                         </div>
                         
                         <?php if (!empty($documentStatus['missing'])): ?>
                             <div class="missing-documents">
-                                <h4>Documents manquants :</h4>
+                                <h4><?php echo $lang->get('dashboard_missing_documents_title'); ?></h4>
                                 <ul>
                                     <?php foreach ($documentStatus['missing'] as $missingDoc): ?>
                                         <li><?php echo $document->getDocumentTypeName($missingDoc); ?></li>
@@ -408,15 +464,15 @@ $pageTitle = $lang->get('dashboard_title');
                     
                     <div class="sidebar-section">
                         <div class="section-header">
-                            <h3 class="section-title">Aide et support</h3>
+                            <h3 class="section-title"><?php echo $lang->get('dashboard_help_support_title'); ?></h3>
                         </div>
                         
                         <div class="support-links">
                             <a href="<?php echo $lang->pageUrl('contact'); ?>" class="support-link">
                                 <div class="support-icon">💬</div>
                                 <div class="support-content">
-                                    <div class="support-title">Nous contacter</div>
-                                    <div class="support-description">Support client 7j/7</div>
+                                    <div class="support-title"><?php echo $lang->get('contact_us'); ?></div>
+                                    <div class="support-description"><?php echo $lang->get('dashboard_support_7d'); ?></div>
                                 </div>
                             </a>
                             
@@ -424,7 +480,7 @@ $pageTitle = $lang->get('dashboard_title');
                                 <div class="support-icon">📞</div>
                                 <div class="support-content">
                                     <div class="support-title">+33 7 45 50 52 07</div>
-                                    <div class="support-description">Lun-Ven 9h-18h</div>
+                                    <div class="support-description"><?php echo $lang->get('dashboard_support_hours'); ?></div>
                                 </div>
                             </a>
                         </div>
@@ -437,11 +493,11 @@ $pageTitle = $lang->get('dashboard_title');
     <div class="modal" id="loanDetailsModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Détails de la demande</h3>
+                <h3><?php echo $lang->get('dashboard_modal_loan_details_title'); ?></h3>
                 <button class="modal-close" onclick="closeLoanDetailsModal()">&times;</button>
             </div>
             <div class="modal-body" id="loanDetailsContent">
-                <div class="loading">Chargement...</div>
+                <div class="loading"><?php echo $lang->get('loading'); ?></div>
             </div>
         </div>
     </div>
@@ -451,7 +507,7 @@ $pageTitle = $lang->get('dashboard_title');
     <script>
         function viewLoanDetails(loanId) {
             document.getElementById('loanDetailsModal').classList.add('show');
-            document.getElementById('loanDetailsContent').innerHTML = '<div class="loading">Chargement...</div>';
+            document.getElementById('loanDetailsContent').innerHTML = `<div class="loading"><?php echo $lang->get('loading'); ?></div>`;
             
             fetch(`/ajax/get-loan-details.php?id=${loanId}`)
                 .then(response => response.json())
@@ -459,11 +515,11 @@ $pageTitle = $lang->get('dashboard_title');
                     if (data.success) {
                         document.getElementById('loanDetailsContent').innerHTML = data.html;
                     } else {
-                        document.getElementById('loanDetailsContent').innerHTML = '<div class="error">Erreur lors du chargement</div>';
+                        document.getElementById('loanDetailsContent').innerHTML = `<div class="error"><?php echo $lang->get('dashboard_modal_load_error'); ?></div>`;
                     }
                 })
                 .catch(error => {
-                    document.getElementById('loanDetailsContent').innerHTML = '<div class="error">Erreur lors du chargement</div>';
+                    document.getElementById('loanDetailsContent').innerHTML = `<div class="error"><?php echo $lang->get('dashboard_modal_load_error'); ?></div>`;
                 });
         }
         

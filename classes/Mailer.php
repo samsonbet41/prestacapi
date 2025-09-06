@@ -890,4 +890,74 @@ class Mailer {
     public function getLastError() {
         return $this->lastError;
     }
+
+    public function sendDocumentReminderEmail($userData, $loanData, $languageCode) {
+        try {
+            $subject = $this->lang->get('email_doc_reminder_subject', ['id' => $loanData['id']], $languageCode);
+            $message = $this->buildDocumentReminderTemplate($userData, $loanData, $languageCode);
+            
+            $result = $this->send($userData['email'], $subject, $message);
+            
+            if ($result) {
+                $this->log("Email de rappel de documents envoyé vers: " . $userData['email'], 'SUCCESS');
+            } else {
+                $this->log("Échec de l'envoi de l'email de rappel de documents à : " . $userData['email'], 'ERROR');
+            }
+            
+            return $result;
+            
+        } catch (Exception $e) {
+            $this->log("Erreur lors de l'envoi de l'email de rappel de documents : " . $e->getMessage(), 'ERROR');
+            return false;
+        }
+    }
+
+    private function buildDocumentReminderTemplate($userData, $loanData, $languageCode) {
+        $styles = "
+        <style>
+            body { font-family: 'Arial', sans-serif; margin: 0; padding: 0; background-color: #F5F7FA; }
+            .container { max-width: 600px; margin: 0 auto; background: white; }
+            .header { background: linear-gradient(135deg, #F59E0B 0%, #1F3B73 100%); color: white; padding: 2rem; text-align: center; }
+            .content { padding: 2rem; }
+            .warning-box { background: #fffbeb; border: 1px solid #F59E0B; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; }
+            .button { display: inline-block; background: #00B8D9; color: white; padding: 12px 25px; text-decoration: none; border-radius: 6px; margin: 1rem 0; font-weight: bold; }
+            .footer { background: #1F3B73; color: white; padding: 1.5rem; text-align: center; font-size: 0.9rem; }
+        </style>
+        ";
+
+        return "
+        <!DOCTYPE html>
+        <html lang='{$languageCode}'>
+        <head>
+            <meta charset='UTF-8'>
+            <title>". $this->lang->get('email_doc_reminder_subject', ['id' => $loanData['id']], $languageCode) ."</title>
+            {$styles}
+        </head>
+        <body>
+            <div class='container'>
+                <div class='header'>
+                    <h1>". $this->lang->get('email_doc_reminder_header', [], $languageCode) ."</h1>
+                    <p>". $this->lang->get('email_ref', [], $languageCode) .": #" . htmlspecialchars($loanData['id']) . "</p>
+                </div>
+                <div class='content'>
+                    <h2>". $this->lang->get('email_greeting', ['name' => htmlspecialchars($userData['first_name'])], $languageCode) ."</h2>
+                    <p>". $this->lang->get('email_doc_reminder_intro', [], $languageCode) ."</p>
+                    <div class='warning-box'>
+                        <h3>". $this->lang->get('email_doc_reminder_box_title', [], $languageCode) ."</h3>
+                        <p>". $this->lang->get('email_doc_reminder_box_body', [], $languageCode) ."</p>
+                    </div>
+                    <div style='text-align: center; margin: 2rem 0;'>
+                        <a href='https://prestacapi.com/{$languageCode}/documents' class='button'>
+                            ". $this->lang->get('email_doc_reminder_cta_button', [], $languageCode) ."
+                        </a>
+                    </div>
+                    <p>". $this->lang->get('email_support_body', [], $languageCode) ."</p>
+                </div>
+                <div class='footer'>
+                    <p><strong>PrestaCapi</strong></p>
+                </div>
+            </div>
+        </body>
+        </html>";
+    }
 }

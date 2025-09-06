@@ -1,11 +1,13 @@
 <?php
 require_once '../includes/auth-admin.php';
 require_once '../../classes/LoanRequest.php';
+require_once '../../classes/Document.php'; 
 requirePermission('manage_loans');
 
 $pageTitle = 'Demandes de prêt';
 
 $loanRequest = new LoanRequest();
+$document = new Document();
 $db = Database::getInstance();
 
 $page = max(1, intval($_GET['page'] ?? 1));
@@ -293,13 +295,17 @@ include '../includes/sidebar.php';
                             <th>Montant</th>
                             <th>Durée</th>
                             <th>Objectif</th>
+                            <th>Documents</th>
                             <th>Statut</th>
                             <th>Date</th>
-                            <th style="width: 140px;">Actions</th>
+                            <th style="width: 180px;">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($loans as $loan): ?>
+                        <?php foreach ($loans as $loan): 
+                            $docStatus = $document->getUserDocumentStatus($loan['user_id']);
+                            $docsVerified = $docStatus['completion_percentage'] === 100;
+                        ?>
                             <tr class="<?php echo getPriorityClass($loan['status']); ?>">
                                 <td>
                                     <input type="checkbox" name="selected[]" value="<?php echo $loan['id']; ?>">
@@ -337,6 +343,17 @@ include '../includes/sidebar.php';
                                         <?php echo htmlspecialchars(truncateText($loan['purpose'], 80)); ?>
                                     </div>
                                 </td>
+                                <td>
+                                    <?php if ($docsVerified): ?>
+                                        <span class="badge badge-success" title="Tous les documents requis sont vérifiés">
+                                            ✅ Complets
+                                        </span>
+                                    <?php else: ?>
+                                        <span class="badge badge-warning" title="<?php echo $docStatus['verified'] . '/' . $docStatus['total_required']; ?> documents requis vérifiés">
+                                            ⏳ <?php echo $docStatus['verified']; ?>/<?php echo $docStatus['total_required']; ?> Vérifiés
+                                        </span>
+                                    <?php endif; ?>
+                                </td>
                                 <td data-status="<?php echo $loan['status']; ?>">
                                     <?php echo getStatusBadge($loan['status']); ?>
                                 </td>
@@ -354,6 +371,15 @@ include '../includes/sidebar.php';
                                             👁️
                                         </a>
                                         
+                                        <?php if (!$docsVerified): ?>
+                                            <button class="action-btn notify" 
+                                                    data-action="send-reminder" 
+                                                    data-loan-id="<?php echo $loan['id']; ?>"
+                                                    title="Notifier l'utilisateur pour les documents manquants">
+                                                🔔
+                                            </button>
+                                        <?php endif; ?>
+
                                         <?php if ($loan['status'] === 'pending'): ?>
                                             <button class="action-btn edit" 
                                                     data-action="update-loan-status" 
@@ -524,5 +550,401 @@ include '../includes/sidebar.php';
     </div>
 </div>
 
-
 <?php include '../includes/footer.php'; ?>
+
+<script>
+function changeSorting(value) {
+    const [sort, order] = value.split('-');
+    const url = new URL(window.location);
+    url.searchParams.set('sort', sort);
+    url.searchParams.set('order', order);
+    url.searchParams.set('page', '1'); 
+    window.location.href = url.toString();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const selectAll = document.getElementById('selectAll');
+    const checkboxes = document.querySelectorAll('input[name="selected[]"]');
+    const bulkActions = document.getElementById('bulkActions');
+    const selectedCountEl = document.querySelector('.selected-count');
+
+    function updateBulkActions() {
+        const selected = document.querySelectorAll('input[name="selected[]"]:checked');
+        selectedCountEl.textContent = selected.length;
+        bulkActions.style.display = selected.length > 0 ? 'flex' : 'none';
+    }
+
+    selectAll.addEventListener('change', function() {
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = this.checked;
+        });
+        updateBulkActions();
+    });
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+            const noneChecked = Array.from(checkboxes).every(cb => !cb.checked);
+            
+            selectAll.checked = allChecked;
+            selectAll.indeterminate = !allChecked && !noneChecked;
+            updateBulkActions();
+        });
+    });
+
+    document.body.addEventListener('click', function(e) {
+        const target = e.target.closest('[data-action="send-reminder"]');
+        if (target) {
+            e.preventDefault();
+            const loanId = target.dataset.loanId;
+            if (!loanId) return;
+
+            if (!confirm("Voulez-vous vraiment envoyer une notification de rappel à cet utilisateur ?")) {
+                return;
+            }
+
+            target.disabled = true;
+            target.innerHTML = '...';
+
+            fetch('/deboutatoutprix/ajax/loan-actions.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    action: 'send_document_reminder',
+                    loan_id: loanId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(data.message, 'success');
+                } else {
+                    showToast(data.message || "Une erreur est survenue.", 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast("Erreur de communication avec le serveur.", 'error');
+            })
+            .finally(() => {
+                target.disabled = false;
+                target.innerHTML = '🔔';
+            });
+        }
+    });
+
+    document.addEventListener('click', function(e) {
+        const bulkBtn = e.target.closest('[data-action="bulk-action"]');
+        if (bulkBtn) {
+            e.preventDefault();
+            const action = bulkBtn.dataset.bulkAction;
+            const selectedIds = Array.from(document.querySelectorAll('input[name="selected[]"]:checked'))
+                                   .map(cb => cb.value);
+            
+            if (selectedIds.length === 0) {
+                showToast('Veuillez sélectionner au moins une demande.', 'warning');
+                return;
+            }
+
+            const confirmText = bulkBtn.dataset.confirm;
+            if (confirmText && !confirm(confirmText)) {
+                return;
+            }
+
+            fetch('/deboutatoutprix/ajax/loan-actions.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    action: 'bulk_' + action,
+                    loan_ids: selectedIds
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(data.message, 'success');
+                    setTimeout(() => window.location.reload(), 1500);
+                } else {
+                    showToast(data.message || 'Une erreur est survenue.', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Erreur de communication avec le serveur.', 'error');
+            });
+        }
+    });
+
+    document.addEventListener('click', function(e) {
+        const exportBtn = e.target.closest('[data-action="export-data"]');
+        if (exportBtn) {
+            e.preventDefault();
+            const type = exportBtn.dataset.type;
+            const format = exportBtn.dataset.format;
+            
+            const url = new URL('/deboutatoutprix/ajax/export.php', window.location.origin);
+            url.searchParams.set('type', type);
+            url.searchParams.set('format', format);
+            
+            const currentParams = new URLSearchParams(window.location.search);
+            ['status', 'search', 'date_from', 'date_to', 'min_amount', 'max_amount', 'user_id'].forEach(param => {
+                if (currentParams.has(param)) {
+                    url.searchParams.set(param, currentParams.get(param));
+                }
+            });
+        
+            window.open(url.toString(), '_blank');
+        }
+    });
+
+    document.addEventListener('click', function(e) {
+        const modalTrigger = e.target.closest('[data-modal-id]');
+        if (modalTrigger) {
+            const modalId = modalTrigger.dataset.modalId;
+            const targetInput = modalTrigger.dataset.targetInput;
+            const loanId = modalTrigger.dataset.id;
+            
+            const modal = document.getElementById(modalId);
+            if (modal && targetInput && loanId) {
+                const input = document.getElementById(targetInput);
+                if (input) {
+                    input.value = loanId;
+                }
+                modal.style.display = 'block';
+            }
+        }
+
+        if (e.target.classList.contains('modal-close') || 
+            e.target.hasAttribute('data-dismiss')) {
+            const modal = e.target.closest('.modal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        if (e.target.classList.contains('modal')) {
+            e.target.style.display = 'none';
+        }
+    });
+
+    document.addEventListener('click', function(e) {
+        const actionBtn = e.target.closest('[data-action="update-loan-status"]');
+        if (actionBtn) {
+            e.preventDefault();
+            const loanId = actionBtn.dataset.id;
+            const status = actionBtn.dataset.status;
+            
+            if (!loanId || !status) return;
+
+            actionBtn.disabled = true;
+            const originalText = actionBtn.innerHTML;
+            actionBtn.innerHTML = '...';
+
+            fetch('/deboutatoutprix/ajax/loan-actions.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    action: 'update_status',
+                    loan_id: loanId,
+                    status: status
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(data.message, 'success');
+                    setTimeout(() => window.location.reload(), 1000);
+                } else {
+                    showToast(data.message || 'Une erreur est survenue.', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Erreur de communication avec le serveur.', 'error');
+            })
+            .finally(() => {
+                actionBtn.disabled = false;
+                actionBtn.innerHTML = originalText;
+            });
+        }
+    });
+
+    const approveForm = document.getElementById('quickApproveForm');
+    const rejectForm = document.getElementById('quickRejectForm');
+
+    [approveForm, rejectForm].forEach(form => {
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                const actionType = this.id === 'quickApproveForm' ? 'approve' : 'reject';
+                formData.append('action', actionType);
+
+                const submitBtn = document.querySelector(`button[type="submit"][form="${this.id}"]`);
+                
+                let originalText = '';
+                if (submitBtn) {
+                    originalText = submitBtn.innerHTML;
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '⏳ Traitement...';
+                }
+
+                fetch('/deboutatoutprix/ajax/loan-actions.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast(data.message, 'success');
+                        this.closest('.modal').style.display = 'none';
+                        setTimeout(() => window.location.reload(), 1500);
+                    } else {
+                        showToast(data.message || 'Une erreur est survenue.', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showToast('Erreur de communication avec le serveur.', 'error');
+                })
+                .finally(() => {
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalText;
+                    }
+                });
+            });
+        }
+    });
+
+    const exportBtn = document.querySelector('.export-btn');
+    const exportDropdown = document.querySelector('.export-dropdown-content');
+    
+    if (exportBtn && exportDropdown) {
+        exportBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            exportDropdown.style.display = exportDropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        document.addEventListener('click', function() {
+            exportDropdown.style.display = 'none';
+        });
+    }
+});
+
+
+function showToast(message, type = 'info') {
+    let toastContainer = document.querySelector('.toast-container');
+    if (!toastContainer) {
+        toastContainer = document.createElement('div');
+        toastContainer.className = 'toast-container';
+        toastContainer.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        `;
+        document.body.appendChild(toastContainer);
+    }
+
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.style.cssText = `
+        background: ${type === 'success' ? '#10B981' : type === 'error' ? '#EF4444' : type === 'warning' ? '#F59E0B' : '#3B82F6'};
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        animation: slideInRight 0.3s ease-out;
+        max-width: 400px;
+        word-wrap: break-word;
+    `;
+    toast.textContent = message;
+
+    toastContainer.appendChild(toast);
+
+    // Supprimer le toast après 5 secondes
+    setTimeout(() => {
+        toast.style.animation = 'slideOutRight 0.3s ease-in';
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
+            }
+        }, 300);
+    }, 5000);
+}
+
+// Ajouter les animations CSS si elles n'existent pas
+if (!document.querySelector('#toast-animations')) {
+    const style = document.createElement('style');
+    style.id = 'toast-animations';
+    style.textContent = `
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+        .export-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .export-dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            min-width: 120px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1000;
+            border-radius: 6px;
+            border: 1px solid #e5e7eb;
+        }
+        .export-dropdown-item {
+            color: #374151;
+            padding: 8px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+        }
+        .export-dropdown-item:hover {
+            background-color: #f3f4f6;
+        }
+        .export-dropdown-item:first-child {
+            border-radius: 6px 6px 0 0;
+        }
+        .export-dropdown-item:last-child {
+            border-radius: 0 0 6px 6px;
+        }
+        .bulk-actions {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 1rem;
+        }
+        .bulk-actions-text {
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+        .bulk-actions-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+    `;
+    document.head.appendChild(style);
+}
+</script>

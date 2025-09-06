@@ -1,6 +1,7 @@
 <?php
 require_once 'Database.php';
 require_once 'Mailer.php';
+require_once 'User.php';
 
 class LoanRequest {
     private $db;
@@ -80,7 +81,7 @@ class LoanRequest {
     }
     
     public function getLoanRequestById($id, $userId = null) {
-        $sql = "SELECT lr.*, u.first_name, u.last_name, u.email, u.phone 
+        $sql = "SELECT lr.*, u.first_name, u.last_name, u.email, u.phone, u.balance 
                 FROM loan_requests lr 
                 JOIN users u ON lr.user_id = u.id 
                 WHERE lr.id = ?";
@@ -484,4 +485,50 @@ class LoanRequest {
             return ['success' => false, 'message' => 'Erreur lors de la suppression'];
         }
     }
+
+    public function sendDocumentReminderNotification($loanId) {
+        try {
+            $loan = $this->getLoanRequestById($loanId);
+            if (!$loan) {
+                return ['success' => false, 'message' => 'Demande de prêt introuvable.'];
+            }
+
+            $user_obj = new User();
+            $user = $user_obj->getUserById($loan['user_id']);
+            if (!$user) {
+                return ['success' => false, 'message' => 'Utilisateur introuvable.'];
+            }
+
+            $lang = Language::getInstance();
+            $userLanguage = $user['language'] ?? 'fR';
+
+            $title = $lang->get('notification_docs_reminder_title', ['id' => $loanId], $userLanguage);
+            
+            $messageParams = [
+                'name' => $user['first_name'],
+                'amount' => $lang->formatCurrency($loan['amount']),
+                'purpose' => $loan['purpose'],
+                'date' => $lang->formatDate($loan['created_at'])
+            ];
+            $message = $lang->get('notification_docs_reminder_message', $messageParams, $userLanguage);
+
+            $this->createNotification(
+                $loan['user_id'],
+                'document_reminder',
+                $title,
+                $message,
+                $loanId
+            );
+
+            $mailer = new Mailer();
+            $mailer->sendDocumentReminderEmail($user, $loan, $userLanguage);
+
+            return ['success' => true, 'message' => 'Notification et e-mail de rappel envoyés avec succès.'];
+
+        } catch (Exception $e) {
+            error_log("Erreur envoi notif rappel docs: " . $e->getMessage());
+            return ['success' => false, 'message' => 'Erreur serveur lors de l\'envoi de la notification.'];
+        }
+    }
+
 }

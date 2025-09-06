@@ -170,19 +170,26 @@
 }
 
 /* Table Row Priority Styling */
-.priority-high { position: relative; }
-.priority-high::before {
+/* La position relative est maintenant sur la cellule, pas la ligne */
+tr.priority-high td:first-child {
+  position: relative;
+}
+
+/* La barre est dessinée par rapport à cette première cellule (rouge pour haute priorité) */
+tr.priority-high td:first-child::before {
   content: '';
   position: absolute;
   left: 0;
   top: 0;
   bottom: 0;
-  width: 4px;
+  width: 4px; /* ou 3px, selon votre design */
   background-color: var(--error-color);
 }
 
-.priority-medium { position: relative; }
-.priority-medium::before {
+tr.priority-medium td:first-child { 
+  position: relative; 
+} 
+tr.priority-medium td:first-child::before {
   content: '';
   position: absolute;
   left: 0;

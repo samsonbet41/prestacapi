@@ -464,34 +464,6 @@
   font-size: 13px;
 }
 
-.priority-high {
-  position: relative;
-}
-
-.priority-high::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: var(--error-color);
-}
-
-.priority-medium {
-  position: relative;
-}
-
-.priority-medium::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: var(--warning-color);
-}
-
 .table-actions {
   display: flex;
   gap: 8px;

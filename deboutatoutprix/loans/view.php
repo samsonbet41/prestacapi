@@ -2,6 +2,7 @@
 require_once '../includes/auth-admin.php';
 require_once '../../classes/LoanRequest.php'; 
 require_once '../../classes/Document.php'; 
+require_once '../../classes/User.php';
 requirePermission('manage_loans');
 
 $pageTitle = 'Détail demande de prêt';
